@@ -4,7 +4,8 @@
         "import/resolver": {
             "node": {
                 "paths": ["src"]
-            }
+            },
+            "exports": {}
         }
     },
     "parser": "@babel/eslint-parser",

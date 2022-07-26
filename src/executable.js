@@ -1,13 +1,10 @@
+import { NamedDefaultableInMemoryEntity, RuntimeItemsMixin } from "@exabyte-io/code.js/entity";
 import { mix } from "mixwith";
-import { NamedDefaultableInMemoryEntity, RuntimeItemsMixin } from "@exabyte-io/code.js/dist/entity";
+
 import { Flavor } from "./flavor";
 
 export class Executable extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItemsMixin) {
     static Flavor = Flavor;
-
-    constructor(config) {
-        super(config);
-    }
 
     toJSON(exclude) {
         return super.toJSON(["flavors"].concat(exclude));
@@ -18,18 +15,18 @@ export class Executable extends mix(NamedDefaultableInMemoryEntity).with(Runtime
     }
 
     get flavors() {
-        return Object.keys(this.flavorsTree).map(key => {
-            return this.constructor.Flavor.create(
-                Object.assign({}, this.flavorsTree[key], {name: key, executable: this})
-            );
+        return Object.keys(this.flavorsTree).map((key) => {
+            return this.constructor.Flavor.create({
+                ...this.flavorsTree[key],
+                name: key,
+                executable: this,
+            });
         });
     }
 
     get flavorsFromTree() {
-        return Object.keys(this.flavorsTree).map(key => {
-            return new this.constructor.Flavor(
-                Object.assign({}, this.flavorsTree[key], {name: key})
-            );
+        return Object.keys(this.flavorsTree).map((key) => {
+            return new this.constructor.Flavor({ ...this.flavorsTree[key], name: key });
         });
     }
 
@@ -44,5 +41,4 @@ export class Executable extends mix(NamedDefaultableInMemoryEntity).with(Runtime
     getFlavorByConfig(config) {
         return config ? this.getFlavorByName(config.name) : this.defaultFlavor;
     }
-
 }

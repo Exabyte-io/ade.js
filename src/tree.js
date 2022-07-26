@@ -1,34 +1,34 @@
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
-
-import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
-
+import { getOneMatchFromObject } from "@exabyte-io/code.js/utils";
 
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
- * @param cls {*} optional class to use to create applications
+ * @param Cls {*} optional class to use to create applications
  * @returns {Object} containing applications and applicationConfigs
  */
-export function getAllApplications(cls = null) {
+export function getAllApplications(Cls = null) {
     const applicationsTree = {};
     const applicationsArray = [];
     allApplications.map((appName) => {
         applicationsTree[appName] = {};
         const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
-        applicationsTree[appName]["defaultVersion"] = defaultVersion;
+        applicationsTree[appName].defaultVersion = defaultVersion;
         versions.map((options) => {
             const { version } = options;
             if (!(version in applicationsTree[appName])) applicationsTree[appName][version] = {};
             const config = { ...appData, build, ...options };
-            if (cls) {
-                applicationsTree[appName][version][build] = new cls(config);
-                applicationsArray.push(new cls(config));
+            if (Cls) {
+                applicationsTree[appName][version][build] = new Cls(config);
+                applicationsArray.push(new Cls(config));
             } else {
                 applicationsTree[appName][version][build] = config;
                 applicationsArray.push(config);
             }
+            return null;
         });
+        return null;
     });
-    return { applicationsTree, applicationsArray }
+    return { applicationsTree, applicationsArray };
 }
 
 /**
@@ -41,8 +41,9 @@ export function getAllApplications(cls = null) {
  */
 export function getApplication({ applicationsTree, name, version = null, build = "Default" }) {
     const app = applicationsTree[name];
-    if (!version) version = app["defaultVersion"];
-    return app[version][build];
+    let current = version;
+    if (!version) current = app.defaultVersion;
+    return app[current][build];
 }
 
 const { applicationsTree } = getAllApplications(null);
@@ -66,17 +67,10 @@ export function getApplicationConfig({ name, version = null, build = "Default" }
  */
 export function getExecutableConfig({ appName, execName }) {
     const appTree = getAppTree(appName);
-    Object.entries(appTree).map(([name, exec]) => { exec.name = name });
+    Object.entries(appTree).map(([name, exec]) => {
+        exec.name = name;
+        return null;
+    });
     if (!execName) return getOneMatchFromObject(appTree, "isDefault", true);
     return appTree[execName];
-}
-
-/**
- * @summary Get flavor config
- * @param appName
- * @param execName
- * @param flavorName
- */
-export function getFlavorConfig({ appName, execName, flavorName }) {
-    // TODO : reduce redundancy of object construction in getting flavors from executable
 }
