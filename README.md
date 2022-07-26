@@ -46,3 +46,25 @@ npm run transpile
 npm run test
 ```
 
+ADe
+===
+
+The`ADe` package sits just below the `WoDe` package in the Mat3ra workflow
+ecosystem, where `ADe` houses entity definitions for:
+
+- `Application` - uniquely determined by `name, [version], [build]`
+- `Executable` - defined for a given application and accessible from application by name
+- `Flavor` - defined for a given executable and accessible from executable by name
+- `Template` - a jinja template for an application input file
+
+The relevant data parameterizing these entities is housed in
+the [Application Flavors](https://github.com/Exabyte-io/exabyte-application-flavors)
+repository. This includes the supported applications, executables, flavors,
+and defined templates.
+
+Templates themselves are organized by application in a top-level `assets`
+directory in `application-flavors` and the API for loading and working with templates can be found in
+each application's `assets.js` module.
+At build time, all templates are loaded and compiled into a single monolithic
+JS file using `build_templates.js` so that it can be used in the client as well as in NodeJS.
+This is how templates are consumed from `applicaton-flavors` in `ADe`.
