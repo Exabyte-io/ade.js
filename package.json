@@ -35,7 +35,16 @@
         "@babel/preset-env": "7.16.4",
         "@babel/preset-react": "7.16.7",
         "@babel/register": "^7.16.0",
-        "@babel/runtime-corejs3": "7.16.8"
+        "@babel/runtime-corejs3": "7.16.8",
+        "@exabyte-io/application-flavors.js": "2022.7.24-0",
+        "@exabyte-io/code.js": "2022.7.19-0",
+        "@exabyte-io/made.js": "2022.6.15-0",
+        "@exabyte-io/periodic-table.js": "2022.6.8-0",
+        "lodash": "^4.17.21",
+        "mixwith": "^0.1.1",
+        "swig": "^1.4.2",
+        "underscore": "^1.13.3",
+        "underscore.string": "^3.3.4"
     },
     "devDependencies": {
         "chai": "^4.3.4",
@@ -62,4 +71,3 @@
         "*.{js,css}": "prettier --write"
     }
 }
-
