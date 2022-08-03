@@ -1,7 +1,7 @@
 import _ from "underscore";
-import lodash from "lodash";
 import { mix } from "mixwith";
 import s from "underscore.string";
+import path from "path";
 
 import { Made } from "@exabyte-io/made.js";
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
@@ -58,7 +58,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     }
 
     getPseudoBySymbol(symbol) {
-        return (this.methodData.pseudo || []).find(p => p.element === symbol);
+        return (this.methodData.pseudopotentials || []).find(p => p.element === symbol);
     }
 
     get ATOMIC_SPECIES() {
@@ -80,7 +80,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
 
     static symbolToAtomicSpecie(symbol, pseudo) {
         const el = PERIODIC_TABLE[symbol];
-        const filename = pseudo ? lodash.get(pseudo, 'filename', s.strRightBack(pseudo.path, '/')) : '';
+        const filename = pseudo.filename || path.basename(pseudo.path) || "";
         return el ? s.sprintf('%s %f %s', symbol, el.atomic_mass, filename) : undefined;
     }
 }
