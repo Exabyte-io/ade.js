@@ -54,8 +54,21 @@ const { applicationsTree } = getAllApplications(null);
  * @param build
  * @returns {*}
  */
-export function getApplicationConfig({ name, version = null, build = "Default" }) {
-    return getApplication({ applicationsTree, name, version, build });
+export function getApplicationConfig(options) {
+    if (!options) {
+        throw new Error(`Options are missing while getting application config!`);
+    }
+    const {
+        name,
+        version = null,
+        build = "Default"
+    } = options;
+    return getApplication({ 
+        applicationsTree,
+        name,
+        version,
+        build
+    });
 }
 
 /**
