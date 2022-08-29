@@ -10,6 +10,9 @@ export class Application extends NamedDefaultableInMemoryEntity {
     static Executable = Executable;
 
     constructor(config) {
+        if (!config) {
+            throw new Error(`Application is missing its config`);
+        }
         const staticConfig = getApplicationConfig(config);
         super({...staticConfig, ...config});
     }
