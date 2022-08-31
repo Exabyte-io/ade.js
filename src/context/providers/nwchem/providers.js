@@ -19,7 +19,7 @@ export class NWChemTotalEnergyContextProvider extends mix(ExecutableContextProvi
     WorkflowContextMixin,
     JobContextMixin,
 ) {
-    static materialCls = Made.Material;
+    static Material = Made.Material;
 
     get atomSymbols() {
         return this.material.Basis.uniqueElements;

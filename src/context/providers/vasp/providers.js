@@ -17,7 +17,7 @@ export class VASPContextProvider extends mix(ExecutableContextProvider).with(
     WorkflowContextMixin,
     JobContextMixin,
 ) {
-    static materialCls = Made.Material;
+    static Material = Made.Material;
 
     /*
      * @NOTE: Overriding getData makes this provider "stateless", ie. delivering data from scratch each time and not
@@ -44,7 +44,7 @@ export class VASPNEBContextProvider extends mix(ExecutableContextProvider).with(
     WorkflowContextMixin,
     JobContextMixin,
 ) {
-    static materialCls = Made.Material;
+    static Material = Made.Material;
 
     getData() {
         const sortedMaterials = this.sortMaterialsByIndexInSet(this.materials);
