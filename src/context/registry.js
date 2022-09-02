@@ -1,26 +1,34 @@
-import _ from "underscore";
-import { ContextProviderRegistryContainer } from "@exabyte-io/code.js/dist/context";
+import { createAndPatchRegistry } from "@exabyte-io/code.js/dist/context";
 
 import {
-    QEPWXContextProvider,
+    NWChemTotalEnergyContextProvider,
     QENEBContextProvider,
+    QEPWXContextProvider,
     VASPContextProvider,
     VASPNEBContextProvider,
-    NWChemTotalEnergyContextProvider,
 } from "../context";
 
-const adeContextProviders = {
-    QEPWXInputDataManager: QEPWXContextProvider.getConstructorConfig({ name: "input" }),
-    QENEBInputDataManager: QENEBContextProvider.getConstructorConfig({ name: "input" }),
-    VASPInputDataManager: VASPContextProvider.getConstructorConfig({ name: "input" }),
-    VASPNEBInputDataManager: VASPNEBContextProvider.getConstructorConfig({ name: "input" }),
-    NWChemInputDataManager: NWChemTotalEnergyContextProvider.getConstructorConfig({ name: "input" }),
-}
+export const adeProviders = {
+    QEPWXInputDataManager: {
+        providerCls: QEPWXContextProvider,
+        config: { name: "input" },
+    },
+    QENEBInputDataManager: {
+        providerCls: QENEBContextProvider,
+        config: { name: "input" },
+    },
+    VASPInputDataManager: {
+        providerCls: VASPContextProvider,
+        config: { name: "input" },
+    },
+    VASPNEBInputDataManager: {
+        providerCls: VASPNEBContextProvider,
+        config: { name: "input" },
+    },
+    NWChemInputDataManager: {
+        providerCls: NWChemTotalEnergyContextProvider,
+        config: { name: "input" },
+    },
+};
 
-const clsInstance = new ContextProviderRegistryContainer();
-_.map(adeContextProviders, (instance, name) => clsInstance.addProvider({
-    instance,
-    name
-}));
-
-export const ContextProviderRegistry = clsInstance;
+export const ContextProviderRegistry = createAndPatchRegistry(adeProviders);

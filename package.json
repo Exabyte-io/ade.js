@@ -37,7 +37,7 @@
         "@babel/register": "^7.16.0",
         "@babel/runtime-corejs3": "7.16.8",
         "@exabyte-io/application-flavors.js": "2022.7.24-0",
-        "@exabyte-io/code.js": "2022.8.31-0",
+        "@exabyte-io/code.js": "2022.9.2-0",
         "@exabyte-io/made.js": "2022.6.15-0",
         "@exabyte-io/periodic-table.js": "2022.6.8-0",
         "lodash": "^4.17.21",
