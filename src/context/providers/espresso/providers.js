@@ -21,7 +21,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     WorkflowContextMixin,
     JobContextMixin,
 ) {
-    static materialCls = Made.Material;
+    static Material = Made.Material;
 
     get atomSymbols() {
         return this.material.Basis.uniqueElements;
@@ -101,7 +101,7 @@ export class QENEBContextProvider extends mix(ExecutableContextProvider).with(
     WorkflowContextMixin,
     JobContextMixin,
 ) {
-    static materialCls = Made.Material;
+    static Material = Made.Material;
 
     getData() {
         const sortedMaterials = this.sortMaterialsByIndexInSet(this.materials);
