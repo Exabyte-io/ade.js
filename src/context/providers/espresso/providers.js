@@ -54,7 +54,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     }
 
     static getMaterialsContext(materials) {
-        if (!!materials || materials.length <= 1) return {};
+        if (!materials) return {};
         return { perMaterial: materials.map((material) => this.getMaterialContext(material)) };
     }
 
