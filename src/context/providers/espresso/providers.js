@@ -16,6 +16,7 @@ import { ExecutableContextProvider } from "../../providers";
 
 export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     MaterialContextMixin,
+    MaterialsContextMixin,
     MethodDataContextMixin,
     WorkflowContextMixin,
     JobContextMixin,
