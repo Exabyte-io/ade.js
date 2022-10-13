@@ -8,9 +8,8 @@ import {
 } from "@exabyte-io/code.js/dist/context";
 import { Made } from "@exabyte-io/made.js";
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
-import lodash from "lodash";
+import _ from "lodash";
 import { mix } from "mixwith";
-import _ from "underscore";
 import s from "underscore.string";
 
 import { ExecutableContextProvider } from "../../providers";
@@ -27,12 +26,36 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return this.material.Basis.uniqueElements;
     }
 
-    get atomicPositionsWithoutConstraints() {
-        return this.material.Basis.atomicPositions;
+    static atomSymbols(material) {
+        return material.Basis.uniqueElements;
     }
 
-    get atomicPositions() {
-        return this.material.Basis.atomicPositionsWithConstraints;
+    /** Returns the input text block for atomic positions WITH constraints.
+     */
+    static atomicPositionsWithConstraints(material) {
+        return material.Basis.atomicPositionsWithConstraints.join("\n");
+    }
+
+    /** Returns the input text block for atomic positions
+     *  Note: does NOT include constraints
+     */
+    static atomicPositions(material) {
+        return material.Basis.atomicPositions.join("\n");
+    }
+
+    static getMaterialContext(material) {
+        return {
+            NAT: material.Basis.atomicPositions.length,
+            NTYP: material.Basis.uniqueElements.length,
+            ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
+            ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: QEPWXContextProvider.atomicPositions(material),
+            CELL_PARAMETERS: QEPWXContextProvider.CELL_PARAMETERS(material),
+        };
+    }
+
+    static getMaterialsContext(materials) {
+        if (!!materials || materials.length <= 1) return {};
+        return { perMaterial: materials.map((material) => this.getMaterialContext(material)) };
     }
 
     /*
@@ -44,17 +67,14 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         // ECUTWFC = 40;
         // ECUTRHO = 200;
 
-        const IBRAV = 0;
+        const IBRAV = 0; // use CELL_PARAMETERS to define Bravais lattice
 
         return {
             IBRAV,
             RESTART_MODE: this.RESTART_MODE,
-            NAT: this.atomicPositions.length,
-            NTYP: this.atomSymbols.length,
-            ATOMIC_POSITIONS: this.atomicPositions.join("\n"),
-            ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: this.atomicPositionsWithoutConstraints.join("\n"),
-            CELL_PARAMETERS: this.CELL_PARAMETERS,
             ATOMIC_SPECIES: this.ATOMIC_SPECIES,
+            ...QEPWXContextProvider.getMaterialContext(this.material),
+            ...QEPWXContextProvider.QEPWXContextProvider.getMaterialsContext(this.materials),
         };
     }
 
@@ -74,8 +94,25 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         }).join("\n");
     }
 
-    get CELL_PARAMETERS() {
-        return this.material.Lattice.vectorArrays
+    /** Builds ATOMIC SPECIES block of pw.x input in the format
+     *  X   Mass_X   PseudoPot_X
+     *  where X            is the atom label
+     *        Mass_X       is the mass of element X [amu]
+     *        PseudoPot_X  is the pseudopotential filename associated with element X
+     *
+     *  Note: assumes this.methodData is defined
+     */
+    _ATOMIC_SPECIES(material) {
+        return this.atomSymbols(material)
+            .map((symbol) => {
+                const pseudo = this.getPseudoBySymbol(symbol);
+                return QEPWXContextProvider.symbolToAtomicSpecie(symbol, pseudo);
+            })
+            .join("\n");
+    }
+
+    static CELL_PARAMETERS(material) {
+        return material.Lattice.vectorArrays
             .map((x) => {
                 return x
                     .map((y) => {
@@ -88,9 +125,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
 
     static symbolToAtomicSpecie(symbol, pseudo) {
         const el = PERIODIC_TABLE[symbol];
-        const filename = pseudo
-            ? lodash.get(pseudo, "filename", s.strRightBack(pseudo.path, "/"))
-            : "";
+        const filename = pseudo ? _.get(pseudo, "filename", s.strRightBack(pseudo.path, "/")) : "";
         return el ? s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) : undefined;
     }
 }
