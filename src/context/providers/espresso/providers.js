@@ -74,7 +74,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
             RESTART_MODE: this.RESTART_MODE,
             ATOMIC_SPECIES: this.ATOMIC_SPECIES,
             ...QEPWXContextProvider.getMaterialContext(this.material),
-            ...QEPWXContextProvider.QEPWXContextProvider.getMaterialsContext(this.materials),
+            ...QEPWXContextProvider.getMaterialsContext(this.materials),
         };
     }
 
