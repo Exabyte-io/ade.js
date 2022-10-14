@@ -59,6 +59,34 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return { perMaterial: materials.map((material) => this.getMaterialContext(material)) };
     }
 
+    static NAT(material) {
+        return material.Basis.atomicPositions.length;
+    }
+
+    static NTYP(material) {
+        return material.Basis.uniqueElements.length;
+    }
+
+    buildQEPWXContext(material) {
+        const IBRAV = 0; // use CELL_PARAMETERS to define Bravais lattice
+
+        return {
+            IBRAV,
+            RESTART_MODE: this.RESTART_MODE,
+            ATOMIC_SPECIES: this._ATOMIC_SPECIES(material),
+            NAT: QEPWXContextProvider.NAT(material),
+            NTYP: QEPWXContextProvider.NTYP(material),
+            ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
+            ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: QEPWXContextProvider.atomicPositions(material),
+            CELL_PARAMETERS: QEPWXContextProvider.CELL_PARAMETERS(material),
+        };
+    }
+
+    getDataPerMaterial() {
+        if (!this.materials || this.materials.length <= 1) return {};
+        return { perMaterial: this.materials.map((material) => this.buildQEPWXContext(material)) };
+    }
+
     /*
      * @NOTE: Overriding getData makes this provider "stateless", ie. delivering data from scratch each time and not
      *        considering the content of `this.data`, and `this.isEdited` field(s).
@@ -68,14 +96,9 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         // ECUTWFC = 40;
         // ECUTRHO = 200;
 
-        const IBRAV = 0; // use CELL_PARAMETERS to define Bravais lattice
-
         return {
-            IBRAV,
-            RESTART_MODE: this.RESTART_MODE,
-            ATOMIC_SPECIES: this.ATOMIC_SPECIES,
-            ...QEPWXContextProvider.getMaterialContext(this.material),
-            ...QEPWXContextProvider.getMaterialsContext(this.materials),
+            ...this.buildQEPWXContext(this.material),
+            ...this.getDataPerMaterial(),
         };
     }
 
@@ -104,7 +127,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
      *  Note: assumes this.methodData is defined
      */
     _ATOMIC_SPECIES(material) {
-        return this.atomSymbols(material)
+        return QEPWXContextProvider.atomSymbols(material)
             .map((symbol) => {
                 const pseudo = this.getPseudoBySymbol(symbol);
                 return QEPWXContextProvider.symbolToAtomicSpecie(symbol, pseudo);
