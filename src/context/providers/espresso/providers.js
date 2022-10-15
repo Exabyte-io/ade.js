@@ -23,10 +23,6 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
 ) {
     static Material = Made.Material;
 
-    get atomSymbols() {
-        return this.material.Basis.uniqueElements;
-    }
-
     static atomSymbols(material) {
         return material.Basis.uniqueElements;
     }
@@ -44,21 +40,6 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return material.Basis.atomicPositions.join("\n");
     }
 
-    static getMaterialContext(material) {
-        return {
-            NAT: material.Basis.atomicPositions.length,
-            NTYP: material.Basis.uniqueElements.length,
-            ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
-            ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: QEPWXContextProvider.atomicPositions(material),
-            CELL_PARAMETERS: QEPWXContextProvider.CELL_PARAMETERS(material),
-        };
-    }
-
-    static getMaterialsContext(materials) {
-        if (!materials) return {};
-        return { perMaterial: materials.map((material) => this.getMaterialContext(material)) };
-    }
-
     static NAT(material) {
         return material.Basis.atomicPositions.length;
     }
@@ -73,7 +54,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return {
             IBRAV,
             RESTART_MODE: this.RESTART_MODE,
-            ATOMIC_SPECIES: this._ATOMIC_SPECIES(material),
+            ATOMIC_SPECIES: this.ATOMIC_SPECIES(material),
             NAT: QEPWXContextProvider.NAT(material),
             NTYP: QEPWXContextProvider.NTYP(material),
             ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
@@ -110,14 +91,6 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return (this.methodData.pseudo || []).find((p) => p.element === symbol);
     }
 
-    get ATOMIC_SPECIES() {
-        // atomic species with pseudopotentials
-        return _.map(this.atomSymbols, (symbol) => {
-            const pseudo = this.getPseudoBySymbol(symbol);
-            return QEPWXContextProvider.symbolToAtomicSpecie(symbol, pseudo);
-        }).join("\n");
-    }
-
     /** Builds ATOMIC SPECIES block of pw.x input in the format
      *  X   Mass_X   PseudoPot_X
      *  where X            is the atom label
@@ -126,7 +99,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
      *
      *  Note: assumes this.methodData is defined
      */
-    _ATOMIC_SPECIES(material) {
+    ATOMIC_SPECIES(material) {
         return QEPWXContextProvider.atomSymbols(material)
             .map((symbol) => {
                 const pseudo = this.getPseudoBySymbol(symbol);
