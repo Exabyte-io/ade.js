@@ -13,11 +13,26 @@ import { ExecutableContextProvider } from "../../providers";
 
 export class VASPContextProvider extends mix(ExecutableContextProvider).with(
     MaterialContextMixin,
+    MaterialsContextMixin,
     MethodDataContextMixin,
     WorkflowContextMixin,
     JobContextMixin,
 ) {
     static Material = Made.Material;
+
+    // eslint-disable-next-line class-methods-use-this
+    buildVASPContext(material) {
+        return {
+            // TODO: figure out whether we need two separate POSCARS, maybe one is enough
+            POSCAR: material.getAsPOSCAR(true, true),
+            POSCAR_WITH_CONSTRAINTS: material.getAsPOSCAR(true),
+        };
+    }
+
+    getDataPerMaterial() {
+        if (!this.materials || this.materials.length <= 1) return {};
+        return { perMaterial: this.materials.map((material) => this.buildVASPContext(material)) };
+    }
 
     /*
      * @NOTE: Overriding getData makes this provider "stateless", ie. delivering data from scratch each time and not
@@ -29,9 +44,8 @@ export class VASPContextProvider extends mix(ExecutableContextProvider).with(
         // ECUTRHO;
 
         return {
-            // TODO: figure out whether we need two separate POSCARS, maybe one is enough
-            POSCAR: this.material.getAsPOSCAR(true, true),
-            POSCAR_WITH_CONSTRAINTS: this.material.getAsPOSCAR(true),
+            ...this.buildVASPContext(this.material),
+            ...this.getDataPerMaterial(),
         };
     }
 }

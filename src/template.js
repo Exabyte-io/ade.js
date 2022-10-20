@@ -1,45 +1,57 @@
-import jinja from "swig";
-
 import { allTemplates } from "@exabyte-io/application-flavors.js";
-
 import { NamedInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
 import { deepClone } from "@exabyte-io/code.js/dist/utils";
+import jinja from "swig";
 import _ from "underscore";
 
 import { ContextProviderRegistry } from "./context/registry";
 
-
 export class Template extends NamedInMemoryEntity {
     static providerRegistry = ContextProviderRegistry;
 
-    constructor(config) {
-        super(config);
+    get isManuallyChanged() {
+        return this.prop("isManuallyChanged", false);
     }
 
-    get isManuallyChanged() {return this.prop('isManuallyChanged', false)}
+    get content() {
+        return this.prop("content");
+    }
 
-    get content() {return this.prop("content")}
+    setContent(text) {
+        return this.setProp("content", text);
+    }
 
-    setContent(text) {return this.setProp('content', text)};
+    get rendered() {
+        return this.prop("rendered") || this.content;
+    }
 
-    get rendered() {return this.prop('rendered') || this.content}
+    setRendered(text) {
+        return this.setProp("rendered", text);
+    }
 
-    setRendered(text) {return this.setProp('rendered', text)};
+    get applicationName() {
+        return this.prop("applicationName");
+    }
 
-    get applicationName() {return this.prop('applicationName')}
+    get executableName() {
+        return this.prop("executableName");
+    }
 
-    get executableName() {return this.prop('executableName')}
-
-    get contextProviders() {return this.prop('contextProviders') || []}
+    get contextProviders() {
+        return this.prop("contextProviders") || [];
+    }
 
     addContextProvider(provider) {
-        this.setProp('contextProviders', this.contextProviders.push(provider))
+        this.setProp("contextProviders", this.contextProviders.push(provider));
     }
 
     removeContextProvider(provider) {
-        this.setProp('contextProviders', this.contextProviders.filter(p =>
-            (p.name !== provider.name && p.domain !== provider.domain)
-        ));
+        this.setProp(
+            "contextProviders",
+            this.contextProviders.filter(
+                (p) => p.name !== provider.name && p.domain !== provider.domain,
+            ),
+        );
     }
 
     render(externalContext) {
@@ -62,26 +74,25 @@ export class Template extends NamedInMemoryEntity {
         return this.toJSON();
     }
 
-    getRenderingContext(externalContext) {
-        // TODO context providers
-        return Object.assign({}, externalContext);
-    }
-
     // Remove "bulky" items and JSON stringify before passing it to rendering engine (eg. jinja) to compile.
     // This way the context should still be passed in full to contextProviders, but not to final text template.
+    // eslint-disable-next-line class-methods-use-this
     _cleanRenderingContext(object) {
         const { job, ...clone } = object;
         return deepClone(clone);
     }
 
-
-
     static fromFlavor(appName, execName, inputName) {
         const filtered = allTemplates.filter(
-            (temp) => temp.applicationName === appName && temp.executableName === execName && temp.name === inputName
+            (temp) =>
+                temp.applicationName === appName &&
+                temp.executableName === execName &&
+                temp.name === inputName,
         );
         if (filtered.length !== 1) {
-            console.log(`found ${filtered.length} templates for app=${appName} exec=${execName} name=${inputName} expected 1`)
+            console.log(
+                `found ${filtered.length} templates for app=${appName} exec=${execName} name=${inputName} expected 1`,
+            );
         }
         return new Template(filtered[0]);
     }
@@ -93,8 +104,9 @@ export class Template extends NamedInMemoryEntity {
      */
     getContextProvidersAsClassInstances(providerContext) {
         const me = this;
-        return this.contextProviders.map(p => {
-            const {constructor, config} = me.constructor.providerRegistry.findProviderInstanceByName(p.name);
+        return this.contextProviders.map((p) => {
+            const { constructor, config } =
+                me.constructor.providerRegistry.findProviderInstanceByName(p.name);
             const clsInstance = new constructor({
                 ...config,
                 context: providerContext,
@@ -108,11 +120,13 @@ export class Template extends NamedInMemoryEntity {
      */
     getDataFromProvidersForRenderingContext(providerContext) {
         const result = {};
-        this.getContextProvidersAsClassInstances(providerContext).forEach(contextProvider => {
+        this.getContextProvidersAsClassInstances(providerContext).forEach((contextProvider) => {
             const context = contextProvider.yieldDataForRendering();
-            Object.keys(context).forEach(key => {
+            Object.keys(context).forEach((key) => {
                 // merge context keys if they are objects otherwise override them.
-                result[key] = _.isObject(result[key]) ? Object.assign({}, result[key], context[key]) : context[key];
+                result[key] = _.isObject(result[key])
+                    ? { ...result[key], ...context[key] }
+                    : context[key];
             });
         });
         return result;
@@ -124,7 +138,7 @@ export class Template extends NamedInMemoryEntity {
     // TODO: optimize logic to prevent re-initializing the context provider classes again below, reuse above function
     getDataFromProvidersForPersistentContext(providerContext) {
         const result = {};
-        this.getContextProvidersAsClassInstances(providerContext).forEach(contextProvider => {
+        this.getContextProvidersAsClassInstances(providerContext).forEach((contextProvider) => {
             // only save in the persistent context the data from providers that were edited (or able to be edited)
             Object.assign(result, contextProvider.isEdited ? contextProvider.yieldData() : {});
         });
@@ -137,7 +151,9 @@ export class Template extends NamedInMemoryEntity {
      *        - "external" context and
      */
     getRenderingContext(externalContext) {
-        return Object.assign({}, externalContext, this.getDataFromProvidersForRenderingContext(externalContext));
+        return {
+            ...externalContext,
+            ...this.getDataFromProvidersForRenderingContext(externalContext),
+        };
     }
-
 }
