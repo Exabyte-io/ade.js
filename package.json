@@ -45,7 +45,7 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
-        "@exabyte-io/code.js": "git+https://github.com/Exabyte-io/code.js.git#6dc6793575741847741c5803d7cafed7da0dfca2",
+        "@exabyte-io/code.js": "git+https://github.com/Exabyte-io/code.js.git#0d82444794d72f84865ac0c2623508a0ee9435ee",
         "@exabyte-io/made.js": "2022.6.15-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
