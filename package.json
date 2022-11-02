@@ -36,7 +36,7 @@
         "@babel/preset-react": "7.16.7",
         "@babel/register": "^7.16.0",
         "@babel/runtime-corejs3": "7.16.8",
-        "@exabyte-io/application-flavors.js": "2022.7.24-0",
+        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/exabyte-application-flavors.git#756fd8fcb26a9f2ba66fdd965a302fe017835e33",
         "@exabyte-io/periodic-table.js": "2022.6.8-0",
         "lodash": "^4.17.21",
         "mixwith": "^0.1.1",
