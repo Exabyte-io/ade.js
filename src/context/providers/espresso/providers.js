@@ -8,7 +8,7 @@ import {
 } from "@exabyte-io/code.js/dist/context";
 import { Made } from "@exabyte-io/made.js";
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
-import _ from "lodash";
+import lodash from "lodash";
 import { mix } from "mixwith";
 import s from "underscore.string";
 
@@ -122,7 +122,9 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
 
     static symbolToAtomicSpecie(symbol, pseudo) {
         const el = PERIODIC_TABLE[symbol];
-        const filename = pseudo ? _.get(pseudo, "filename", s.strRightBack(pseudo.path, "/")) : "";
+        const filename = pseudo
+            ? lodash.get(pseudo, "filename", s.strRightBack(pseudo.path, "/"))
+            : "";
         return el ? s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) : undefined;
     }
 }
@@ -146,7 +148,10 @@ export class QENEBContextProvider extends mix(ExecutableContextProvider).with(
         });
 
         return {
-            ..._.omit(PWXContexts[0], ["ATOMIC_POSITIONS", "ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS"]),
+            ...lodash.omit(PWXContexts[0], [
+                "ATOMIC_POSITIONS",
+                "ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS",
+            ]),
             FIRST_IMAGE: PWXContexts[0].ATOMIC_POSITIONS,
             LAST_IMAGE: PWXContexts[PWXContexts.length - 1].ATOMIC_POSITIONS,
             INTERMEDIATE_IMAGES: PWXContexts.slice(1, PWXContexts.length - 1).map(
