@@ -1,14 +1,10 @@
-import { mix } from "mixwith";
 import { NamedDefaultableInMemoryEntity, RuntimeItemsMixin } from "@exabyte-io/code.js/dist/entity";
+import { mix } from "mixwith";
+
 import { Template } from "./template";
 
 export class Flavor extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItemsMixin) {
-
-    constructor(config) {
-        super(config);
-    }
-
-    get input() { return this.prop("input", []) }
+    get input() { return this.prop("input", []); }
 
     // TODO : prevent this from running in client
     get inputAsTemplates() {
@@ -26,8 +22,11 @@ export class Flavor extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItem
         });
     }
 
-    getInputAsRenderedTemplates(context) {return this.inputAsTemplates.map(t => t.getRenderedJSON(context))}
+    getInputAsRenderedTemplates(context) {
+        return this.inputAsTemplates.map((t) => t.getRenderedJSON(context));
+    }
 
-    get disableRenderMaterials() {return this.prop("isMultiMaterial", false)}
-
+    get disableRenderMaterials() {
+        return this.prop("isMultiMaterial", false);
+    }
 }
