@@ -45,11 +45,11 @@
     },
     "devDependencies": {
         "@exabyte-io/code.js": "2022.11.11-0",
+        "@exabyte-io/eslint-config": "^2022.11.16-0",
         "@exabyte-io/made.js": "2022.6.15-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
-        "eslint-config-mat3ra": "git+https://github.com/Exabyte-io/eslint-config-mat3ra.git#feat/SOF-6397",
         "eslint-plugin-import": "2.25.3",
         "eslint-plugin-jsdoc": "37.1.0",
         "eslint-plugin-jsx-a11y": "6.5.1",
