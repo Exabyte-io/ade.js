@@ -4,7 +4,9 @@ import { mix } from "mixwith";
 import { Template } from "./template";
 
 export class Flavor extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItemsMixin) {
-    get input() { return this.prop("input", []); }
+    get input() {
+        return this.prop("input", []);
+    }
 
     // TODO : prevent this from running in client
     get inputAsTemplates() {

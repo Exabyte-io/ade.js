@@ -12,9 +12,7 @@ export function getAllApplications(cls = null) {
     const applicationsArray = [];
     allApplications.forEach((appName) => {
         applicationsTree[appName] = {};
-        const {
-            versions, defaultVersion, build = "Default", ...appData
-        } = getAppData(appName);
+        const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
         applicationsTree[appName].defaultVersion = defaultVersion;
         versions.forEach((options) => {
             const { version } = options;
@@ -40,9 +38,7 @@ export function getAllApplications(cls = null) {
  * @param build {String} the build to use (optional, defaults to Default)
  * @return {*} an application
  */
-export function getApplication({
-    applicationsTree, name, version = null, build = "Default",
-}) {
+export function getApplication({ applicationsTree, name, version = null, build = "Default" }) {
     const app = applicationsTree[name];
     // eslint-disable-next-line no-param-reassign
     if (!version) version = app.defaultVersion;
@@ -60,7 +56,10 @@ const { applicationsTree } = getAllApplications(null);
  */
 export function getApplicationConfig({ name, version = null, build = "Default" }) {
     return getApplication({
-        applicationsTree, name, version, build,
+        applicationsTree,
+        name,
+        version,
+        build,
     });
 }
 
@@ -72,7 +71,9 @@ export function getApplicationConfig({ name, version = null, build = "Default" }
  */
 export function getExecutableConfig({ appName, execName }) {
     const appTree = getAppTree(appName);
-    Object.entries(appTree).forEach(([name, exec]) => { exec.name = name; });
+    Object.entries(appTree).forEach(([name, exec]) => {
+        exec.name = name;
+    });
     if (!execName) return getOneMatchFromObject(appTree, "isDefault", true);
     return appTree[execName];
 }

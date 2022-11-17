@@ -97,9 +97,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
     get executables() {
         const tree = getAppTree(this.prop("name"));
         return Object.keys(tree).map((key) => {
-            return new this.constructor.Executable(
-                { ...tree[key], name: key },
-            );
+            return new this.constructor.Executable({ ...tree[key], name: key });
         });
     }
 
