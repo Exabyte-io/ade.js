@@ -1,5 +1,8 @@
 import {
-    allApplications, allowedMonitors, allowedResults, allTemplates,
+    allApplications,
+    allowedMonitors,
+    allowedResults,
+    allTemplates,
 } from "@exabyte-io/application-flavors.js";
 
 import { Application } from "./application";

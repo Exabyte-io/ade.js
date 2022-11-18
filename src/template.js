@@ -56,8 +56,7 @@ export class Template extends NamedInMemoryEntity {
 
     render(externalContext) {
         const renderingContext = this.getRenderingContext(externalContext);
-        let template,
-            rendered;
+        let template, rendered;
         if (!this.isManuallyChanged) {
             try {
                 template = jinja.compile(this.content);
@@ -85,9 +84,10 @@ export class Template extends NamedInMemoryEntity {
 
     static fromFlavor(appName, execName, inputName) {
         const filtered = allTemplates.filter(
-            (temp) => temp.applicationName === appName
-                && temp.executableName === execName
-                && temp.name === inputName,
+            (temp) =>
+                temp.applicationName === appName &&
+                temp.executableName === execName &&
+                temp.name === inputName,
         );
         if (filtered.length !== 1) {
             console.log(
@@ -105,8 +105,8 @@ export class Template extends NamedInMemoryEntity {
     getContextProvidersAsClassInstances(providerContext) {
         const me = this;
         return this.contextProviders.map((p) => {
-            const { constructor, config } = me.constructor.providerRegistry
-                .findProviderInstanceByName(p.name);
+            const { constructor, config } =
+                me.constructor.providerRegistry.findProviderInstanceByName(p.name);
             const clsInstance = new constructor({
                 ...config,
                 context: providerContext,
