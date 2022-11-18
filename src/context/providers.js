@@ -4,7 +4,7 @@ export class ExecutableContextProvider extends ContextProvider {
     constructor(config) {
         super({
             ...config,
-            domain: "executable"
+            domain: "executable",
         });
     }
 }
