@@ -45,13 +45,14 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
-        "@exabyte-io/code.js": "2022.11.11-0",
+        "@exabyte-io/code.js": "git+https://github.com/Exabyte-io/code.js.git#feat/SOF-6077",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "2022.6.15-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
         "eslint-config-prettier": "^8.5.0",
+        "eslint-import-resolver-exports": "^1.0.0-beta.3",
         "eslint-plugin-import": "2.25.3",
         "eslint-plugin-jsdoc": "37.1.0",
         "eslint-plugin-jsx-a11y": "6.5.1",
