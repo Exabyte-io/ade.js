@@ -6,7 +6,7 @@ import {
     MaterialsSetContextMixin,
     MethodDataContextMixin,
     WorkflowContextMixin,
-} from "@exabyte-io/code.js/dist/context";
+} from "@exabyte-io/code.js/context";
 import { Made } from "@exabyte-io/made.js";
 import { mix } from "mixwith";
 

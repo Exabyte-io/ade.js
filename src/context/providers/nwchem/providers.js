@@ -3,7 +3,7 @@ import {
     MaterialContextMixin,
     MethodDataContextMixin,
     WorkflowContextMixin,
-} from "@exabyte-io/code.js/dist/context";
+} from "@exabyte-io/code.js/context";
 import { Made } from "@exabyte-io/made.js";
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
 import lodash from "lodash";
