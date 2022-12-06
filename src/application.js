@@ -1,5 +1,5 @@
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
-import { NamedDefaultableInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
+import { NamedDefaultableInMemoryEntity } from "@exabyte-io/code.js/entity";
 import lodash from "lodash";
 
 import { Executable } from "./executable";
