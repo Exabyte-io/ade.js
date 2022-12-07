@@ -1,0 +1,28 @@
+#  structure:
+#  folder:  application name
+#  file:    version
+#  1st lvl: executable
+#  2nd lvl: build
+#  3rd lvl: model path
+#  4th lvl: model options
+pw.x:
+  default:
+    dft/lda:
+      functional:
+        - spz
+      functionalComponent:
+        - slater
+        - pz81
+        - vwn
+    dft/gga:
+      functional:
+        - pbe
+        - pbesol
+        - pw91
+      functionalComponents:
+        - pbe-x
+        - pbe-c
+        - pbesol-x
+        - pbesol-c
+        - pw91-x
+        - pw91-c
