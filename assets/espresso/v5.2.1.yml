@@ -7,22 +7,19 @@
 #  4th lvl: model options
 pw.x:
   default:
+    dft:
+      vdWCorrection:
+        dft-d3
     dft/lda:
       functional:
-        - spz
-      functionalComponent:
-        - slater
-        - pz81
-        - vwn
+        - slug: spz
+          name: PZ
+        - slug: spw92
+          name: PW
+        - slug: svwn1
+          name: VWN1
     dft/gga:
       functional:
-        - pbe
-        - pbesol
-        - pw91
-      functionalComponents:
-        - pbe-x
-        - pbe-c
-        - pbesol-x
-        - pbesol-c
-        - pw91-x
-        - pw91-c
+        - slug: pbe
+        - slug: pbesol
+        - slug: pw91
