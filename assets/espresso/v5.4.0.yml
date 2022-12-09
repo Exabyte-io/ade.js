@@ -1,0 +1,24 @@
+#  structure:
+#  folder:  application name
+#  file:    version
+#  1st lvl: executable
+#  2nd lvl: build
+#  3rd lvl: model path
+#  4th lvl: model options
+include: v5.2.1.yml
+pw.x:
+  default:
+    dft/lda:
+      functional:
+        - slug: spz
+          name: PZ
+        - slug: spw92
+          isRemoved: true
+          name: pw
+        - slug: svwn1
+          name: vwn
+    dft/gga:
+      isRemoved: true
+      functional:
+        - slug: rvv10
+
