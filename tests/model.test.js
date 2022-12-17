@@ -86,7 +86,7 @@ describe("Model features", () => {
         const filtered = getModelTreeByApplication({
             tree: MODEL_TREE,
             appName: "espresso",
-            version: "v5.4.0",
+            version: "5.4.0",
             executable: "pw.x",
             build: "default",
         });

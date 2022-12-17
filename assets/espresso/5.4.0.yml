@@ -5,7 +5,7 @@
 #  2nd lvl: build
 #  3rd lvl: model node path
 #  4th lvl: model node data
-include: v5.2.1.yml
+include: 5.2.1.yml
 pw.x:
   default:
     - path: dft/lda/spz

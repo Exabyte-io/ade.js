@@ -1,6 +1,6 @@
 module.exports = {
     espresso: {
-        "v5.2.1": {
+        "5.2.1": {
             "pw.x": {
                 default: [
                     { path: "dft" },
@@ -21,7 +21,7 @@ module.exports = {
                 ],
             },
         },
-        "v5.4.0": {
+        "5.4.0": {
             "pw.x": {
                 default: [
                     { path: "dft" },
