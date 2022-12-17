@@ -3,23 +3,25 @@
 #  file:    version
 #  1st lvl: executable
 #  2nd lvl: build
-#  3rd lvl: model path
+#  3rd lvl: node path
 #  4th lvl: model options
 pw.x:
   default:
-    dft:
-      vdWCorrection:
-        dft-d3
-    dft/lda:
-      functional:
-        - slug: spz
+    - path: dft
+    - path: dft/lda
+    - path: dft/lda/spz
+      data:
+        functional:
           name: PZ
-        - slug: spw92
+    - path: dft/lda/spw92
+      data:
+        functional:
           name: PW
-        - slug: svwn1
-          name: VWN1
-    dft/gga:
-      functional:
-        - slug: pbe
-        - slug: pbesol
-        - slug: pw91
+    - path: dft/lda/svwn5
+      data:
+        functional:
+          name: VWN
+    - path: dft/gga
+    - path: dft/gga/pbe
+    - path: dft/gga/pbesol
+    - path: dft/gga/pw91
