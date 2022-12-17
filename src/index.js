@@ -11,6 +11,7 @@ import { ExecutableContextProvider } from "./context/providers";
 import { ContextProviderRegistry } from "./context/registry";
 import { Executable } from "./executable";
 import { Flavor } from "./flavor";
+import { getModelTreeByApplication } from "./model_features";
 import { Template } from "./template";
 import { getAllApplications, getApplication } from "./tree";
 
@@ -28,4 +29,5 @@ export {
     ExecutableContextProvider,
     ContextProviderRegistry,
     context,
+    getModelTreeByApplication,
 };
