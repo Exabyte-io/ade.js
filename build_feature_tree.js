@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
 const _ = require("lodash");
+const utils = require("./dist/utils");
 
 const ASSET_PATH = path.resolve(__dirname, "assets");
 const FEATURE_DATA = {};
@@ -26,61 +27,6 @@ const findKeys = (key, object) => {
     };
     iterate(object);
     return foundKeys;
-};
-
-/**
- * Merge two arrays containing objects with attribute `slug`
- * @param {Array} array - The array incoming data is merged into.
- * @param {Array} other - The array containing new (incoming) data.
- * @returns {Array} - The merged array.
- */
-const mergeArrayBySlugs = (array, other) => {
-    /* eslint-disable no-use-before-define */
-    const otherSlugs = other
-        .map((item) => (_.isPlainObject(item) ? item.slug : undefined))
-        .filter(Boolean);
-    const merged = array
-        .filter((item) => otherSlugs.includes(item.slug))
-        .map((item) =>
-            recursiveMerge(
-                item,
-                other.find((obj) => obj.slug === item.slug),
-            ),
-        )
-        .filter(Boolean);
-    return merged.concat(array.filter((item) => !otherSlugs.includes(item.slug)));
-    /* eslint-enable no-use-before-define */
-};
-
-/**
- * Recursively merge objects or arrays.
- * @param {Object|Array} target - The initial data structure to be merged into.
- * @param {Object|Array} source - The incoming data structure.
- * @returns {Object|Array|undefined} - The merged value.
- */
-const recursiveMerge = (target, source) => {
-    if ("isRemoved" in source && source.isRemoved) return undefined;
-    if (Array.isArray(target) && Array.isArray(source)) {
-        // attempt to merge by slugs
-        if (target.some((item) => "slug" in item)) {
-            return mergeArrayBySlugs(target, source);
-        }
-        return _.unionWith(target, source, _.isEqual);
-    }
-    const mergedObj = {};
-    Object.entries(source).forEach(([key, value]) => {
-        if (!(key in target)) {
-            mergedObj[key] = value;
-        } else if (_.isPlainObject(value)) {
-            mergedObj[key] = recursiveMerge(target[key], value);
-        } else if (Array.isArray(value)) {
-            mergedObj[key] = recursiveMerge(target[key], value);
-        } else {
-            mergedObj[key] = value;
-        }
-        return null;
-    });
-    return mergedObj;
 };
 
 /**
@@ -115,7 +61,7 @@ const loadYAMLWithReferences = (filePath, separator = "#") => {
             const [fileName, key = ""] = reference.split(separator);
             let resolved = loadYAMLWithReferences(path.resolve(currentDir, fileName));
             resolved = getByPath(resolved, key);
-            resolved = recursiveMerge(resolved, currObj);
+            resolved = utils.recursiveMerge(resolved, currObj);
             if (!parentObjPath) {
                 yamlObj = resolved;
             } else {
@@ -187,4 +133,8 @@ const getAssetData = (currPath) => {
 
 getAssetData(ASSET_PATH);
 
-fs.writeFileSync("./feature_data.js", `module.exports = ${JSON.stringify(FEATURE_DATA)}`, "utf8");
+fs.writeFileSync(
+    "./model_feature_data.js",
+    `module.exports = ${JSON.stringify(FEATURE_DATA)}`,
+    "utf8",
+);
