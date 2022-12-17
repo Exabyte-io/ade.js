@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-import modelFeatures from "../feature_data";
+import modelFeatures from "../model_feature_data";
 import { recursiveMerge } from "./utils";
 
 /**
@@ -10,9 +10,9 @@ import { recursiveMerge } from "./utils";
  * @param {Object[]} pathData - Array of objects containing path and node data.
  * @returns {Object[]} - The filtered tree (with possibly modified data).
  */
-export function filterTree(nodes, paths, pathData) {
+export function filterTree(nodes, paths, pathData = null) {
     return nodes.reduce((acc, node) => {
-        if (paths.includes(node.label)) {
+        if (paths.includes(node.label) || node.label === "root") {
             let modified = {};
             let data = pathData && pathData.find((item) => item.path === node.label)?.data;
             if (data) {
