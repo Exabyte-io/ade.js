@@ -4,28 +4,28 @@ import t from "t";
 import { filterTree, getModelTreeByApplication } from "../src/model_features";
 
 const MODEL_TREE = {
-    label: "root",
+    label: "",
     children: [
         {
-            parent: "root",
-            label: "dft",
+            parent: "",
+            label: "/dft",
             data: { type: { slug: "dft", name: "Density Functional Theory", default: "dft" } },
             children: [
                 {
-                    parent: "dft",
-                    label: "dft/lda",
+                    parent: "/dft",
+                    label: "/dft/lda",
                     data: { subtype: { slug: "lda", name: "Local Density Approximation" } },
                     children: [
                         {
-                            parent: "dft/lda",
-                            label: "dft/lda/spz",
+                            parent: "/dft/lda",
+                            label: "/dft/lda/spz",
                             data: { functional: { slug: "spz", name: "Slater-PZ" } },
                         },
                     ],
                 },
                 {
-                    parent: "dft",
-                    label: "dft/gga",
+                    parent: "/dft",
+                    label: "/dft/gga",
                     data: {
                         default: true,
                         subtype: {
@@ -36,8 +36,8 @@ const MODEL_TREE = {
                     },
                     children: [
                         {
-                            parent: "dft/gga",
-                            label: "dft/gga/pbe",
+                            parent: "/dft/gga",
+                            label: "/dft/gga/pbe",
                             data: { functional: { slug: "pbe", name: "PBE" } },
                         },
                     ],
@@ -45,13 +45,13 @@ const MODEL_TREE = {
             ],
         },
         {
-            parent: "root",
-            label: "ml",
+            parent: "",
+            label: "/ml",
             data: { type: { slug: "ml", name: "Machine Learning", default: "ml" } },
             children: [
                 {
-                    parent: "ml",
-                    label: "ml/re",
+                    parent: "/ml",
+                    label: "/ml/re",
                     data: { subtype: { slug: "re", name: "Regression" } },
                 },
             ],
@@ -60,10 +60,10 @@ const MODEL_TREE = {
 };
 
 describe("Model features", () => {
-    const paths = ["dft", "dft/lda"];
+    const paths = ["/dft", "/dft/lda"];
     const pathData = [
         {
-            path: "dft/lda",
+            path: "/dft/lda",
             data: {
                 additionalAttribute: "test",
                 subtype: {
@@ -78,7 +78,7 @@ describe("Model features", () => {
     });
     it("can be modified", () => {
         const tree = filterTree([MODEL_TREE], paths, pathData);
-        const modified = t.find(tree, (node) => node.label === "dft/lda");
+        const modified = t.find(tree, (node) => node.label === "/dft/lda");
         expect(modified.data).to.have.property("additionalAttribute", "test");
         expect(modified.data.subtype.slug).to.be.equal("lda-modified");
     });
@@ -90,8 +90,8 @@ describe("Model features", () => {
             executable: "pw.x",
             build: "default",
         });
-        const pbe = t.find(filtered, (node) => node.label === "dft/gga/pbe");
-        const re = t.find(filtered, (node) => node.label === "ml/re");
+        const pbe = t.find(filtered, (node) => node.label === "/dft/gga/pbe");
+        const re = t.find(filtered, (node) => node.label === "/ml/re");
         expect(pbe.data).to.have.property("functional");
         expect(re).to.be.undefined;
     });
