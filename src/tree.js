@@ -42,7 +42,7 @@ export function getApplication({ applicationsTree, name, version = null, build =
     const app = applicationsTree[name];
     // eslint-disable-next-line no-param-reassign
     if (!version) version = app.defaultVersion;
-    return app[version][build];
+    return app[version]?.[build];
 }
 
 const { applicationsTree } = getAllApplications(null);
