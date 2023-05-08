@@ -36,9 +36,7 @@
         "@babel/preset-react": "7.16.7",
         "@babel/register": "^7.16.0",
         "@babel/runtime-corejs3": "7.16.8",
-        "@exabyte-io/application-flavors.js": "2022.7.24-0",
-        "@exabyte-io/code.js": "2022.9.2-0",
-        "@exabyte-io/made.js": "2022.6.15-0",
+        "@exabyte-io/application-flavors.js": "2023.4.26-0",
         "@exabyte-io/periodic-table.js": "2022.6.8-0",
         "lodash": "^4.17.21",
         "mixwith": "^0.1.1",
@@ -47,21 +45,28 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
+        "@exabyte-io/code.js": "2022.11.11-0",
+        "@exabyte-io/eslint-config": "^2022.11.17-0",
+        "@exabyte-io/made.js": "2022.6.15-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
-        "eslint-config-prettier": "8.3.0",
-        "eslint-plugin-react": "7.30.0",
+        "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "2.25.3",
         "eslint-plugin-jsdoc": "37.1.0",
         "eslint-plugin-jsx-a11y": "6.5.1",
-        "eslint-plugin-prettier": "4.2.1",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-react": "7.30.0",
         "eslint-plugin-simple-import-sort": "7.0.0",
         "husky": "^7.0.4",
         "lint-staged": "^12.1.2",
         "mocha": "^9.1.3",
         "nyc": "^15.1.0",
         "prettier": "^2.7.1"
+    },
+    "peerDependencies": {
+        "@exabyte-io/code.js": "*",
+        "@exabyte-io/made.js": "*"
     },
     "engines": {
         "node": ">=12.0.0"

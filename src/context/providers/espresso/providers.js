@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import {
     JobContextMixin,
     MaterialContextMixin,
@@ -8,31 +9,65 @@ import {
 } from "@exabyte-io/code.js/dist/context";
 import { Made } from "@exabyte-io/made.js";
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
+import lodash from "lodash";
 import { mix } from "mixwith";
 import path from "path";
-import _ from "underscore";
 import s from "underscore.string";
 
 import { ExecutableContextProvider } from "../../providers";
 
 export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     MaterialContextMixin,
+    MaterialsContextMixin,
     MethodDataContextMixin,
     WorkflowContextMixin,
     JobContextMixin,
 ) {
     static Material = Made.Material;
 
-    get atomSymbols() {
-        return this.material.Basis.uniqueElements;
+    static atomSymbols(material) {
+        return material.Basis.uniqueElements;
     }
 
-    get atomicPositionsWithoutConstraints() {
-        return this.material.Basis.atomicPositions;
+    /** Returns the input text block for atomic positions WITH constraints.
+     */
+    static atomicPositionsWithConstraints(material) {
+        return material.Basis.atomicPositionsWithConstraints.join("\n");
     }
 
-    get atomicPositions() {
-        return this.material.Basis.atomicPositionsWithConstraints;
+    /** Returns the input text block for atomic positions
+     *  Note: does NOT include constraints
+     */
+    static atomicPositions(material) {
+        return material.Basis.atomicPositions.join("\n");
+    }
+
+    static NAT(material) {
+        return material.Basis.atomicPositions.length;
+    }
+
+    static NTYP(material) {
+        return material.Basis.uniqueElements.length;
+    }
+
+    buildQEPWXContext(material) {
+        const IBRAV = 0; // use CELL_PARAMETERS to define Bravais lattice
+
+        return {
+            IBRAV,
+            RESTART_MODE: this.RESTART_MODE,
+            ATOMIC_SPECIES: this.ATOMIC_SPECIES(material),
+            NAT: QEPWXContextProvider.NAT(material),
+            NTYP: QEPWXContextProvider.NTYP(material),
+            ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
+            ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: QEPWXContextProvider.atomicPositions(material),
+            CELL_PARAMETERS: QEPWXContextProvider.CELL_PARAMETERS(material),
+        };
+    }
+
+    getDataPerMaterial() {
+        if (!this.materials || this.materials.length <= 1) return {};
+        return { perMaterial: this.materials.map((material) => this.buildQEPWXContext(material)) };
     }
 
     /*
@@ -44,17 +79,9 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         // ECUTWFC = 40;
         // ECUTRHO = 200;
 
-        const IBRAV = 0;
-
         return {
-            IBRAV,
-            RESTART_MODE: this.RESTART_MODE,
-            NAT: this.atomicPositions.length,
-            NTYP: this.atomSymbols.length,
-            ATOMIC_POSITIONS: this.atomicPositions.join("\n"),
-            ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: this.atomicPositionsWithoutConstraints.join("\n"),
-            CELL_PARAMETERS: this.CELL_PARAMETERS,
-            ATOMIC_SPECIES: this.ATOMIC_SPECIES,
+            ...this.buildQEPWXContext(this.material),
+            ...this.getDataPerMaterial(),
         };
     }
 
@@ -66,16 +93,25 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return (this.methodData.pseudopotentials || []).find((p) => p.element === symbol);
     }
 
-    get ATOMIC_SPECIES() {
-        // atomic species with pseudopotentials
-        return _.map(this.atomSymbols, (symbol) => {
-            const pseudo = this.getPseudoBySymbol(symbol);
-            return QEPWXContextProvider.symbolToAtomicSpecie(symbol, pseudo);
-        }).join("\n");
+    /** Builds ATOMIC SPECIES block of pw.x input in the format
+     *  X   Mass_X   PseudoPot_X
+     *  where X            is the atom label
+     *        Mass_X       is the mass of element X [amu]
+     *        PseudoPot_X  is the pseudopotential filename associated with element X
+     *
+     *  Note: assumes this.methodData is defined
+     */
+    ATOMIC_SPECIES(material) {
+        return QEPWXContextProvider.atomSymbols(material)
+            .map((symbol) => {
+                const pseudo = this.getPseudoBySymbol(symbol);
+                return QEPWXContextProvider.symbolToAtomicSpecie(symbol, pseudo);
+            })
+            .join("\n");
     }
 
-    get CELL_PARAMETERS() {
-        return this.material.Lattice.vectorArrays
+    static CELL_PARAMETERS(material) {
+        return material.Lattice.vectorArrays
             .map((x) => {
                 return x
                     .map((y) => {
@@ -112,7 +148,10 @@ export class QENEBContextProvider extends mix(ExecutableContextProvider).with(
         });
 
         return {
-            ..._.omit(PWXContexts[0], ["ATOMIC_POSITIONS", "ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS"]),
+            ...lodash.omit(PWXContexts[0], [
+                "ATOMIC_POSITIONS",
+                "ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS",
+            ]),
             FIRST_IMAGE: PWXContexts[0].ATOMIC_POSITIONS,
             LAST_IMAGE: PWXContexts[PWXContexts.length - 1].ATOMIC_POSITIONS,
             INTERMEDIATE_IMAGES: PWXContexts.slice(1, PWXContexts.length - 1).map(

@@ -1,7 +1,6 @@
+/* eslint-disable new-cap */
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
-
 import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
-
 
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
@@ -11,11 +10,11 @@ import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
 export function getAllApplications(cls = null) {
     const applicationsTree = {};
     const applicationsArray = [];
-    allApplications.map((appName) => {
+    allApplications.forEach((appName) => {
         applicationsTree[appName] = {};
         const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
-        applicationsTree[appName]["defaultVersion"] = defaultVersion;
-        versions.map((options) => {
+        applicationsTree[appName].defaultVersion = defaultVersion;
+        versions.forEach((options) => {
             const { version } = options;
             if (!(version in applicationsTree[appName])) applicationsTree[appName][version] = {};
             const config = { ...appData, build, ...options };
@@ -28,7 +27,7 @@ export function getAllApplications(cls = null) {
             }
         });
     });
-    return { applicationsTree, applicationsArray }
+    return { applicationsTree, applicationsArray };
 }
 
 /**
@@ -41,7 +40,8 @@ export function getAllApplications(cls = null) {
  */
 export function getApplication({ applicationsTree, name, version = null, build = "Default" }) {
     const app = applicationsTree[name];
-    if (!version) version = app["defaultVersion"];
+    // eslint-disable-next-line no-param-reassign
+    if (!version) version = app.defaultVersion;
     return app[version][build];
 }
 
@@ -55,7 +55,12 @@ const { applicationsTree } = getAllApplications(null);
  * @returns {*}
  */
 export function getApplicationConfig({ name, version = null, build = "Default" }) {
-    return getApplication({ applicationsTree, name, version, build });
+    return getApplication({
+        applicationsTree,
+        name,
+        version,
+        build,
+    });
 }
 
 /**
@@ -66,7 +71,9 @@ export function getApplicationConfig({ name, version = null, build = "Default" }
  */
 export function getExecutableConfig({ appName, execName }) {
     const appTree = getAppTree(appName);
-    Object.entries(appTree).map(([name, exec]) => { exec.name = name });
+    Object.entries(appTree).forEach(([name, exec]) => {
+        exec.name = name;
+    });
     if (!execName) return getOneMatchFromObject(appTree, "isDefault", true);
     return appTree[execName];
 }
@@ -77,6 +84,7 @@ export function getExecutableConfig({ appName, execName }) {
  * @param execName
  * @param flavorName
  */
+// eslint-disable-next-line no-unused-vars
 export function getFlavorConfig({ appName, execName, flavorName }) {
     // TODO : reduce redundancy of object construction in getting flavors from executable
 }

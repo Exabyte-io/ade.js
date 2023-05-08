@@ -1,36 +1,35 @@
-import lodash from "lodash";
-import { getAppTree, getAppData, allApplications } from "@exabyte-io/application-flavors.js";
+import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
 import { NamedDefaultableInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
+import lodash from "lodash";
 
 import { Executable } from "./executable";
 import { getApplicationConfig, getExecutableConfig } from "./tree";
-
 
 export class Application extends NamedDefaultableInMemoryEntity {
     static Executable = Executable;
 
     constructor(config) {
         const staticConfig = getApplicationConfig(config);
-        super({...staticConfig, ...config});
+        super({ ...staticConfig, ...config });
     }
 
     // TODO: extract this from application-flavors "global" default config for espresso 5.4.0
     static get defaultConfig() {
         return {
-            name: 'espresso',
-            shortName: 'qe',
-            version: '5.4.0',
-            summary: 'Quantum Espresso',
-            build: 'Default',
-        }
+            name: "espresso",
+            shortName: "qe",
+            version: "5.4.0",
+            summary: "Quantum Espresso",
+            build: "Default",
+        };
     }
 
     static create(config) {
         return this.createFromNameVersionBuild(config);
     }
 
-    static createFromNameVersionBuild({name, version = null, build = "Default"}) {
-        return new Application({name, version, build});
+    static createFromNameVersionBuild({ name, version = null, build = "Default" }) {
+        return new Application({ name, version, build });
     }
 
     getExecutables() {
@@ -39,7 +38,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
 
     getBuilds() {
         const data = getAppData(this.prop("name"));
-        const {versions} = data;
+        const { versions } = data;
         const builds = ["Default"];
         versions.map((v) => v.build && builds.push(v.build));
         return lodash.uniq(builds);
@@ -47,7 +46,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
 
     getVersions() {
         const data = getAppData(this.prop("name"));
-        const {versions} = data;
+        const { versions } = data;
         const these = versions.map((v) => v.version);
         return lodash.uniq(these);
     }
@@ -61,7 +60,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
             getExecutableConfig({
                 appName: this.prop("name"),
                 execName: name,
-            })
+            }),
         );
     }
 
@@ -74,8 +73,9 @@ export class Application extends NamedDefaultableInMemoryEntity {
     }
 
     // override upon inheritance
+    // eslint-disable-next-line class-methods-use-this
     get allowedModelTypes() {
-        return []
+        return [];
     }
 
     get summary() {
@@ -96,11 +96,9 @@ export class Application extends NamedDefaultableInMemoryEntity {
 
     get executables() {
         const tree = getAppTree(this.prop("name"));
-        return Object.keys(tree).map(key => {
-            return new this.constructor.Executable(
-                Object.assign({}, tree[key], {name: key})
-            )
-        })
+        return Object.keys(tree).map((key) => {
+            return new this.constructor.Executable({ ...tree[key], name: key });
+        });
     }
 
     get hasAdvancedComputeOptions() {
@@ -110,5 +108,4 @@ export class Application extends NamedDefaultableInMemoryEntity {
     get isLicensed() {
         return this.prop("isLicensed");
     }
-
 }

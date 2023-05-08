@@ -1,13 +1,18 @@
-import { allApplications, allTemplates, allowedResults, allowedMonitors } from "@exabyte-io/application-flavors.js";
+import {
+    allApplications,
+    allowedMonitors,
+    allowedResults,
+    allTemplates,
+} from "@exabyte-io/application-flavors.js";
 
 import { Application } from "./application";
+import * as context from "./context";
+import { ExecutableContextProvider } from "./context/providers";
+import { ContextProviderRegistry } from "./context/registry";
 import { Executable } from "./executable";
 import { Flavor } from "./flavor";
 import { Template } from "./template";
 import { getAllApplications, getApplication } from "./tree";
-import { ExecutableContextProvider } from "./context/providers";
-import * as context from "./context";
-import { ContextProviderRegistry } from "./context/registry";
 
 export {
     Application,
@@ -23,4 +28,4 @@ export {
     ExecutableContextProvider,
     ContextProviderRegistry,
     context,
-}
+};
