@@ -90,7 +90,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     }
 
     getPseudoBySymbol(symbol) {
-        return (this.methodData.pseudopotentials || []).find((p) => p.element === symbol);
+        return (this.methodData.pseudo || []).find((p) => p.element === symbol);
     }
 
     /** Builds ATOMIC SPECIES block of pw.x input in the format
