@@ -124,7 +124,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
 
     static symbolToAtomicSpecie(symbol, pseudo) {
         const el = PERIODIC_TABLE[symbol];
-        const filename = pseudo.filename || path.basename(pseudo.path) || "";
+        const filename = pseudo?.filename || path.basename(pseudo?.path || "");
         return el ? s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) : undefined;
     }
 }
