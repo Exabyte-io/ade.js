@@ -40,9 +40,9 @@ export function getAllApplications(cls = null) {
  */
 export function getApplication({ applicationsTree, name, version = null, build = "Default" }) {
     const app = applicationsTree[name];
-    // eslint-disable-next-line no-param-reassign
-    if (!version) version = app.defaultVersion;
-    return app[version][build];
+    const version_ = version || app.defaultVersion;
+    if (!app[version_]) console.log(`Version ${version_} not available for ${name} !`);
+    return app[version_]?.[build];
 }
 
 const { applicationsTree } = getAllApplications(null);
