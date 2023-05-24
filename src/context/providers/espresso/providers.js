@@ -11,6 +11,7 @@ import { Made } from "@exabyte-io/made.js";
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
 import lodash from "lodash";
 import { mix } from "mixwith";
+import path from "path";
 import s from "underscore.string";
 
 import { ExecutableContextProvider } from "../../providers";
@@ -123,9 +124,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
 
     static symbolToAtomicSpecie(symbol, pseudo) {
         const el = PERIODIC_TABLE[symbol];
-        const filename = pseudo
-            ? lodash.get(pseudo, "filename", s.strRightBack(pseudo.path, "/"))
-            : "";
+        const filename = pseudo?.filename || path.basename(pseudo?.path || "");
         return el ? s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) : undefined;
     }
 }
