@@ -38,13 +38,13 @@
         "@babel/runtime-corejs3": "7.16.8",
         "@exabyte-io/application-flavors.js": "2023.4.26-0",
         "@exabyte-io/periodic-table.js": "2022.6.8-0",
-        "lodash": "^4.17.21",
         "mixwith": "^0.1.1",
-        "swig": "^1.4.2",
-        "underscore": "^1.13.3",
-        "underscore.string": "^3.3.4"
+        "swig": "^1.4.2"
     },
     "devDependencies": {
+        "lodash": "^4.17.21",
+        "underscore": "^1.13.3",
+        "underscore.string": "^3.3.4",
         "@exabyte-io/code.js": "2022.11.11-0",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "2022.6.15-0",
@@ -66,7 +66,10 @@
     },
     "peerDependencies": {
         "@exabyte-io/code.js": "*",
-        "@exabyte-io/made.js": "*"
+        "@exabyte-io/made.js": "*",
+        "lodash": "*",
+        "underscore": "*",
+        "underscore.string": "*"
     },
     "engines": {
         "node": ">=12.0.0"
