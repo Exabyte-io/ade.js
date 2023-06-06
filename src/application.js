@@ -13,6 +13,8 @@ export class Application extends NamedDefaultableInMemoryEntity {
         super({ ...staticConfig, ...config });
     }
 
+    static _useDeepClone = true;
+
     // TODO: extract this from application-flavors "global" default config for espresso 5.4.0
     static get defaultConfig() {
         return {
