@@ -8,6 +8,8 @@ export class Flavor extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItem
         return this.prop("input", []);
     }
 
+    static _useDeepClone = true;
+
     // TODO : prevent this from running in client
     get inputAsTemplates() {
         // get template from application-flavors rather than lookup by ID

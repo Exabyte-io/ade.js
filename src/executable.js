@@ -6,6 +6,8 @@ import { Flavor } from "./flavor";
 export class Executable extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItemsMixin) {
     static Flavor = Flavor;
 
+    static _useDeepClone = true;
+
     toJSON(exclude) {
         return super.toJSON(["flavors"].concat(exclude));
     }

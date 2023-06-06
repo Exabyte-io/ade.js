@@ -9,6 +9,8 @@ import { ContextProviderRegistry } from "./context/registry";
 export class Template extends NamedInMemoryEntity {
     static providerRegistry = ContextProviderRegistry;
 
+    static _useDeepClone = true;
+
     get isManuallyChanged() {
         return this.prop("isManuallyChanged", false);
     }
