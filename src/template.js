@@ -1,6 +1,6 @@
 import { allTemplates } from "@exabyte-io/application-flavors.js";
-import { NamedInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
-import { deepClone } from "@exabyte-io/code.js/dist/utils";
+import { NamedInMemoryEntity } from "@exabyte-io/code.js/entity";
+import { deepClone } from "@exabyte-io/code.js/utils";
 import jinja from "swig";
 import _ from "underscore";
 

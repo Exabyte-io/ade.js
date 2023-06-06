@@ -1,4 +1,4 @@
-import { NamedDefaultableInMemoryEntity, RuntimeItemsMixin } from "@exabyte-io/code.js/dist/entity";
+import { NamedDefaultableInMemoryEntity, RuntimeItemsMixin } from "@exabyte-io/code.js/entity";
 import { mix } from "mixwith";
 
 import { Flavor } from "./flavor";
