@@ -35,7 +35,12 @@ export class Executable extends mix(NamedDefaultableInMemoryEntity).with(Runtime
     }
 
     getFlavorByName(name) {
-        return this.getEntityByName(this.flavors, "flavor", name);
+        let flavor = this.getEntityByName(this.flavors, "flavor", name);
+        if (!flavor) {
+            console.warn(`Could not find flavor '${name}'! Using default instead.`);
+            flavor = this.getEntityByName(this.flavors, "flavor", undefined); // extracts default flavor
+        }
+        return flavor;
     }
 
     getFlavorByConfig(config) {
