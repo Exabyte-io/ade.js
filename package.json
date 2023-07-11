@@ -35,7 +35,7 @@
         "@babel/preset-env": "7.16.4",
         "@babel/preset-react": "7.16.7",
         "@babel/register": "^7.16.0",
-        "@babel/runtime-corejs3": "7.16.8",      
+        "@babel/runtime-corejs3": "7.16.8",
         "@exabyte-io/periodic-table.js": "2022.6.8-0",
         "@exabyte-io/application-flavors.js": "2023.7.11-0",
         "lodash": "^4.17.21",
