@@ -96,9 +96,21 @@ export class Application extends NamedDefaultableInMemoryEntity {
 
     get executables() {
         const tree = getAppTree(this.prop("name"));
-        return Object.keys(tree).map((key) => {
+        const executableList = Object.keys(tree).map((key) => {
             return new this.constructor.Executable({ ...tree[key], name: key });
         });
+        const allowedExecutables = executableList.filter((exe) => {
+            const { supportedApplicationVersions } = exe._json;
+            return (
+                !supportedApplicationVersions ||
+                (supportedApplicationVersions &&
+                    supportedApplicationVersions.includes(this.prop("version")))
+            );
+        });
+        return allowedExecutables;
+        // return Object.keys(tree).map((key) => {
+        //     return new this.constructor.Executable({ ...tree[key], name: key });
+        // });
     }
 
     get hasAdvancedComputeOptions() {
