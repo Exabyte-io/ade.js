@@ -100,7 +100,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
             return new this.constructor.Executable({ ...tree[key], name: key });
         });
         const allowedExecutables = executableList.filter((exe) => {
-            const { supportedApplicationVersions } = exe._json;
+            const { supportedApplicationVersions } = exe.toJSON();
             return (
                 !supportedApplicationVersions ||
                 (supportedApplicationVersions &&
@@ -108,9 +108,6 @@ export class Application extends NamedDefaultableInMemoryEntity {
             );
         });
         return allowedExecutables;
-        // return Object.keys(tree).map((key) => {
-        //     return new this.constructor.Executable({ ...tree[key], name: key });
-        // });
     }
 
     get hasAdvancedComputeOptions() {

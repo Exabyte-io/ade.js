@@ -47,7 +47,7 @@
         "@exabyte-io/code.js": "2023.7.11-0",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "2022.6.15-0",
-        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/application-flavors#f5067567d53111b4783912a7b05707a2f4dbb8e6",
+        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/application-flavors#02cb9dd629101c74567c662d6ccb7277613ff27e",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
