@@ -44,10 +44,10 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
-        "@exabyte-io/code.js": "2023.7.11-0",
+        "@exabyte-io/code.js": "Exabyte-io/code.js.git#1a0884db8d778d146c91d31234291221788c5881",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "2022.6.15-0",
-        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/application-flavors.git#138b6dedfd0b268eab7b7406d2daf0f93ba6724a",
+        "@exabyte-io/application-flavors.js": "Exabyte-io/application-flavors#5d07ceb1b1a081ecca0e4dec00b6334600d39f45",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
