@@ -41,4 +41,16 @@ export class Executable extends mix(NamedDefaultableInMemoryEntity).with(Runtime
     getFlavorByConfig(config) {
         return config ? this.getFlavorByName(config.name) : this.defaultFlavor;
     }
+
+    getFlavorByApplicationVersion(version) {
+        const filteredFlavors = this.flavors.filter((flavor) => {
+            const { supportedApplicationVersions } = flavor.toJSON();
+            return (
+                !supportedApplicationVersions ||
+                (supportedApplicationVersions && supportedApplicationVersions.includes(version))
+            );
+        });
+
+        return filteredFlavors;
+    }
 }
