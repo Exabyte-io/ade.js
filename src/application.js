@@ -101,8 +101,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
                 const { supportedApplicationVersions } = tree[key];
                 return (
                     !supportedApplicationVersions ||
-                    (supportedApplicationVersions &&
-                        supportedApplicationVersions.includes(this.prop("version")))
+                    supportedApplicationVersions.includes(this.prop("version"))
                 );
             })
             .map((key) => {
