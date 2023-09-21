@@ -44,10 +44,10 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
-        "@exabyte-io/code.js": "2023.8.10-0",
+        "@exabyte-io/application-flavors.js": "2023.9.20-0",
+        "@exabyte-io/code.js": "^2023.9.21-6",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "2022.6.15-0",
-        "@exabyte-io/application-flavors.js": "2023.9.20-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
