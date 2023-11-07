@@ -18,7 +18,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
         return {
             name: "espresso",
             shortName: "qe",
-            version: "5.4.0",
+            version: "6.3",
             summary: "Quantum Espresso",
             build: "Default",
         };
