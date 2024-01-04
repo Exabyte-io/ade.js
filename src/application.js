@@ -116,4 +116,9 @@ export class Application extends NamedDefaultableInMemoryEntity {
     get isLicensed() {
         return this.prop("isLicensed");
     }
+
+    get isUsingMaterial() {
+        const materialUsingApplications = ["vasp", "nwchem", "espresso"];
+        return materialUsingApplications.includes(this.name);
+    }
 }
