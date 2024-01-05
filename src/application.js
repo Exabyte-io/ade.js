@@ -118,7 +118,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
     }
 
     get isUsingMaterial() {
-        const materialUsingApplications = ["vasp", "nwchem", "espresso"];
+        const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
         return materialUsingApplications.includes(this.name);
     }
 }
