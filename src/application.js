@@ -1,11 +1,11 @@
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
-import { NamedDefaultableInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
+import { NamedDefaultableHashedInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
 import lodash from "lodash";
 
 import { Executable } from "./executable";
 import { getApplicationConfig, getExecutableConfig } from "./tree";
 
-export class Application extends NamedDefaultableInMemoryEntity {
+export class Application extends NamedDefaultableHashedInMemoryEntity {
     static Executable = Executable;
 
     constructor(config) {
@@ -120,5 +120,13 @@ export class Application extends NamedDefaultableInMemoryEntity {
     get isUsingMaterial() {
         const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
         return materialUsingApplications.includes(this.name);
+    }
+
+    getHashObject() {
+        return {
+            name: this.name,
+            version: this.version,
+            build: this.build,
+        };
     }
 }
