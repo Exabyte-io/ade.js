@@ -1,9 +1,12 @@
-import { NamedDefaultableInMemoryEntity, RuntimeItemsMixin } from "@exabyte-io/code.js/dist/entity";
+import {
+    NamedDefaultableHashedInMemoryEntity,
+    RuntimeItemsMixin,
+} from "@exabyte-io/code.js/dist/entity";
 import { mix } from "mixwith";
 
 import { Flavor } from "./flavor";
 
-export class Executable extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItemsMixin) {
+export class Executable extends mix(NamedDefaultableHashedInMemoryEntity).with(RuntimeItemsMixin) {
     static Flavor = Flavor;
 
     toJSON(exclude) {
@@ -49,5 +52,16 @@ export class Executable extends mix(NamedDefaultableInMemoryEntity).with(Runtime
         });
 
         return filteredFlavors;
+    }
+
+    getHashObject() {
+        return {
+            name: this.name,
+            applicationId: this.applicationId,
+            results: this.results,
+            monitors: this.monitors,
+            preProcessors: this.preProcessors,
+            postProcessors: this.postProcessors,
+        };
     }
 }

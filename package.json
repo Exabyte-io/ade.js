@@ -44,7 +44,7 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
-        "@exabyte-io/code.js": "2023.11.22-0",
+        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#7b6e48bde4b887ca6270435c8c84fc63bac71abf",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "2022.6.15-0",
         "@exabyte-io/application-flavors.js": "2024.1.23-1",

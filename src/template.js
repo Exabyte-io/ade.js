@@ -1,12 +1,20 @@
 import { allTemplates } from "@exabyte-io/application-flavors.js";
 import { NamedInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
+import {
+    HashedEntityMixin,
+    HashedInputArrayMixin,
+} from "@exabyte-io/code.js/dist/entity/mixins/hash";
 import { deepClone } from "@exabyte-io/code.js/dist/utils";
+import { mix } from "mixwith";
 import jinja from "swig";
 import _ from "underscore";
 
 import { ContextProviderRegistry } from "./context/registry";
 
-export class Template extends NamedInMemoryEntity {
+export class Template extends mix(NamedInMemoryEntity).with(
+    HashedEntityMixin,
+    HashedInputArrayMixin,
+) {
     static providerRegistry = ContextProviderRegistry;
 
     get isManuallyChanged() {
@@ -154,6 +162,16 @@ export class Template extends NamedInMemoryEntity {
         return {
             ...externalContext,
             ...this.getDataFromProvidersForRenderingContext(externalContext),
+        };
+    }
+
+    getHashObject() {
+        return {
+            content: Template.hashContent(this.content),
+            applicationName: this.applicationName,
+            applicationVersion: this.applicationVersion,
+            executableName: this.executableName,
+            contextProviders: this.contextProviders,
         };
     }
 }

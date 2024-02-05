@@ -1,9 +1,12 @@
-import { NamedDefaultableInMemoryEntity, RuntimeItemsMixin } from "@exabyte-io/code.js/dist/entity";
+import {
+    NamedDefaultableHashedInMemoryEntity,
+    RuntimeItemsMixin,
+} from "@exabyte-io/code.js/dist/entity";
 import { mix } from "mixwith";
 
 import { Template } from "./template";
 
-export class Flavor extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItemsMixin) {
+export class Flavor extends mix(NamedDefaultableHashedInMemoryEntity).with(RuntimeItemsMixin) {
     get input() {
         return this.prop("input", []);
     }
@@ -30,5 +33,18 @@ export class Flavor extends mix(NamedDefaultableInMemoryEntity).with(RuntimeItem
 
     get disableRenderMaterials() {
         return this.prop("isMultiMaterial", false);
+    }
+
+    getHashObject() {
+        return {
+            applicationName: this.applicationName,
+            executableName: this.executableName,
+            executableId: this.executableId,
+            input: this.input,
+            results: this.results,
+            monitors: this.monitors,
+            preProcessors: this.preProcessors,
+            postProcessors: this.postProcessors,
+        };
     }
 }
