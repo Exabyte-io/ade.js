@@ -44,7 +44,7 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
-        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#7b6e48bde4b887ca6270435c8c84fc63bac71abf",
+        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#87c1ddfd731798de978e6c579efad44d5738ac6a",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "2022.6.15-0",
         "@exabyte-io/application-flavors.js": "2024.1.23-1",
@@ -65,7 +65,7 @@
         "prettier": "^2.7.1"
     },
     "peerDependencies": {
-        "@exabyte-io/code.js": "*",
+        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#87c1ddfd731798de978e6c579efad44d5738ac6a",
         "@exabyte-io/made.js": "*",
         "@exabyte-io/application-flavors.js": "*"
     },
