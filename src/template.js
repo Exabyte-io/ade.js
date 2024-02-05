@@ -1,9 +1,9 @@
 import { allTemplates } from "@exabyte-io/application-flavors.js";
-import { NamedInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
 import {
     HashedEntityMixin,
     HashedInputArrayMixin,
-} from "@exabyte-io/code.js/dist/entity/mixins/hash";
+    NamedInMemoryEntity,
+} from "@exabyte-io/code.js/dist/entity";
 import { deepClone } from "@exabyte-io/code.js/dist/utils";
 import { mix } from "mixwith";
 import jinja from "swig";
