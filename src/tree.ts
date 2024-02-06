@@ -1,13 +1,14 @@
 /* eslint-disable new-cap */
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
+import type { ApplicationConfig } from "@exabyte-io/application-flavors.js";
 
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
  * @param cls {*} optional class to use to create applications
  * @returns {Object} containing applications and applicationConfigs
  */
-export function getAllApplications(cls = null) {
+export function getAllApplications(cls: InstanceType<any> | null) {
     const applicationsTree = {};
     const applicationsArray = [];
     allApplications.forEach((appName) => {
@@ -38,7 +39,7 @@ export function getAllApplications(cls = null) {
  * @param build {String} the build to use (optional, defaults to Default)
  * @return {*} an application
  */
-export function getApplication({ applicationsTree, name, version = null, build = "Default" }) {
+export function getApplication({ applicationsTree, name, version = null, build = "Default" }: {applicationsTree: any, name: string, version: string | null, build: string}) {
     const app = applicationsTree[name];
     const version_ = version || app.defaultVersion;
     if (!app[version_]) console.log(`Version ${version_} not available for ${name} !`);
@@ -54,7 +55,7 @@ const { applicationsTree } = getAllApplications(null);
  * @param build
  * @returns {*}
  */
-export function getApplicationConfig({ name, version = null, build = "Default" }) {
+export function getApplicationConfig({ name, version = null, build = "Default" }: ApplicationConfig) {
     return getApplication({
         applicationsTree,
         name,
@@ -69,7 +70,7 @@ export function getApplicationConfig({ name, version = null, build = "Default" }
  * @param execName {String|null} if not provided, find the executable with isDefault === true
  * @returns {*}
  */
-export function getExecutableConfig({ appName, execName }) {
+export function getExecutableConfig({ appName, execName }: { appName: string, execName: string | null }) {
     const appTree = getAppTree(appName);
     Object.entries(appTree).forEach(([name, exec]) => {
         exec.name = name;
