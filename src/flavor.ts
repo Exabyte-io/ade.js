@@ -4,22 +4,20 @@ import {
 } from "@exabyte-io/code.js/dist/entity";
 
 import { Template } from "./template";
+import { Constructor } from "@exabyte-io/code.js/dist/context";
 
-const RuntimeItemsEntity = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
+const FlavorBase = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
+type FlavorBase = InstanceType<typeof FlavorBase>;
 
-type FlavorBaseEntity = InstanceType<typeof RuntimeItemsEntity>
-
-export type FlavorBaseEntityConstructor<T extends FlavorBaseEntity = FlavorBaseEntity> = new (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...args: any[]
-) => T;
+export const Flavor = FlavorMixin(FlavorBase);
+export type Flavor = InstanceType<typeof Flavor>;
 
 type NamedTemplate = {name: string} | {templateName: string};
 
 export function FlavorMixin<
-    T extends FlavorBaseEntityConstructor = FlavorBaseEntityConstructor,
+    T extends Constructor<FlavorBase> = Constructor<FlavorBase>,
 >(superclass: T) {
-    return class extends superclass {
+    return class AdeFlavor extends superclass {
         get input() {
             return this.prop<NamedTemplate[]>("input", []);
         }
@@ -39,7 +37,7 @@ export function FlavorMixin<
             });
         }
 
-        getInputAsRenderedTemplates(context) {
+        getInputAsRenderedTemplates(context: object) {
             return this.inputAsTemplates.map((t) => t.getRenderedJSON(context));
         }
 
@@ -48,11 +46,3 @@ export function FlavorMixin<
         }
     }
 }
-
-export const Flavor = FlavorMixin(
-    RuntimeItemsMixin(
-        NamedDefaultableHashedInMemoryEntity
-    )
-);
-
-export type Flavor = InstanceType<typeof Flavor>;

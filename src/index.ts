@@ -3,6 +3,7 @@ import {
     allowedMonitors,
     allowedResults,
     allTemplates,
+// @ts-ignore
 } from "@exabyte-io/application-flavors.js";
 
 import { Application } from "./application";

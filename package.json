@@ -3,11 +3,12 @@
     "version": "0.0.0",
     "description": "Application DEfinitions",
     "scripts": {
+        "prepublishOnly": "rm -rf lib; npm run transpile",
+        "transpile": "tsc",
+        "postinstall": "npm run transpile",
         "test": "nyc --reporter=text mocha --recursive --bail --require @babel/register/lib --require tests/setup.js tests",
         "lint": "eslint src tests && prettier --write src tests",
         "lint:fix": "eslint --fix --cache src tests && prettier --write src tests",
-        "transpile": "babel --out-dir dist src",
-        "postinstall": "npm run transpile",
         "prettier": "prettier --check src tests",
         "prepare": "husky install"
     },
@@ -16,11 +17,6 @@
         "url": "https://github.com/Exabyte-io/ade.js.git"
     },
     "main": "dist/index.js",
-    "files": [
-        "/dist",
-        "/src",
-        ".babelrc"
-    ],
     "author": "Exabyte Inc.",
     "bugs": {
         "url": "https://github.com/Exabyte-io/ade.js/issues"
@@ -30,24 +26,32 @@
     "dependencies": {
         "@babel/cli": "7.16.0",
         "@babel/core": "7.16.0",
+        "@exabyte-io/periodic-table.js": "2022.6.8-0",
+        "@types/chai": "^4.3.5",
+        "@types/mocha": "^10.0.1",
+        "@types/node": "^20.4.2",
+        "@types/underscore": "^1.11.6",
+        "@types/underscore.string": "^0.0.40",
+        "lodash": "^4.17.21",
+        "mixwith": "^0.1.1",
+        "swig": "^1.4.2",
+        "typescript": "^5.3.3",
+        "underscore": "^1.13.3",
+        "underscore.string": "^3.3.4"
+    },
+    "devDependencies": {
         "@babel/eslint-parser": "7.16.3",
         "@babel/plugin-proposal-class-properties": "7.16.0",
         "@babel/preset-env": "7.16.4",
         "@babel/preset-react": "7.16.7",
         "@babel/register": "^7.16.0",
         "@babel/runtime-corejs3": "7.16.8",
-        "@exabyte-io/periodic-table.js": "2022.6.8-0",
-        "lodash": "^4.17.21",
-        "mixwith": "^0.1.1",
-        "swig": "^1.4.2",
-        "underscore": "^1.13.3",
-        "underscore.string": "^3.3.4"
-    },
-    "devDependencies": {
-        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#87c1ddfd731798de978e6c579efad44d5738ac6a",
-        "@exabyte-io/eslint-config": "^2022.11.17-0",
-        "@exabyte-io/made.js": "2022.6.15-0",
         "@exabyte-io/application-flavors.js": "2024.1.23-1",
+        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#20d456ad83bd59b5a075bc499513fd076f46c6ce",
+        "@exabyte-io/eslint-config": "^2022.11.17-0",
+        "@exabyte-io/made.js": "^2024.1.8-0",
+        "@typescript-eslint/eslint-plugin": "^5.9.1",
+        "@typescript-eslint/parser": "^5.9.1",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
@@ -65,7 +69,7 @@
         "prettier": "^2.7.1"
     },
     "peerDependencies": {
-        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#87c1ddfd731798de978e6c579efad44d5738ac6a",
+        "@exabyte-io/code.js": "*",
         "@exabyte-io/made.js": "*",
         "@exabyte-io/application-flavors.js": "*"
     },

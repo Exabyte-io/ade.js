@@ -1,3 +1,4 @@
+// @ts-ignore
 import { allTemplates } from "@exabyte-io/application-flavors.js";
 import {
     HashedEntityMixin,
@@ -5,27 +6,24 @@ import {
     NamedInMemoryEntity,
 } from "@exabyte-io/code.js/dist/entity";
 import { deepClone } from "@exabyte-io/code.js/dist/utils";
+// @ts-ignore
 import jinja from "swig";
 import _ from "underscore";
 
 import { ContextProviderRegistry } from "./context/registry";
-import { ContextProvider } from "@exabyte-io/code.js/dist/context";
+import { Constructor, ContextProvider } from "@exabyte-io/code.js/dist/context";
+import { TemplateData } from "./types";
 
-// create entity instances to extract type
-const HashedEntity = HashedEntityMixin(NamedInMemoryEntity);
-const HashedInputArrayEntity = HashedInputArrayMixin(HashedEntity);
+const TemplateBase = HashedInputArrayMixin(HashedEntityMixin(NamedInMemoryEntity));
+type TemplateBase = InstanceType<typeof TemplateBase>;
 
-type TemplateBaseEntity = InstanceType<typeof NamedInMemoryEntity & typeof HashedInputArrayEntity>;
-
-export type TemplateBaseEntityConstructor<T extends TemplateBaseEntity = TemplateBaseEntity> = new (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...args: any[]
-) => T;
+export const Template = TemplateMixin(TemplateBase);
+export type Template = InstanceType<typeof Template>;
 
 export function TemplateMixin<
-    T extends TemplateBaseEntityConstructor = TemplateBaseEntityConstructor,
+    T extends Constructor<TemplateBase> = Constructor<TemplateBase>,
 >(superclass: T) {
-    return class extends superclass {
+    return class AdeTemplate extends superclass {
         static providerRegistry = ContextProviderRegistry;
 
         get isManuallyChanged() {
@@ -36,7 +34,7 @@ export function TemplateMixin<
             return this.prop<string>("content");
         }
 
-        setContent(text) {
+        setContent(text: string) {
             return this.setProp("content", text);
         }
 
@@ -44,7 +42,7 @@ export function TemplateMixin<
             return this.prop<string>("rendered") || this.content;
         }
 
-        setRendered(text) {
+        setRendered(text: string) {
             return this.setProp("rendered", text);
         }
 
@@ -64,7 +62,7 @@ export function TemplateMixin<
             this.setProp("contextProviders", this.contextProviders.push(provider));
         }
 
-        removeContextProvider(provider) {
+        removeContextProvider(provider: ContextProvider) {
             this.setProp(
                 "contextProviders",
                 this.contextProviders.filter(
@@ -73,7 +71,7 @@ export function TemplateMixin<
             );
         }
 
-        render(externalContext) {
+        render(externalContext: object) {
             const renderingContext = this.getRenderingContext(externalContext);
             let template, rendered;
             if (!this.isManuallyChanged) {
@@ -88,7 +86,7 @@ export function TemplateMixin<
             }
         }
 
-        getRenderedJSON(context) {
+        getRenderedJSON(context: object) {
             this.render(context);
             return this.toJSON();
         }
@@ -96,14 +94,14 @@ export function TemplateMixin<
         // Remove "bulky" items and JSON stringify before passing it to rendering engine (eg. jinja) to compile.
         // This way the context should still be passed in full to contextProviders, but not to final text template.
         // eslint-disable-next-line class-methods-use-this
-        _cleanRenderingContext(object) {
+        _cleanRenderingContext(object: { [key: string]: any }) {
             const { job, ...clone } = object;
             return deepClone(clone);
         }
 
         static fromFlavor(appName: string, execName: string, inputName: string): Template {
             const filtered = allTemplates.filter(
-                (temp) =>
+                (temp: TemplateData) =>
                     temp.applicationName === appName &&
                     temp.executableName === execName &&
                     temp.name === inputName,
@@ -142,7 +140,9 @@ export function TemplateMixin<
                 const context = contextProvider.yieldDataForRendering();
                 Object.keys(context).forEach((key) => {
                     // merge context keys if they are objects otherwise override them.
+                    // @ts-ignore
                     result[key] = _.isObject(result[key])
+                        // @ts-ignore
                         ? { ...result[key], ...context[key] }
                         : context[key];
                 });
@@ -176,13 +176,3 @@ export function TemplateMixin<
         }
     }
 }
-
-export const Template = TemplateMixin(
-    HashedEntityMixin(
-        HashedInputArrayMixin(
-            NamedInMemoryEntity
-        ),
-    )
-);
-
-export type Template = InstanceType<typeof Template>;

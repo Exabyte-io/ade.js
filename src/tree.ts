@@ -1,24 +1,25 @@
-/* eslint-disable new-cap */
+// @ts-ignore
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
-import type { ApplicationConfig } from "@exabyte-io/application-flavors.js";
+import { AppTree, ApplicationArray, ApplicationConfig, ApplicationData, ApplicationTree, ExecutableData, VersionData } from "./types";
 
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
- * @param cls {*} optional class to use to create applications
- * @returns {Object} containing applications and applicationConfigs
+ * @param cls optional class to use to create applications
+ * @returns containing applications and applicationConfigs
  */
 export function getAllApplications(cls: InstanceType<any> | null) {
-    const applicationsTree = {};
-    const applicationsArray = [];
-    allApplications.forEach((appName) => {
-        applicationsTree[appName] = {};
-        const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
+    const applicationsTree: ApplicationTree = {};
+    const applicationsArray: ApplicationArray = [];
+    allApplications.forEach((appName: string) => {
+        // applicationsTree[appName] = {};
+        const { versions, defaultVersion, ...appData } = getAppData(appName) as ApplicationData;
         applicationsTree[appName].defaultVersion = defaultVersion;
-        versions.forEach((options) => {
-            const { version } = options;
+        versions.forEach(({ version, build, ...versionData }) => {
+            // add version to applicationsTree if it doesn't exist
             if (!(version in applicationsTree[appName])) applicationsTree[appName][version] = {};
-            const config = { ...appData, build, ...options };
+            // convert to class instance if cls is provided otherwise use the config
+            const config: ApplicationConfig = { ...appData, version, build, ...versionData };
             if (cls) {
                 applicationsTree[appName][version][build] = new cls(config);
                 applicationsArray.push(new cls(config));
@@ -33,29 +34,60 @@ export function getAllApplications(cls: InstanceType<any> | null) {
 
 /**
  * @summary Get an application from the constructed applications
- * @param applicationsTree {Object} See getAllApplications applicationsTree object structure
- * @param name {String} name of the application
- * @param version {String|null} version of the application (optional, defaults to defaultVersion)
- * @param build {String} the build to use (optional, defaults to Default)
- * @return {*} an application
+ * @param applicationsTree See getAllApplications applicationsTree object structure
+ * @param name name of the application
+ * @param version version of the application (optional, defaults to defaultVersion)
+ * @param build the build to use (optional, defaults to Default)
+ * @return an application
  */
-export function getApplication({ applicationsTree, name, version = null, build = "Default" }: {applicationsTree: any, name: string, version: string | null, build: string}) {
+export function getApplication({
+    applicationsTree,
+    name,
+    version = undefined,
+    build = "Default"
+}: {
+    applicationsTree: ApplicationTree,
+    name: string
+    version?: string
+    build?: string
+}): ApplicationConfig | undefined {
     const app = applicationsTree[name];
+    if (!app) {
+        console.log(`Application ${name} not found!`);
+        return undefined;
+    }
     const version_ = version || app.defaultVersion;
-    if (!app[version_]) console.log(`Version ${version_} not available for ${name} !`);
-    return app[version_]?.[build];
+    const appData = app[version_][build];
+    if (!appData) {
+        console.log(`Version ${version_} not available for ${name}!`);
+        return undefined;
+    }
+    return {
+        ...app,
+        ...appData,
+        version: appData.version, // Explicitly set version and build in case they are different in app and versionData
+        build: appData.build || build
+    };
 }
 
 const { applicationsTree } = getAllApplications(null);
 
 /**
  * @summary Get pre-defined application config from an already generated applicationsTree of configs
- * @param name
- * @param version {String|null}
- * @param build
- * @returns {*}
+ * @param name name of the application
+ * @param version version of the application (optional, defaults to defaultVersion)
+ * @param build the build to use (optional, defaults to Default)
+ * @returns an application config
  */
-export function getApplicationConfig({ name, version = null, build = "Default" }: ApplicationConfig) {
+export function getApplicationConfig({
+    name,
+    version = undefined,
+    build = "Default"
+}: {
+    name: string,
+    version?: string,
+    build?: string
+}) {
     return getApplication({
         applicationsTree,
         name,
@@ -66,26 +98,22 @@ export function getApplicationConfig({ name, version = null, build = "Default" }
 
 /**
  * @summary Get executable config
- * @param appName {String} name of application to get executable for
- * @param execName {String|null} if not provided, find the executable with isDefault === true
- * @returns {*}
+ * @param appName name of application to get executable for
+ * @param execName if not provided, find the executable with isDefault === true
+ * @returns an executable config
  */
-export function getExecutableConfig({ appName, execName }: { appName: string, execName: string | null }) {
-    const appTree = getAppTree(appName);
+export function getExecutableConfig({ appName, execName = undefined }: { appName: string, execName: string | undefined }):  ExecutableData | undefined {
+    const appTree: AppTree = getAppTree(appName);
     Object.entries(appTree).forEach(([name, exec]) => {
         exec.name = name;
     });
-    if (!execName) return getOneMatchFromObject(appTree, "isDefault", true);
+    if (!execName) {
+        console.log("No executable name provided, using default executable");
+        return getOneMatchFromObject(appTree, "isDefault", true) as ExecutableData | undefined;
+    }
+    if (!appTree[execName]) {
+        console.log(`Executable ${execName} not found for application ${appName}`);
+        return undefined;
+    }
     return appTree[execName];
-}
-
-/**
- * @summary Get flavor config
- * @param appName
- * @param execName
- * @param flavorName
- */
-// eslint-disable-next-line no-unused-vars
-export function getFlavorConfig({ appName, execName, flavorName }) {
-    // TODO : reduce redundancy of object construction in getting flavors from executable
 }

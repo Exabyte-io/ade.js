@@ -1,31 +1,28 @@
+// @ts-ignore
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
 import { NamedDefaultableHashedInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
+import { type Constructor } from "@exabyte-io/code.js/dist/context";
+
 import lodash from "lodash";
 
 import { Executable } from "./executable";
 import { getApplicationConfig, getExecutableConfig } from "./tree";
+import { ApplicationConfig, ApplicationData } from "./types";
 
-export type ApplicationConfig = {
-    name: string;
-    version?: string;
-    build?: string;
-};
+type ApplicationBase = InstanceType<typeof NamedDefaultableHashedInMemoryEntity>;
 
-type ApplicationBaseEntity = InstanceType<typeof NamedDefaultableHashedInMemoryEntity>;
-
-export type ApplicationBaseEntityConstructor<T extends ApplicationBaseEntity = ApplicationBaseEntity> = new (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...args: any[]
-) => T;
-
+// @ts-ignore
 export function ApplicationMixin<
-    T extends ApplicationBaseEntityConstructor = ApplicationBaseEntityConstructor,
+    T extends Constructor<ApplicationBase> = Constructor<ApplicationBase>
 >(superclass: T) {
-    return class extends superclass {
+    return class AdeApplication extends superclass {
         static Executable = Executable;
 
-        constructor(...config: any[]) {
+        constructor(...args: any[]) {
+            const config = args[0] as ApplicationConfig;
+            if (!config || typeof config.name !== "string") throw new Error("Invalid application configuration object.");
             const staticConfig = getApplicationConfig(config);
+            if (!staticConfig) throw new Error(`Application "${config.name} (${config.version}-${config.build})" is not supported.`);
             super({ ...staticConfig, ...config });
         }
 
@@ -40,12 +37,24 @@ export function ApplicationMixin<
             };
         }
 
-        static create(config) {
+        static create(config: {
+            name: string,
+            version?: string,
+            build?: string
+        }) {
             return this.createFromNameVersionBuild(config);
         }
 
-        static createFromNameVersionBuild({ name, version = null, build = "Default" }: {name: string, version?: string | null, build?: string}) {
-            return new Application({ name, version, build });
+        static createFromNameVersionBuild({
+            name,
+            version = undefined,
+            build = "Default"
+        }: {
+            name: string,
+            version?: string,
+            build?: string
+        }) {
+            return new AdeApplication({ name, version, build });
         }
 
         getExecutables() {
@@ -53,7 +62,7 @@ export function ApplicationMixin<
         }
 
         getBuilds() {
-            const data = getAppData(this.prop("name"));
+            const data = getAppData(this.prop("name")) as ApplicationData;
             const { versions } = data;
             const builds = ["Default"];
             versions.map((v) => v.build && builds.push(v.build));
@@ -61,7 +70,7 @@ export function ApplicationMixin<
         }
 
         getVersions() {
-            const data = getAppData(this.prop("name"));
+            const data = getAppData(this.prop("name")) as ApplicationData;
             const { versions } = data;
             const these: string[] = versions.map((v) => v.version);
             return lodash.uniq(these);
@@ -71,8 +80,8 @@ export function ApplicationMixin<
             return allApplications;
         }
 
-        getExecutableByName(name: string | null = null) {
-            return new Application.Executable(
+        getExecutableByName(name?: string) {
+            return new AdeApplication.Executable(
                 getExecutableConfig({
                     appName: this.prop("name"),
                     execName: name,
@@ -121,7 +130,7 @@ export function ApplicationMixin<
                     );
                 })
                 .map((key) => {
-                    return new Application.Executable({ ...tree[key], name: key });
+                    return new AdeApplication.Executable({ ...tree[key], name: key });
                 });
         }
 
@@ -140,8 +149,5 @@ export function ApplicationMixin<
     }
 }
 
-export const Application = ApplicationMixin(
-    NamedDefaultableHashedInMemoryEntity,
-);
-
+export const Application = ApplicationMixin(NamedDefaultableHashedInMemoryEntity);
 export type Application = InstanceType<typeof Application>;

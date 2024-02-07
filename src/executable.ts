@@ -3,31 +3,32 @@ import {
     RuntimeItemsMixin,
 } from "@exabyte-io/code.js/dist/entity";
 import { Flavor } from "./flavor";
+import { Constructor } from "@exabyte-io/code.js/dist/context";
+import { FlavorData } from "./types";
 
-const RuntimeItemsEntity = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
-type ExecutableBaseEntity = InstanceType<typeof RuntimeItemsEntity>;
+const ExecutableBase = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
+type ExecutableBase = InstanceType<typeof ExecutableBase>;
 
-export type ExecutableBaseEntityConstructor<T extends ExecutableBaseEntity = ExecutableBaseEntity> = new (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...args: any[]
-) => T;
+export const Executable = ExecutableMixin(ExecutableBase);
+export type Executable = InstanceType<typeof Executable>;
 
 export function ExecutableMixin<
-    T extends ExecutableBaseEntityConstructor = ExecutableBaseEntityConstructor,
+    T extends Constructor<ExecutableBase> = Constructor<ExecutableBase>,
 >(superclass: T) {
-    return class extends superclass {
+    return class AdeExecutable extends superclass {
         static Flavor = Flavor;
 
+        // @ts-ignore
         toJSON(exclude) {
             return super.toJSON(["flavors"].concat(exclude));
         }
 
         get flavorsTree() {
-            return this.prop<Flavor[]>("flavors");
+            return this.prop<Record<string, FlavorData>>("flavors");
         }
 
         get flavors() {
-            return Object.keys(this.flavorsTree).map((key) => {
+            return Object.keys(this.flavorsTree).map((key: string) => {
                 return AdeExecutable.Flavor.create({
                     ...this.flavorsTree[key],
                     name: key,
@@ -37,7 +38,7 @@ export function ExecutableMixin<
         }
 
         get flavorsFromTree() {
-            return Object.keys(this.flavorsTree).map((key) => {
+            return Object.keys(this.flavorsTree).map((key: string) => {
                 return new AdeExecutable.Flavor({ ...this.flavorsTree[key], name: key });
             });
         }
@@ -47,14 +48,14 @@ export function ExecutableMixin<
         }
 
         getFlavorByName(name?: string | null) {
-            return this.getEntityByName(this.flavors, "flavor", name) as Flavor;
+            return name ? this.getEntityByName(this.flavors, "flavor", name) as Flavor : undefined;
         }
 
         getFlavorByConfig(config?: {name: string}) {
             return config ? this.getFlavorByName(config.name) : this.defaultFlavor;
         }
 
-        getFlavorsByApplicationVersion(version) {
+        getFlavorsByApplicationVersion(version: string) {
             const filteredFlavors = this.flavors.filter((flavor) => {
                 const supportedApplicationVersions = flavor.prop<string[]>("supportedApplicationVersions");
                 return !supportedApplicationVersions || supportedApplicationVersions.includes(version);
@@ -64,11 +65,3 @@ export function ExecutableMixin<
         }
     }
 }
-
-export const Executable = ExecutableMixin(
-    RuntimeItemsMixin(
-        NamedDefaultableHashedInMemoryEntity
-    )
-);
-
-export type Executable = InstanceType<typeof Executable>;
