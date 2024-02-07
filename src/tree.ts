@@ -12,10 +12,11 @@ export function getAllApplications(cls: InstanceType<any> | null) {
     const applicationsTree: ApplicationTree = {};
     const applicationsArray: ApplicationArray = [];
     allApplications.forEach((appName: string) => {
-        // applicationsTree[appName] = {};
+        // @ts-expect-error instantiating an empty object
+        applicationsTree[appName] = {};
         const { versions, defaultVersion, ...appData } = getAppData(appName) as ApplicationData;
         applicationsTree[appName].defaultVersion = defaultVersion;
-        versions.forEach(({ version, build, ...versionData }) => {
+        versions.forEach(({ version, build = "Default", ...versionData }) => {
             // add version to applicationsTree if it doesn't exist
             if (!(version in applicationsTree[appName])) applicationsTree[appName][version] = {};
             // convert to class instance if cls is provided otherwise use the config

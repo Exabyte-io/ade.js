@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import {
+    Constructor,
     JobContextMixin,
     MaterialContextMixin,
     MaterialsContextMixin,
@@ -8,49 +9,56 @@ import {
     WorkflowContextMixin,
 } from "@exabyte-io/code.js/dist/context";
 import { Made } from "@exabyte-io/made.js";
+// @ts-expect-error periodic-table.js is not typed
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
 import lodash from "lodash";
-import { mix } from "mixwith";
 import path from "path";
 import s from "underscore.string";
 
 import { ExecutableContextProvider } from "../../providers";
 
-export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
-    MaterialContextMixin,
-    MaterialsContextMixin,
-    MethodDataContextMixin,
-    WorkflowContextMixin,
-    JobContextMixin,
-) {
+const QEPWXContextProviderBase = JobContextMixin(
+    WorkflowContextMixin(
+        MethodDataContextMixin(
+            MaterialsContextMixin<Constructor, Made.Material>(
+                MaterialContextMixin<Constructor, Made.Material>(ExecutableContextProvider)
+            )
+        )
+    )
+)
+export class QEPWXContextProvider extends QEPWXContextProviderBase {
     static Material = Made.Material;
 
-    static atomSymbols(material) {
+    get materials() {
+        return this._materials as Made.Material[];
+    }
+
+    static atomSymbols(material: Made.Material) {
         return material.Basis.uniqueElements;
     }
 
     /** Returns the input text block for atomic positions WITH constraints.
      */
-    static atomicPositionsWithConstraints(material) {
+    static atomicPositionsWithConstraints(material: Made.Material) {
         return material.Basis.atomicPositionsWithConstraints.join("\n");
     }
 
     /** Returns the input text block for atomic positions
      *  Note: does NOT include constraints
      */
-    static atomicPositions(material) {
+    static atomicPositions(material: Made.Material) {
         return material.Basis.atomicPositions.join("\n");
     }
 
-    static NAT(material) {
+    static NAT(material: Made.Material) {
         return material.Basis.atomicPositions.length;
     }
 
-    static NTYP(material) {
+    static NTYP(material: Made.Material) {
         return material.Basis.uniqueElements.length;
     }
 
-    buildQEPWXContext(material) {
+    buildQEPWXContext(material: Made.Material) {
         const IBRAV = 0; // use CELL_PARAMETERS to define Bravais lattice
 
         return {
@@ -89,8 +97,8 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return this.job.parentJob || this.workflow.hasRelaxation ? "restart" : "from_scratch";
     }
 
-    getPseudoBySymbol(symbol) {
-        return (this.methodData.pseudo || []).find((p) => p.element === symbol);
+    getPseudoBySymbol(symbol: string) {
+        return (this.methodData.pseudo || []).find((p: {element: string}) => p.element === symbol);
     }
 
     /** Builds ATOMIC SPECIES block of pw.x input in the format
@@ -101,7 +109,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
      *
      *  Note: assumes this.methodData is defined
      */
-    ATOMIC_SPECIES(material) {
+    ATOMIC_SPECIES(material: Made.Material) {
         return QEPWXContextProvider.atomSymbols(material)
             .map((symbol) => {
                 const pseudo = this.getPseudoBySymbol(symbol);
@@ -110,7 +118,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
             .join("\n");
     }
 
-    static CELL_PARAMETERS(material) {
+    static CELL_PARAMETERS(material: Made.Material) {
         return material.Lattice.vectorArrays
             .map((x) => {
                 return x
@@ -122,26 +130,39 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
             .join("\n");
     }
 
-    static symbolToAtomicSpecie(symbol, pseudo) {
+    static symbolToAtomicSpecie(symbol: string, pseudo: { filename?: string, path?: string}) {
         const el = PERIODIC_TABLE[symbol];
         const filename = pseudo?.filename || path.basename(pseudo?.path || "");
         return el ? s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) : undefined;
     }
 }
 
-export class QENEBContextProvider extends mix(ExecutableContextProvider).with(
-    MaterialContextMixin,
-    MaterialsContextMixin,
-    MaterialsSetContextMixin,
-    MethodDataContextMixin,
-    WorkflowContextMixin,
-    JobContextMixin,
-) {
+const QENEBContextProviderBase = JobContextMixin(
+    WorkflowContextMixin(
+        MethodDataContextMixin(
+            MaterialsSetContextMixin(
+                MaterialsContextMixin<Constructor, Made.Material>(
+                    MaterialContextMixin<Constructor, Made.Material>(ExecutableContextProvider)
+                )
+            )
+        )
+    )
+)
+
+export class QENEBContextProvider extends QENEBContextProviderBase {
     static Material = Made.Material;
+
+    get material() {
+        return this._material as Made.Material;
+    }
+
+    get materials() {
+        return this._materials as Made.Material[];
+    }
 
     getData() {
         const sortedMaterials = this.sortMaterialsByIndexInSet(this.materials);
-        const PWXContexts = sortedMaterials.map((material) => {
+        const PWXContexts = sortedMaterials.map((material: Partial<Made.Material>) => {
             const context = { ...this.config.context, material };
             const config = { ...this.config, context };
             return new QEPWXContextProvider(config).getData();
@@ -155,7 +176,7 @@ export class QENEBContextProvider extends mix(ExecutableContextProvider).with(
             FIRST_IMAGE: PWXContexts[0].ATOMIC_POSITIONS,
             LAST_IMAGE: PWXContexts[PWXContexts.length - 1].ATOMIC_POSITIONS,
             INTERMEDIATE_IMAGES: PWXContexts.slice(1, PWXContexts.length - 1).map(
-                (data) => data.ATOMIC_POSITIONS,
+                (data: {ATOMIC_POSITIONS: string}) => data.ATOMIC_POSITIONS,
             ),
         };
     }

@@ -54,3 +54,5 @@ export type TemplateData = {
     applicationName?: string;
     executableName?: string;
 }
+
+export type NamedTemplate = {name: string} | {templateName: string};

@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import {
+    Constructor,
     JobContextMixin,
     MaterialContextMixin,
     MaterialsContextMixin,
@@ -8,21 +9,24 @@ import {
     WorkflowContextMixin,
 } from "@exabyte-io/code.js/dist/context";
 import { Made } from "@exabyte-io/made.js";
-import { mix } from "mixwith";
 
 import { ExecutableContextProvider } from "../../providers";
 
-export class VASPContextProvider extends mix(ExecutableContextProvider).with(
-    MaterialContextMixin,
-    MaterialsContextMixin,
-    MethodDataContextMixin,
-    WorkflowContextMixin,
-    JobContextMixin,
-) {
+const VASPContextProviderBase = JobContextMixin(
+    WorkflowContextMixin(
+        MethodDataContextMixin(
+            MaterialsContextMixin<Constructor,Made.Material>(
+                MaterialContextMixin<Constructor,Made.Material>(ExecutableContextProvider)
+            )
+        )
+    )
+);
+
+export class VASPContextProvider extends VASPContextProviderBase {
     static Material = Made.Material;
 
     // eslint-disable-next-line class-methods-use-this
-    buildVASPContext(material) {
+    buildVASPContext(material: Made.Material) {
         return {
             // TODO: figure out whether we need two separate POSCARS, maybe one is enough
             POSCAR: material.getAsPOSCAR(true, true),
@@ -32,7 +36,7 @@ export class VASPContextProvider extends mix(ExecutableContextProvider).with(
 
     getDataPerMaterial() {
         if (!this.materials || this.materials.length <= 1) return {};
-        return { perMaterial: this.materials.map((material) => this.buildVASPContext(material)) };
+        return { perMaterial: this.materials.map((material: Made.Material) => this.buildVASPContext(material)) };
     }
 
     /*
@@ -51,19 +55,24 @@ export class VASPContextProvider extends mix(ExecutableContextProvider).with(
     }
 }
 
-export class VASPNEBContextProvider extends mix(ExecutableContextProvider).with(
-    MaterialContextMixin,
-    MaterialsContextMixin,
-    MaterialsSetContextMixin,
-    MethodDataContextMixin,
-    WorkflowContextMixin,
-    JobContextMixin,
-) {
+const VASPNEBContextProviderBase = JobContextMixin(
+    WorkflowContextMixin(
+        MethodDataContextMixin(
+            MaterialsSetContextMixin(
+                MaterialsContextMixin<Constructor,Made.Material>(
+                    MaterialContextMixin<Constructor,Made.Material>(ExecutableContextProvider)
+                )
+            )
+        )
+    )
+);
+
+export class VASPNEBContextProvider extends VASPNEBContextProviderBase {
     static Material = Made.Material;
 
     getData() {
         const sortedMaterials = this.sortMaterialsByIndexInSet(this.materials);
-        const VASPContexts = sortedMaterials.map((material) => {
+        const VASPContexts = sortedMaterials.map((material: Partial<Made.Material>) => {
             const context = { ...this.config.context, material };
             const config = { ...this.config, context };
             return new VASPContextProvider(config).getData();
@@ -73,7 +82,7 @@ export class VASPNEBContextProvider extends mix(ExecutableContextProvider).with(
             FIRST_IMAGE: VASPContexts[0].POSCAR_WITH_CONSTRAINTS,
             LAST_IMAGE: VASPContexts[VASPContexts.length - 1].POSCAR_WITH_CONSTRAINTS,
             INTERMEDIATE_IMAGES: VASPContexts.slice(1, VASPContexts.length - 1).map(
-                (data) => data.POSCAR_WITH_CONSTRAINTS,
+                (data: {POSCAR_WITH_CONSTRAINTS: string}) => data.POSCAR_WITH_CONSTRAINTS,
             ),
         };
     }

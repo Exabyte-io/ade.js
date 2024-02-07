@@ -1,24 +1,28 @@
 import {
+    Constructor,
     JobContextMixin,
     MaterialContextMixin,
     MethodDataContextMixin,
     WorkflowContextMixin,
 } from "@exabyte-io/code.js/dist/context";
 import { Made } from "@exabyte-io/made.js";
+// @ts-expect-error periodic-table.js is not typed
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
 import lodash from "lodash";
-import { mix } from "mixwith";
 import _ from "underscore";
 import s from "underscore.string";
 
-import { ExecutableContextProvider } from "../../providers.ts";
+import { ExecutableContextProvider } from "../../providers";
 
-export class NWChemTotalEnergyContextProvider extends mix(ExecutableContextProvider).with(
-    MaterialContextMixin,
-    MethodDataContextMixin,
-    WorkflowContextMixin,
-    JobContextMixin,
-) {
+const NWChemTotalEnergyContextProviderBase = JobContextMixin(
+    WorkflowContextMixin(
+        MethodDataContextMixin(
+            MaterialContextMixin<Constructor, Made.Material>(ExecutableContextProvider)
+        )
+    )
+)
+
+export class NWChemTotalEnergyContextProvider extends NWChemTotalEnergyContextProviderBase {
     static Material = Made.Material;
 
     get atomSymbols() {
@@ -70,7 +74,7 @@ export class NWChemTotalEnergyContextProvider extends mix(ExecutableContextProvi
         }).join("\n");
     }
 
-    static symbolToAtomicSpecies(symbol, pseudo) {
+    static symbolToAtomicSpecies(symbol: string, pseudo?: {path: string}) {
         const el = PERIODIC_TABLE[symbol];
         const filename = pseudo
             ? lodash.get(pseudo, "filename", s.strRightBack(pseudo.path, "/"))

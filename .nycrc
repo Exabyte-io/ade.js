@@ -1,8 +1,9 @@
 {
     "all": true,
-    "include": [
-        "src/**/*.js",
-        "src/**/*.jsx"
-    ]
+    "extension": [".ts"],
+    "require": ["ts-node/register"],
+    "include": ["src/**/*.ts", "src/**/*.tsx"],
+    "exclude": ["dist"],
+    "sourceMap": true,
+    "instrument": true
 }
-
