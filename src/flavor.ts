@@ -7,6 +7,7 @@ import { Template as AdeTemplate } from "./template";
 import { NamedTemplate } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
 import { AnyObject } from "@exabyte-io/code.js/dist/entity/in_memory";
+import { ExecutionUnitInputItemSchemaForPhysicsBasedSimulationEngines, TemplateSchema1 } from "@exabyte-io/code.js/dist/types";
 
 const Base = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
 type FlavorBaseEntity = InstanceType<typeof Base>;
@@ -18,13 +19,13 @@ export function FlavorMixin<
     return class Flavor extends superclass {
         static Template = Template;
 
-        get input(): NamedTemplate[] {
-            return this.prop<NamedTemplate[]>("input", []);
+        get input() {
+            return this.prop<(ExecutionUnitInputItemSchemaForPhysicsBasedSimulationEngines & {templateName?: string})[]>("input", []);
         }
 
         get inputAsTemplates() {
             return this.input.map((input) => {
-                const templateName = 'name' in input ? input.name : input.templateName;
+                const templateName = 'templateName' in input && input.templateName ? input.templateName : input.name;
                 const template = Flavor.Template.fromFlavor(
                     this.prop("applicationName"),
                     this.prop("executableName"),
