@@ -4,7 +4,6 @@ import {
 } from "@exabyte-io/code.js/dist/entity";
 
 import { Template as AdeTemplate } from "./template";
-import { NamedTemplate } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
 import { AnyObject } from "@exabyte-io/code.js/dist/entity/in_memory";
 import { ExecutionUnitInputItemSchemaForPhysicsBasedSimulationEngines, TemplateSchema1 } from "@exabyte-io/code.js/dist/types";

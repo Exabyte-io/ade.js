@@ -14,13 +14,7 @@ export type ApplicationData = {
     versions: VersionData[];
 }
 
-export type ApplicationTree = Record<string, {
-    defaultVersion: string;
-} & Record<string, Record<string, ApplicationConfig>>>;
-
 export type ApplicationConfig = Omit<ApplicationData, "versions" | "defaultVersion"> & VersionData;
-
-export type ApplicationArray = ApplicationConfig[];
 
 export type AppTree = {
     [applicationName: string]: ExecutableData;
@@ -54,5 +48,3 @@ export type TemplateData = {
     applicationName?: string;
     executableName?: string;
 }
-
-export type NamedTemplate = {name: string} | {templateName: string};
