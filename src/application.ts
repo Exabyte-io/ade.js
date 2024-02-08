@@ -4,17 +4,18 @@ import { NamedDefaultableHashedInMemoryEntity } from "@exabyte-io/code.js/dist/e
 
 import lodash from "lodash";
 
-import { Executable } from "./executable";
+import { Executable as AdeExecutable } from "./executable";
 import { getApplicationConfig, getExecutableConfig } from "./tree";
 import { ApplicationConfig, ApplicationData } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
 
 const Base = NamedDefaultableHashedInMemoryEntity;
-type ApplicationBaseEntity = InstanceType<typeof Base>;
+abstract class ApplicationBaseEntity extends Base {};
 
 export function ApplicationMixin<
+    E extends Constructor<AdeExecutable> = Constructor<AdeExecutable>,
     T extends Constructor<ApplicationBaseEntity> = Constructor<ApplicationBaseEntity>,
->(superclass: T) {
+>(superclass: T, Executable: E) {
     return class Application extends superclass {
         static Executable = Executable;
 
@@ -41,7 +42,7 @@ export function ApplicationMixin<
             name: string,
             version?: string,
             build?: string
-        }) {
+        }): Application {
             return this.createFromNameVersionBuild(config);
         }
 
@@ -53,7 +54,7 @@ export function ApplicationMixin<
             name: string,
             version?: string,
             build?: string
-        }) {
+        }): Application {
             return new Application({ name, version, build });
         }
 
@@ -61,7 +62,7 @@ export function ApplicationMixin<
             return this.executables;
         }
 
-        getBuilds() {
+        getBuilds(): string[] {
             const data = getAppData(this.prop("name")) as ApplicationData;
             const { versions } = data;
             const builds = ["Default"];
@@ -69,14 +70,14 @@ export function ApplicationMixin<
             return lodash.uniq(builds);
         }
 
-        getVersions() {
+        getVersions(): string[] {
             const data = getAppData(this.prop("name")) as ApplicationData;
             const { versions } = data;
             const these: string[] = versions.map((v) => v.version);
             return lodash.uniq(these);
         }
 
-        static getUniqueAvailableNames() {
+        static getUniqueAvailableNames(): string[] {
             return allApplications;
         }
 
@@ -103,20 +104,20 @@ export function ApplicationMixin<
             return [];
         }
 
-        get summary() {
-            return this.prop("summary");
+        get summary(): string {
+            return this.prop<string>("summary");
         }
 
-        get version() {
-            return this.prop("version");
+        get version(): string {
+            return this.prop<string>("version");
         }
 
-        get build() {
-            return this.prop("build");
+        get build(): string {
+            return this.prop<string>("build");
         }
 
-        get shortName() {
-            return this.prop("shortName", this.prop("name"));
+        get shortName(): string {
+            return this.prop<string>("shortName", this.prop<string>("name"));
         }
 
         get executables() {
@@ -134,21 +135,21 @@ export function ApplicationMixin<
                 });
         }
 
-        get hasAdvancedComputeOptions() {
-            return this.prop("hasAdvancedComputeOptions");
+        get hasAdvancedComputeOptions(): boolean {
+            return this.prop<boolean>("hasAdvancedComputeOptions", false);
         }
 
-        get isLicensed() {
-            return this.prop("isLicensed");
+        get isLicensed(): boolean {
+            return this.prop<boolean>("isLicensed", false);
         }
 
-        get isUsingMaterial() {
+        get isUsingMaterial(): boolean {
             const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
             return materialUsingApplications.includes(this.name);
         }
     }
 }
 
-export const Application = ApplicationMixin(Base);
+export const Application = ApplicationMixin(Base, AdeExecutable);
 
-export type Application = InstanceType<typeof Application>;
+export type Application = typeof Application;

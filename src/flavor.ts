@@ -6,6 +6,7 @@ import {
 import { Template } from "./template";
 import { NamedTemplate } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
+import { AnyObject } from "@exabyte-io/code.js/dist/entity/in_memory";
 
 const Base = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
 type FlavorBaseEntity = InstanceType<typeof Base>;
@@ -13,12 +14,12 @@ type FlavorBaseEntity = InstanceType<typeof Base>;
 export function FlavorMixin<
     T extends Constructor<FlavorBaseEntity> = Constructor<FlavorBaseEntity>,
 >(superclass: T) {
-    return class Flavor extends RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity) {
-        get input() {
+    return class Flavor extends superclass {
+        get input(): NamedTemplate[] {
             return this.prop<NamedTemplate[]>("input", []);
         }
 
-        get inputAsTemplates() {
+        get inputAsTemplates(): Template[] {
             return this.input.map((input) => {
                 const templateName = 'name' in input ? input.name : input.templateName;
                 const template = Template.fromFlavor(
@@ -33,16 +34,16 @@ export function FlavorMixin<
             });
         }
 
-        getInputAsRenderedTemplates(context: object) {
+        getInputAsRenderedTemplates(context: object): AnyObject[] {
             return this.inputAsTemplates.map((t) => t.getRenderedJSON(context));
         }
 
-        get disableRenderMaterials() {
-            return this.prop("isMultiMaterial", false);
+        get disableRenderMaterials(): boolean {
+            return this.prop<boolean>("isMultiMaterial", false);
         }
     }
 }
 
 export const Flavor = FlavorMixin(Base);
 
-export type Flavor = InstanceType<typeof Flavor>;
+export type Flavor = typeof Flavor;

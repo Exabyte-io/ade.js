@@ -15,12 +15,12 @@ import { Constructor, ContextProvider } from "@exabyte-io/code.js/dist/context";
 import { TemplateData } from "./types";
 
 const Base = HashedInputArrayMixin(HashedEntityMixin(NamedInMemoryEntity))
-type TemplateBaseEntity = InstanceType<typeof Base>;
+abstract class TemplateBaseEntity extends Base {};
 
 export function TemplateMixin<
     T extends Constructor<TemplateBaseEntity> = Constructor<TemplateBaseEntity>,
 >(superclass: T) {
-    return class Template extends HashedInputArrayMixin(HashedEntityMixin(NamedInMemoryEntity)) {
+    return class Template extends superclass {
         static providerRegistry = ContextProviderRegistry;
 
         get isManuallyChanged() {

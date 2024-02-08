@@ -3,25 +3,31 @@ import {
     RuntimeItemsMixin,
 } from "@exabyte-io/code.js/dist/entity";
 
-import { Flavor } from "./flavor";
+import { Flavor as AdeFlavor } from "./flavor";
 import { FlavorData } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
+import { AnyObject } from "@exabyte-io/code.js/dist/entity/in_memory";
 
 const Base = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
 type ExecutableBaseEntity = InstanceType<typeof Base>;
 
 export function ExecutableMixin<
+    F extends AdeFlavor = AdeFlavor,
     T extends Constructor<ExecutableBaseEntity> = Constructor<ExecutableBaseEntity>,
->(superclass: T) {
-    return class Executable extends RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity) {
+>(superclass: T, Flavor: F) {
+    return class Executable extends superclass {
         static Flavor = Flavor;
 
-        // @ts-ignore
-        toJSON(exclude) {
-            return super.toJSON(["flavors"].concat(exclude));
+        constructor(...config: any[]) {
+            super(...config);
         }
 
-        get flavorsTree() {
+        // @ts-ignore
+        toJSON(exclude?: string[]): AnyObject {
+            return super.toJSON(["flavors"].concat(exclude ? exclude : []));
+        }
+
+        get flavorsTree(): Record<string, FlavorData> {
             return this.prop<Record<string, FlavorData>>("flavors");
         }
 
@@ -46,7 +52,7 @@ export function ExecutableMixin<
         }
 
         getFlavorByName(name?: string | null) {
-            return name ? this.getEntityByName(this.flavors, "flavor", name) as Flavor : undefined;
+            return name ? this.getEntityByName(this.flavors, "flavor", name) : undefined;
         }
 
         getFlavorByConfig(config?: {name: string}) {
@@ -64,6 +70,6 @@ export function ExecutableMixin<
     }
 }
 
-export const Executable = ExecutableMixin(Base);
+export const Executable = ExecutableMixin(Base, AdeFlavor);
 
 export type Executable = InstanceType<typeof Executable>;
