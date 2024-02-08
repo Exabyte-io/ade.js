@@ -23,7 +23,6 @@ export function ApplicationMixin<
             const config = args[0] as ApplicationConfig;
             if (!config || typeof config.name !== "string") throw new Error("Invalid application configuration object.");
             const staticConfig = getApplicationConfig(config);
-            if (!staticConfig) throw new Error(`Application "${config.name} (${config.version}-${config.build})" is not supported.`);
             super({ ...staticConfig, ...config });
         }
 
