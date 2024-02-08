@@ -7,136 +7,148 @@ import lodash from "lodash";
 import { Executable } from "./executable";
 import { getApplicationConfig, getExecutableConfig } from "./tree";
 import { ApplicationConfig, ApplicationData } from "./types";
+import { Constructor } from "@exabyte-io/code.js/dist/context";
 
-export class Application extends NamedDefaultableHashedInMemoryEntity {
-    static Executable = Executable;
+const Base = NamedDefaultableHashedInMemoryEntity;
+type ApplicationBaseEntity = InstanceType<typeof Base>;
 
-    constructor(...args: any[]) {
-        const config = args[0] as ApplicationConfig;
-        if (!config || typeof config.name !== "string") throw new Error("Invalid application configuration object.");
-        const staticConfig = getApplicationConfig(config);
-        if (!staticConfig) throw new Error(`Application "${config.name} (${config.version}-${config.build})" is not supported.`);
-        super({ ...staticConfig, ...config });
-    }
+export function ApplicationMixin<
+    T extends Constructor<ApplicationBaseEntity> = Constructor<ApplicationBaseEntity>,
+>(superclass: T) {
+    return class Application extends superclass {
+        static Executable = Executable;
 
-    // TODO: extract this from application-flavors "global" default config for espresso 5.4.0
-    static get defaultConfig() {
-        return {
-            name: "espresso",
-            shortName: "qe",
-            version: "6.3",
-            summary: "Quantum Espresso",
-            build: "Default",
-        };
-    }
+        constructor(...args: any[]) {
+            const config = args[0] as ApplicationConfig;
+            if (!config || typeof config.name !== "string") throw new Error("Invalid application configuration object.");
+            const staticConfig = getApplicationConfig(config);
+            if (!staticConfig) throw new Error(`Application "${config.name} (${config.version}-${config.build})" is not supported.`);
+            super({ ...staticConfig, ...config });
+        }
 
-    static create(config: {
-        name: string,
-        version?: string,
-        build?: string
-    }) {
-        return this.createFromNameVersionBuild(config);
-    }
+        // TODO: extract this from application-flavors "global" default config for espresso 5.4.0
+        static get defaultConfig() {
+            return {
+                name: "espresso",
+                shortName: "qe",
+                version: "6.3",
+                summary: "Quantum Espresso",
+                build: "Default",
+            };
+        }
 
-    static createFromNameVersionBuild({
-        name,
-        version = undefined,
-        build = "Default"
-    }: {
-        name: string,
-        version?: string,
-        build?: string
-    }) {
-        return new Application({ name, version, build });
-    }
+        static create(config: {
+            name: string,
+            version?: string,
+            build?: string
+        }) {
+            return this.createFromNameVersionBuild(config);
+        }
 
-    getExecutables() {
-        return this.executables;
-    }
+        static createFromNameVersionBuild({
+            name,
+            version = undefined,
+            build = "Default"
+        }: {
+            name: string,
+            version?: string,
+            build?: string
+        }) {
+            return new Application({ name, version, build });
+        }
 
-    getBuilds() {
-        const data = getAppData(this.prop("name")) as ApplicationData;
-        const { versions } = data;
-        const builds = ["Default"];
-        versions.map((v) => v.build && builds.push(v.build));
-        return lodash.uniq(builds);
-    }
+        getExecutables() {
+            return this.executables;
+        }
 
-    getVersions() {
-        const data = getAppData(this.prop("name")) as ApplicationData;
-        const { versions } = data;
-        const these: string[] = versions.map((v) => v.version);
-        return lodash.uniq(these);
-    }
+        getBuilds() {
+            const data = getAppData(this.prop("name")) as ApplicationData;
+            const { versions } = data;
+            const builds = ["Default"];
+            versions.map((v) => v.build && builds.push(v.build));
+            return lodash.uniq(builds);
+        }
 
-    static getUniqueAvailableNames() {
-        return allApplications;
-    }
+        getVersions() {
+            const data = getAppData(this.prop("name")) as ApplicationData;
+            const { versions } = data;
+            const these: string[] = versions.map((v) => v.version);
+            return lodash.uniq(these);
+        }
 
-    getExecutableByName(name?: string) {
-        return new Application.Executable(
-            getExecutableConfig({
-                appName: this.prop("name"),
-                execName: name,
-            }),
-        );
-    }
+        static getUniqueAvailableNames() {
+            return allApplications;
+        }
 
-    getExecutableByConfig(config: {name: string} | null | undefined = null) {
-        return config ? this.getExecutableByName(config.name) : this.defaultExecutable;
-    }
+        getExecutableByName(name?: string) {
+            return new Application.Executable(
+                getExecutableConfig({
+                    appName: this.prop("name"),
+                    execName: name,
+                }),
+            );
+        }
 
-    get defaultExecutable() {
-        return this.getExecutableByName();
-    }
+        getExecutableByConfig(config: {name: string} | null | undefined = null) {
+            return config ? this.getExecutableByName(config.name) : this.defaultExecutable;
+        }
 
-    // override upon inheritance
-    // eslint-disable-next-line class-methods-use-this
-    get allowedModelTypes() {
-        return [];
-    }
+        get defaultExecutable() {
+            return this.getExecutableByName();
+        }
 
-    get summary() {
-        return this.prop("summary");
-    }
+        // override upon inheritance
+        // eslint-disable-next-line class-methods-use-this
+        get allowedModelTypes() {
+            return [];
+        }
 
-    get version() {
-        return this.prop("version");
-    }
+        get summary() {
+            return this.prop("summary");
+        }
 
-    get build() {
-        return this.prop("build");
-    }
+        get version() {
+            return this.prop("version");
+        }
 
-    get shortName() {
-        return this.prop("shortName", this.prop("name"));
-    }
+        get build() {
+            return this.prop("build");
+        }
 
-    get executables() {
-        const tree = getAppTree(this.prop("name"));
-        return Object.keys(tree)
-            .filter((key) => {
-                const { supportedApplicationVersions } = tree[key];
-                return (
-                    !supportedApplicationVersions ||
-                    supportedApplicationVersions.includes(this.prop("version"))
-                );
-            })
-            .map((key) => {
-                return new Application.Executable({ ...tree[key], name: key });
-            });
-    }
+        get shortName() {
+            return this.prop("shortName", this.prop("name"));
+        }
 
-    get hasAdvancedComputeOptions() {
-        return this.prop("hasAdvancedComputeOptions");
-    }
+        get executables() {
+            const tree = getAppTree(this.prop("name"));
+            return Object.keys(tree)
+                .filter((key) => {
+                    const { supportedApplicationVersions } = tree[key];
+                    return (
+                        !supportedApplicationVersions ||
+                        supportedApplicationVersions.includes(this.prop("version"))
+                    );
+                })
+                .map((key) => {
+                    return new Application.Executable({ ...tree[key], name: key });
+                });
+        }
 
-    get isLicensed() {
-        return this.prop("isLicensed");
-    }
+        get hasAdvancedComputeOptions() {
+            return this.prop("hasAdvancedComputeOptions");
+        }
 
-    get isUsingMaterial() {
-        const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
-        return materialUsingApplications.includes(this.name);
+        get isLicensed() {
+            return this.prop("isLicensed");
+        }
+
+        get isUsingMaterial() {
+            const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
+            return materialUsingApplications.includes(this.name);
+        }
     }
 }
+
+export const Application = ApplicationMixin(Base);
+
+export type Application = InstanceType<typeof Application>;
