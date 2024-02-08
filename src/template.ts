@@ -176,4 +176,4 @@ export function TemplateMixin<
 
 export const Template = TemplateMixin(Base);
 
-export type Template = InstanceType<typeof Template>;
+export type Template = typeof Template;

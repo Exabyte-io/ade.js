@@ -42,7 +42,7 @@ export function ApplicationMixin<
             name: string,
             version?: string,
             build?: string
-        }): Application {
+        }) {
             return this.createFromNameVersionBuild(config);
         }
 
@@ -54,7 +54,7 @@ export function ApplicationMixin<
             name: string,
             version?: string,
             build?: string
-        }): Application {
+        }) {
             return new Application({ name, version, build });
         }
 
@@ -62,7 +62,7 @@ export function ApplicationMixin<
             return this.executables;
         }
 
-        getBuilds(): string[] {
+        getBuilds() {
             const data = getAppData(this.prop("name")) as ApplicationData;
             const { versions } = data;
             const builds = ["Default"];
@@ -70,14 +70,14 @@ export function ApplicationMixin<
             return lodash.uniq(builds);
         }
 
-        getVersions(): string[] {
+        getVersions() {
             const data = getAppData(this.prop("name")) as ApplicationData;
             const { versions } = data;
             const these: string[] = versions.map((v) => v.version);
             return lodash.uniq(these);
         }
 
-        static getUniqueAvailableNames(): string[] {
+        static getUniqueAvailableNames() {
             return allApplications;
         }
 
@@ -104,19 +104,19 @@ export function ApplicationMixin<
             return [];
         }
 
-        get summary(): string {
+        get summary() {
             return this.prop<string>("summary");
         }
 
-        get version(): string {
+        get version() {
             return this.prop<string>("version");
         }
 
-        get build(): string {
+        get build() {
             return this.prop<string>("build");
         }
 
-        get shortName(): string {
+        get shortName() {
             return this.prop<string>("shortName", this.prop<string>("name"));
         }
 
@@ -135,15 +135,15 @@ export function ApplicationMixin<
                 });
         }
 
-        get hasAdvancedComputeOptions(): boolean {
+        get hasAdvancedComputeOptions() {
             return this.prop<boolean>("hasAdvancedComputeOptions", false);
         }
 
-        get isLicensed(): boolean {
+        get isLicensed() {
             return this.prop<boolean>("isLicensed", false);
         }
 
-        get isUsingMaterial(): boolean {
+        get isUsingMaterial() {
             const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
             return materialUsingApplications.includes(this.name);
         }

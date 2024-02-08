@@ -3,7 +3,7 @@ import {
     RuntimeItemsMixin,
 } from "@exabyte-io/code.js/dist/entity";
 
-import { Template } from "./template";
+import { Template as AdeTemplate } from "./template";
 import { NamedTemplate } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
 import { AnyObject } from "@exabyte-io/code.js/dist/entity/in_memory";
@@ -12,17 +12,20 @@ const Base = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
 type FlavorBaseEntity = InstanceType<typeof Base>;
 
 export function FlavorMixin<
+    S extends AdeTemplate = AdeTemplate,
     T extends Constructor<FlavorBaseEntity> = Constructor<FlavorBaseEntity>,
->(superclass: T) {
+>(superclass: T, Template: S) {
     return class Flavor extends superclass {
+        static Template = Template;
+
         get input(): NamedTemplate[] {
             return this.prop<NamedTemplate[]>("input", []);
         }
 
-        get inputAsTemplates(): Template[] {
+        get inputAsTemplates() {
             return this.input.map((input) => {
                 const templateName = 'name' in input ? input.name : input.templateName;
-                const template = Template.fromFlavor(
+                const template = Flavor.Template.fromFlavor(
                     this.prop("applicationName"),
                     this.prop("executableName"),
                     templateName,
@@ -44,6 +47,6 @@ export function FlavorMixin<
     }
 }
 
-export const Flavor = FlavorMixin(Base);
+export const Flavor = FlavorMixin(Base, AdeTemplate);
 
 export type Flavor = typeof Flavor;
