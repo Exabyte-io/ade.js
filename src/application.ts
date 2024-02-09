@@ -1,6 +1,6 @@
 // @ts-expect-error application-flavors.js is not typed
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
-import { NamedDefaultableHashedInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
+import { NamedDefaultableInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
 
 import lodash from "lodash";
 
@@ -9,7 +9,7 @@ import { getApplicationConfig, getExecutableConfig } from "./tree";
 import { ApplicationConfig, ApplicationData } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
 
-const Base = NamedDefaultableHashedInMemoryEntity;
+const Base = NamedDefaultableInMemoryEntity;
 abstract class ApplicationBaseEntity extends Base {};
 
 export function ApplicationMixin<

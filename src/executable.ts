@@ -1,5 +1,5 @@
 import {
-    NamedDefaultableHashedInMemoryEntity,
+    NamedDefaultableInMemoryEntity,
     RuntimeItemsMixin,
 } from "@exabyte-io/code.js/dist/entity";
 
@@ -8,7 +8,7 @@ import { FlavorData } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
 import { AnyObject } from "@exabyte-io/code.js/dist/entity/in_memory";
 
-const Base = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
+const Base = RuntimeItemsMixin(NamedDefaultableInMemoryEntity);
 type ExecutableBaseEntity = InstanceType<typeof Base>;
 
 export function ExecutableMixin<

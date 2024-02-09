@@ -1,8 +1,6 @@
 // @ts-expect-error application-flavors.js is not typed
 import { allTemplates } from "@exabyte-io/application-flavors.js";
 import {
-    HashedEntityMixin,
-    HashedInputArrayMixin,
     NamedInMemoryEntity,
 } from "@exabyte-io/code.js/dist/entity";
 import { deepClone } from "@exabyte-io/code.js/dist/utils";
@@ -14,7 +12,7 @@ import { ContextProviderRegistry } from "./context/registry";
 import { Constructor, ContextProvider } from "@exabyte-io/code.js/dist/context";
 import { TemplateData } from "./types";
 
-const Base = HashedInputArrayMixin(HashedEntityMixin(NamedInMemoryEntity))
+const Base = NamedInMemoryEntity
 abstract class TemplateBaseEntity extends Base {};
 
 export function TemplateMixin<

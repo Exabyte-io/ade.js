@@ -1,5 +1,5 @@
 import {
-    NamedDefaultableHashedInMemoryEntity,
+    NamedDefaultableInMemoryEntity,
     RuntimeItemsMixin,
 } from "@exabyte-io/code.js/dist/entity";
 
@@ -8,7 +8,7 @@ import { Constructor } from "@exabyte-io/code.js/dist/context";
 import { AnyObject } from "@exabyte-io/code.js/dist/entity/in_memory";
 import { ExecutionUnitInputItemSchemaForPhysicsBasedSimulationEngines, TemplateSchema1 } from "@exabyte-io/code.js/dist/types";
 
-const Base = RuntimeItemsMixin(NamedDefaultableHashedInMemoryEntity);
+const Base = RuntimeItemsMixin(NamedDefaultableInMemoryEntity);
 type FlavorBaseEntity = InstanceType<typeof Base>;
 
 export function FlavorMixin<
