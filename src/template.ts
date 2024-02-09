@@ -1,4 +1,3 @@
-// @ts-expect-error application-flavors.js is not typed
 import { allTemplates } from "@exabyte-io/application-flavors.js";
 import {
     NamedInMemoryEntity,
@@ -96,7 +95,7 @@ export function TemplateMixin<
 
         static fromFlavor(appName: string, execName: string, inputName: string): Template {
             const filtered = allTemplates.filter(
-                (temp: TemplateData) =>
+                (temp) =>
                     temp.applicationName === appName &&
                     temp.executableName === execName &&
                     temp.name === inputName,

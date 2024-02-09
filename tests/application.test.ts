@@ -7,6 +7,8 @@ describe("Application", () => {
     const obj = { name: "espresso" };
     it("can be created", () => {
         const app = new Application(obj);
+        console.log(app);
+        console.log(app.executables);
         expect(app.name).to.equal("espresso");
         expect(app.executables.map((e) => e.name).includes("pw.x")).to.equal(true);
     });

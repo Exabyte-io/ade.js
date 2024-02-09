@@ -1,3 +1,5 @@
+import { AllowedApplications } from "@exabyte-io/application-flavors.js";
+
 // TODO: remove these types once application-flavors is moved to TypeScript
 export type VersionData = {
     version: string;
@@ -7,7 +9,7 @@ export type VersionData = {
 }
 
 export type ApplicationData = {
-    name: string;
+    name: AllowedApplications;
     shortName: string;
     summary: string;
     defaultVersion: string;
@@ -15,10 +17,6 @@ export type ApplicationData = {
 }
 
 export type ApplicationConfig = Omit<ApplicationData, "versions" | "defaultVersion"> & VersionData;
-
-export type AppTree = {
-    [applicationName: string]: ExecutableData;
-}
 
 export type ExecutableData = {
     name?: string;

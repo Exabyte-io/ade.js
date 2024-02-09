@@ -1,5 +1,4 @@
-// @ts-expect-error application-flavors.js is not typed
-import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
+import { AllowedApplications, ApplicationTreeData, allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
 import { NamedDefaultableInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
 
 import lodash from "lodash";
@@ -21,7 +20,8 @@ export function ApplicationMixin<
 
         constructor(...args: any[]) {
             const config = args[0] as ApplicationConfig;
-            if (!config || typeof config.name !== "string") throw new Error("Invalid application configuration object.");
+            if (!config || !config?.name) throw new Error("Invalid application configuration object.");
+            if (!allApplications.includes(config.name)) throw new Error(`Invalid application name: ${config.name}`);
             const staticConfig = getApplicationConfig(config);
             super({ ...staticConfig, ...config });
         }
@@ -38,7 +38,7 @@ export function ApplicationMixin<
         }
 
         static create(config: {
-            name: string,
+            name: AllowedApplications,
             version?: string,
             build?: string
         }) {
@@ -50,7 +50,7 @@ export function ApplicationMixin<
             version = undefined,
             build = "Default"
         }: {
-            name: string,
+            name: AllowedApplications,
             version?: string,
             build?: string
         }) {
@@ -81,6 +81,7 @@ export function ApplicationMixin<
         }
 
         getExecutableByName(name?: string) {
+            console.log(`getExecutableByName: ${name}`)
             return new Application.Executable(
                 getExecutableConfig({
                     appName: this.prop("name"),
@@ -123,6 +124,7 @@ export function ApplicationMixin<
             const tree = getAppTree(this.prop("name"));
             return Object.keys(tree)
                 .filter((key) => {
+                    // @ts-ignore
                     const { supportedApplicationVersions } = tree[key];
                     return (
                         !supportedApplicationVersions ||

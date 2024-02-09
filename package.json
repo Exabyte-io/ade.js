@@ -43,7 +43,7 @@
         "@babel/preset-react": "7.16.7",
         "@babel/register": "^7.16.0",
         "@babel/runtime-corejs3": "7.16.8",
-        "@exabyte-io/application-flavors.js": "2024.1.23-1",
+        "@exabyte-io/application-flavors.js": "https://github.com/Exabyte-io/application-flavors.git#513e4daf188c1ef1fcfe8195e2c90e289f616296",
         "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#b3eaf74a11cf0b35a1f0bac32e74452fe0329953",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/made.js": "^2024.1.8-0",
@@ -70,7 +70,7 @@
         "ts-node": "^10.9.2"
     },
     "peerDependencies": {
-        "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#b3eaf74a11cf0b35a1f0bac32e74452fe0329953",
+        "@exabyte-io/code.js": "*",
         "@exabyte-io/made.js": "*",
         "@exabyte-io/application-flavors.js": "*"
     },

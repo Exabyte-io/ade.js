@@ -1,8 +1,35 @@
-// @ts-expect-error application-flavors.js is not typed
-import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
+import { AllowedApplications, allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
-import { AppTree, ExecutableData } from "./types";
+import { ExecutableData } from "./types";
 import { Constructor } from "@exabyte-io/code.js/dist/context";
+import { ApplicationData, ApplicationTree } from "@exabyte-io/application-flavors.js/lib/js/build_templates";
+
+type AppTree = {
+    // application
+    [appName in AllowedApplications]: {
+        // version
+        defaultVersion: string
+    } & {
+        [version: string]: {
+            // build
+            [build: string]: {
+                build: string;
+                name: string;
+                summary: string;
+                shortName: string;
+            }
+        }
+    };
+}
+
+type AppArray = {
+    version: string;
+    build: string;
+    name: string;
+    summary: string;
+    shortName: string;
+    isDefault: boolean;
+}[];
 
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
@@ -10,33 +37,25 @@ import { Constructor } from "@exabyte-io/code.js/dist/context";
  * @returns containing applications and applicationConfigs
  */
 export function getAllApplications(cls?: Constructor<any>) {
-    const applicationsTree = {};
-    // @ts-expect-error application-flavors is not typed
-    const applicationsArray = [];
-    allApplications.forEach((appName: string) => {
+    const applicationsTree: AppTree = {} as AppTree;
+    const applicationsArray: AppArray = [];
+    allApplications.forEach((appName) => {
+        const { versions, defaultVersion, ...appData } = getAppData(appName);
         // @ts-ignore
-        applicationsTree[appName] = {};
-        const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
-        // @ts-ignore
-        applicationsTree[appName].defaultVersion = defaultVersion;
-        // @ts-ignore
+        applicationsTree[appName] = { defaultVersion };
         versions.forEach((options) => {
-            const { version } = options;
-            // @ts-ignore
+            const { version, build = "Default" } = options;
             if (!(version in applicationsTree[appName])) applicationsTree[appName][version] = {};
             const config = { ...appData, build, ...options };
             if (cls) {
-            // @ts-ignore
                 applicationsTree[appName][version][build] = new cls(config);
                 applicationsArray.push(new cls(config));
             } else {
-                // @ts-ignore
                 applicationsTree[appName][version][build] = config;
                 applicationsArray.push(config);
             }
         });
     });
-    // @ts-ignore
     return { applicationsTree, applicationsArray };
 }
 
@@ -48,14 +67,12 @@ export function getAllApplications(cls?: Constructor<any>) {
  * @param build {String} the build to use (optional, defaults to Default)
  * @return {*} an application
  */
-// @ts-ignore applicationsTree is not typed
-export function getApplication({ applicationsTree, name, version = null, build = "Default" }:{
-    applicationsTree: object,
-    name: string,
+export function getApplication({ applicationsTree, name, version, build = "Default" }:{
+    applicationsTree: AppTree,
+    name: AllowedApplications,
     version?: string,
     build?: string,
 }) {
-    // @ts-ignore applicationsTree is not typed
     const app = applicationsTree[name];
     const version_ = version || app.defaultVersion;
     if (!app[version_]) console.log(`Version ${version_} not available for ${name} !`);
@@ -71,8 +88,8 @@ const { applicationsTree } = getAllApplications();
  * @param build {String}
  * @returns {*}
  */
-export function getApplicationConfig({ name, version = undefined, build = "Default" }: {
-    name: string;
+export function getApplicationConfig({ name, version, build = "Default" }: {
+    name: AllowedApplications;
     version?: string;
     build?: string;
 }) {
@@ -90,18 +107,26 @@ export function getApplicationConfig({ name, version = undefined, build = "Defau
  * @param execName if not provided, find the executable with isDefault === true
  * @returns an executable config
  */
-export function getExecutableConfig({ appName, execName = undefined }: { appName: string, execName: string | undefined }):  ExecutableData | undefined {
-    const appTree: AppTree = getAppTree(appName);
-    Object.entries(appTree).forEach(([name, exec]) => {
-        exec.name = name;
-    });
+export function getExecutableConfig({ appName, execName }: { appName: AllowedApplications, execName?: string }) {
+    const appTree = getAppTree(appName);
+    console.log(appTree)
     if (!execName) {
         console.log("No executable name provided, using default executable");
-        return getOneMatchFromObject(appTree, "isDefault", true) as ExecutableData | undefined;
+        // iterate over properties of appTree and find the one with isDefault === true
+        Object.entries(appTree).forEach(([key, value]) => {
+            if (value.isDefault) {
+                console.log(`Found default executable: ${key}`);
+                execName = key;
+            }
+        });
+        if (!execName) {
+            console.log(`No default executable found for application ${appName}`);
+            return undefined;
+        }
     }
     if (!appTree[execName]) {
         console.log(`Executable ${execName} not found for application ${appName}`);
         return undefined;
     }
-    return appTree[execName];
+    return {...appTree[execName], name: execName};
 }
