@@ -1,4 +1,8 @@
-import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
+import {
+    allowedApplications,
+    getApplicationExecutableFlavorData,
+    getApplicationVersionBuildData,
+} from "@exabyte-io/application-flavors.js";
 import { NamedDefaultableInMemoryEntity } from "@exabyte-io/code.js/dist/entity";
 import lodash from "lodash";
 
@@ -37,7 +41,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
     }
 
     getBuilds() {
-        const data = getAppData(this.prop("name"));
+        const data = getApplicationVersionBuildData(this.prop("name"));
         const { versions } = data;
         const builds = ["Default"];
         versions.map((v) => v.build && builds.push(v.build));
@@ -45,14 +49,14 @@ export class Application extends NamedDefaultableInMemoryEntity {
     }
 
     getVersions() {
-        const data = getAppData(this.prop("name"));
+        const data = getApplicationVersionBuildData(this.prop("name"));
         const { versions } = data;
         const these = versions.map((v) => v.version);
         return lodash.uniq(these);
     }
 
     static getUniqueAvailableNames() {
-        return allApplications;
+        return allowedApplications;
     }
 
     getExecutableByName(name = null) {
@@ -95,7 +99,7 @@ export class Application extends NamedDefaultableInMemoryEntity {
     }
 
     get executables() {
-        const tree = getAppTree(this.prop("name"));
+        const tree = getApplicationExecutableFlavorData(this.prop("name"));
         return Object.keys(tree)
             .filter((key) => {
                 const { supportedApplicationVersions } = tree[key];
