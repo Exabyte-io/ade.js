@@ -46,7 +46,7 @@
     "devDependencies": {
         "@exabyte-io/code.js": "https://github.com/Exabyte-io/code.js.git#typescript",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
-        "@exabyte-io/made.js": "https://github.com/Exabyte-io/code.js.git#typescript",
+        "@exabyte-io/made.js": "https://github.com/Exabyte-io/made.js.git#typescript",
         "@exabyte-io/application-flavors.js": "https://github.com/Exabyte-io/application-flavors.git#typescript",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
