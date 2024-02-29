@@ -1,5 +1,9 @@
 /* eslint-disable new-cap */
-import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
+import {
+    allowedApplications,
+    getApplicationExecutableFlavorData,
+    getApplicationVersionBuildData,
+} from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
 
 /**
@@ -10,9 +14,14 @@ import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
 export function getAllApplications(cls = null) {
     const applicationsTree = {};
     const applicationsArray = [];
-    allApplications.forEach((appName) => {
+    allowedApplications.forEach((appName) => {
         applicationsTree[appName] = {};
-        const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
+        const {
+            versions,
+            defaultVersion,
+            build = "Default",
+            ...appData
+        } = getApplicationVersionBuildData(appName);
         applicationsTree[appName].defaultVersion = defaultVersion;
         versions.forEach((options) => {
             const { version } = options;
@@ -70,7 +79,7 @@ export function getApplicationConfig({ name, version = null, build = "Default" }
  * @returns {*}
  */
 export function getExecutableConfig({ appName, execName }) {
-    const appTree = getAppTree(appName);
+    const appTree = getApplicationExecutableFlavorData(appName);
     Object.entries(appTree).forEach(([name, exec]) => {
         exec.name = name;
     });

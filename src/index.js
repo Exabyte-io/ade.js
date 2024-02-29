@@ -1,6 +1,7 @@
 import {
-    allApplications,
+    allowedApplications,
     allowedMonitors,
+    allowedPostProcessors,
     allowedResults,
     allTemplates,
 } from "@exabyte-io/application-flavors.js";
@@ -21,10 +22,11 @@ export {
     Template,
     getAllApplications,
     getApplication,
-    allApplications,
     allTemplates,
+    allowedApplications,
     allowedResults,
     allowedMonitors,
+    allowedPostProcessors,
     ExecutableContextProvider,
     ContextProviderRegistry,
     context,

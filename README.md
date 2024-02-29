@@ -58,7 +58,7 @@ ecosystem, where `ADe` houses entity definitions for:
 - `Template` - a jinja template for an application input file
 
 The relevant data parameterizing these entities is housed in
-the [Application Flavors](https://github.com/Exabyte-io/exabyte-application-flavors)
+the [Application Flavors](https://github.com/Exabyte-io/application-flavors)
 repository. This includes the supported applications, executables, flavors,
 and defined templates.
 
@@ -66,5 +66,5 @@ Templates themselves are organized by application in a top-level `assets`
 directory in `application-flavors` and the API for loading and working with templates can be found in
 each application's `assets.js` module.
 At build time, all templates are loaded and compiled into a single monolithic
-JS file using `build_templates.js` so that it can be used in the client as well as in NodeJS.
+TS file using `build_application_trees.ts` so that it can be used in the client as well as in NodeJS.
 This is how templates are consumed from `applicaton-flavors` in `ADe`.
