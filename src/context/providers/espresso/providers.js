@@ -29,6 +29,13 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return material.Basis.uniqueElements;
     }
 
+    static atomSymbolsWithLabels(material) {
+        const elm = material.Basis.elementsArray;
+        const labels = material.Basis.atomic_label_arr;
+        const elmWithLabel = elm.map((label, idx) => label + labels[idx]);
+        return [...new Set(elmWithLabel)];
+    }
+
     /** Returns the input text block for atomic positions WITH constraints.
      */
     static atomicPositionsWithConstraints(material) {
@@ -50,6 +57,10 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return material.Basis.uniqueElements.length;
     }
 
+    static NTYP_WITH_LABELS() {
+        return this.atomSymbolsWithLabels.length;
+    }
+
     buildQEPWXContext(material) {
         const IBRAV = 0; // use CELL_PARAMETERS to define Bravais lattice
 
@@ -57,8 +68,10 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
             IBRAV,
             RESTART_MODE: this.RESTART_MODE,
             ATOMIC_SPECIES: this.ATOMIC_SPECIES(material),
+            ATOMIC_SPECIES_WITH_LABELS: this.ATOMIC_SPECIES_WITH_LABELS(material),
             NAT: QEPWXContextProvider.NAT(material),
             NTYP: QEPWXContextProvider.NTYP(material),
+            NTYP_WITH_LABELS: QEPWXContextProvider.NTYP_WITH_LABELS(material),
             ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
             ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: QEPWXContextProvider.atomicPositions(material),
             CELL_PARAMETERS: QEPWXContextProvider.CELL_PARAMETERS(material),
@@ -110,6 +123,21 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
             .join("\n");
     }
 
+    ATOMIC_SPECIES_WITH_LABELS(material) {
+        return QEPWXContextProvider.atomSymbolsWithLabels(material)
+            .map((symbol) => {
+                const symbolWithoutLabel = symbol.replace(/\d$/, "");
+                const label = symbol.match(/\d$/g)[0] ? symbol.match(/\d$/g)[0] : "";
+                const pseudo = this.getPseudoBySymbol(symbolWithoutLabel);
+                return QEPWXContextProvider.symbolToAtomicSpecieWithLabels(
+                    symbolWithoutLabel,
+                    pseudo,
+                    label,
+                );
+            })
+            .join("\n");
+    }
+
     static CELL_PARAMETERS(material) {
         return material.Lattice.vectorArrays
             .map((x) => {
@@ -126,6 +154,12 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         const el = PERIODIC_TABLE[symbol];
         const filename = pseudo?.filename || path.basename(pseudo?.path || "");
         return el ? s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) : undefined;
+    }
+
+    static symbolToAtomicSpecieWithLabels(symbol, pseudo, label = "") {
+        const el = PERIODIC_TABLE[symbol];
+        const filename = pseudo?.filename || path.basename(pseudo?.path || "");
+        return el ? s.sprintf("%s%s %f %s", symbol, label, el.atomic_mass, filename) : undefined;
     }
 }
 
