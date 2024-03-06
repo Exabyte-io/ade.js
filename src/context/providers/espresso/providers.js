@@ -33,6 +33,8 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         const elm = material.Basis.elementsArray;
         const labels = material.Basis.atomicLabelsArray;
         const elmWithLabel = elm.map((label, idx) => label + labels[idx]);
+
+        // return unique items
         return [...new Set(elmWithLabel)];
     }
 
@@ -71,7 +73,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
             ATOMIC_SPECIES_WITH_LABELS: this.ATOMIC_SPECIES_WITH_LABELS(material),
             NAT: QEPWXContextProvider.NAT(material),
             NTYP: QEPWXContextProvider.NTYP(material),
-            NTYP_WITH_LABELS: QEPWXContextProvider.NTYP_WITH_LABELS(material),
+            NTYP_WITH_LABELS: QEPWXContextProvider.NTYP_WITH_LABELS,
             ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
             ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: QEPWXContextProvider.atomicPositions(material),
             CELL_PARAMETERS: QEPWXContextProvider.CELL_PARAMETERS(material),
