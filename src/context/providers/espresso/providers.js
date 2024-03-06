@@ -129,7 +129,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return QEPWXContextProvider.atomSymbolsWithLabels(material)
             .map((symbol) => {
                 const symbolWithoutLabel = symbol.replace(/\d$/, "");
-                const label = symbol.match(/\d$/g)[0] ? symbol.match(/\d$/g)[0] : "";
+                const label = symbol.match(/\d$/g) ? symbol.match(/\d$/g)[0] : "";
                 const pseudo = this.getPseudoBySymbol(symbolWithoutLabel);
                 return QEPWXContextProvider.symbolToAtomicSpecieWithLabels(
                     symbolWithoutLabel,
