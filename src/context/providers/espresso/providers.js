@@ -31,7 +31,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
 
     static atomSymbolsWithLabels(material) {
         const elm = material.Basis.elementsArray;
-        const labels = material.Basis.atomic_label_arr;
+        const labels = material.Basis.atomicLabelsArray;
         const elmWithLabel = elm.map((label, idx) => label + labels[idx]);
         return [...new Set(elmWithLabel)];
     }
