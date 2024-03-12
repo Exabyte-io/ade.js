@@ -60,8 +60,8 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return material.Basis.uniqueElements.length;
     }
 
-    get NTYP_WITH_LABELS() {
-        return this.atomSymbolsWithLabels.length;
+    static NTYP_WITH_LABELS(material) {
+        return this.atomSymbolsWithLabels(material).length;
     }
 
     buildQEPWXContext(material) {
@@ -74,7 +74,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
             ATOMIC_SPECIES_WITH_LABELS: this.ATOMIC_SPECIES_WITH_LABELS(material),
             NAT: QEPWXContextProvider.NAT(material),
             NTYP: QEPWXContextProvider.NTYP(material),
-            NTYP_WITH_LABELS: QEPWXContextProvider.NTYP_WITH_LABELS,
+            NTYP_WITH_LABELS: QEPWXContextProvider.NTYP_WITH_LABELS(material),
             ATOMIC_POSITIONS: QEPWXContextProvider.atomicPositionsWithConstraints(material),
             ATOMIC_POSITIONS_WITHOUT_CONSTRAINTS: QEPWXContextProvider.atomicPositions(material),
             CELL_PARAMETERS: QEPWXContextProvider.CELL_PARAMETERS(material),
