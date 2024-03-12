@@ -59,7 +59,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return material.Basis.uniqueElements.length;
     }
 
-    static NTYP_WITH_LABELS() {
+    get NTYP_WITH_LABELS() {
         return this.atomSymbolsWithLabels.length;
     }
 
