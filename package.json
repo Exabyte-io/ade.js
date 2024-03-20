@@ -44,11 +44,11 @@
         "underscore.string": "^3.3.4"
     },
     "devDependencies": {
-        "@exabyte-io/code.js": "git+https://github.com/Exabyte-io/code.js.git#5937dc94eb8ca88c6f3e4e9c8f93050e56a869ea",
+        "@exabyte-io/code.js": "2024.2.29-0",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
-        "@exabyte-io/made.js": "git+https://github.com/Exabyte-io/made.js.git#882ce639da8b36ef208fe0e6318c6c7a40485274",
-        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/application-flavors.git#6af8d952e9c345bd26f0c0889d2f4f6c623cc2e0",
-        "@mat3ra/esse": "git+https://github.com/Exabyte-io/esse.git#a967135c3bf155242fc2a5d0a0a262ffdf5d68b7",
+        "@exabyte-io/made.js": "git+https://github.com/Exabyte-io/made.js.git#ccc812354cc4a0324fa346d5860da28d435ed0fd",
+        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/application-flavors.git#4a9bb4eebe85e5c3be5c8232156c025156352d26",
+        "@mat3ra/esse": "2024.3.20-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",

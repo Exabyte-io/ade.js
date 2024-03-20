@@ -29,14 +29,9 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
         return material.Basis.uniqueElements;
     }
 
-    static atomSymbolsWithLabels(material) {
-        const symbols = material.Basis.elementsArray;
-        const labels = material.Basis.atomicLabelsArray;
-        const elmWithLabel = [];
-        symbols.forEach((symbol, idx) => elmWithLabel.push(symbol + labels[idx]));
-
+    static uniqueElementsWithLabels(material) {
         // return unique items
-        return [...new Set(elmWithLabel)];
+        return [...new Set(material.Basis.elementsWithLabelsArray)];
     }
 
     /** Returns the input text block for atomic positions WITH constraints.
@@ -61,7 +56,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     }
 
     static NTYP_WITH_LABELS(material) {
-        return this.atomSymbolsWithLabels(material).length;
+        return this.uniqueElementsWithLabels(material).length;
     }
 
     buildQEPWXContext(material) {
@@ -127,12 +122,12 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     }
 
     ATOMIC_SPECIES_WITH_LABELS(material) {
-        return QEPWXContextProvider.atomSymbolsWithLabels(material)
+        return QEPWXContextProvider.uniqueElementsWithLabels(material)
             .map((symbol) => {
                 const symbolWithoutLabel = symbol.replace(/\d$/, "");
                 const label = symbol.match(/\d$/g) ? symbol.match(/\d$/g)[0] : "";
                 const pseudo = this.getPseudoBySymbol(symbolWithoutLabel);
-                return QEPWXContextProvider.symbolToAtomicSpecieWithLabels(
+                return QEPWXContextProvider.elementAndPseudoToAtomicSpecieWithLabels(
                     symbolWithoutLabel,
                     pseudo,
                     label,
@@ -156,13 +151,13 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     static symbolToAtomicSpecie(symbol, pseudo) {
         const el = PERIODIC_TABLE[symbol];
         const filename = pseudo?.filename || path.basename(pseudo?.path || "");
-        return el ? s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) : undefined;
+        return s.sprintf("%s %f %s", symbol, el.atomic_mass, filename) || "";
     }
 
-    static symbolToAtomicSpecieWithLabels(symbol, pseudo, label = "") {
+    static elementAndPseudoToAtomicSpecieWithLabels(symbol, pseudo, label = "") {
         const el = PERIODIC_TABLE[symbol];
         const filename = pseudo?.filename || path.basename(pseudo?.path || "");
-        return el ? s.sprintf("%s%s %f %s", symbol, label, el.atomic_mass, filename) : undefined;
+        return s.sprintf("%s%s %f %s", symbol, label, el.atomic_mass, filename) || "";
     }
 }
 
