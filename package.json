@@ -46,8 +46,8 @@
     "devDependencies": {
         "@exabyte-io/code.js": "2024.2.29-0",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
-        "@exabyte-io/made.js": "git+https://github.com/Exabyte-io/made.js.git#ccc812354cc4a0324fa346d5860da28d435ed0fd",
-        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/application-flavors.git#4a9bb4eebe85e5c3be5c8232156c025156352d26",
+        "@exabyte-io/made.js": "2024.3.21-1",
+        "@exabyte-io/application-flavors.js": "2024.3.21-0",
         "@mat3ra/esse": "2024.3.20-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
