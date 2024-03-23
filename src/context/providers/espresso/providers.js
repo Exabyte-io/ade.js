@@ -7,8 +7,8 @@ import {
     MethodDataContextMixin,
     WorkflowContextMixin,
 } from "@exabyte-io/code.js/dist/context";
-import { Made } from "@exabyte-io/made.js";
 import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
+import { Made } from "@mat3ra/made";
 import lodash from "lodash";
 import { mix } from "mixwith";
 import path from "path";

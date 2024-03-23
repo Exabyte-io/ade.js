@@ -46,7 +46,7 @@
     "devDependencies": {
         "@exabyte-io/code.js": "2024.2.29-0",
         "@exabyte-io/eslint-config": "^2022.11.17-0",
-        "@exabyte-io/made.js": "2024.3.21-1",
+        "@mat3ra/made": "2024.3.23-1",
         "@exabyte-io/application-flavors.js": "2024.3.21-0",
         "@mat3ra/esse": "2024.3.20-0",
         "chai": "^4.3.4",
@@ -67,7 +67,7 @@
     },
     "peerDependencies": {
         "@exabyte-io/code.js": "*",
-        "@exabyte-io/made.js": "*",
+        "@mat3ra/made": "*",
         "@exabyte-io/application-flavors.js": "*"
     },
     "engines": {
