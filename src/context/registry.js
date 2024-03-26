@@ -1,4 +1,4 @@
-import { createAndPatchRegistry } from "@exabyte-io/code.js/dist/context";
+import { createAndPatchRegistry } from "@mat3ra/code/dist/js/context";
 
 import {
     NWChemTotalEnergyContextProvider,

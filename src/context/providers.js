@@ -1,4 +1,4 @@
-import { ContextProvider } from "@exabyte-io/code.js/dist/context";
+import { ContextProvider } from "@mat3ra/code/dist/js/context";
 
 export class ExecutableContextProvider extends ContextProvider {
     constructor(config) {
