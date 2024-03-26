@@ -1,10 +1,10 @@
+import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
 import {
     JobContextMixin,
     MaterialContextMixin,
     MethodDataContextMixin,
     WorkflowContextMixin,
-} from "@exabyte-io/code.js/dist/context";
-import { PERIODIC_TABLE } from "@exabyte-io/periodic-table.js";
+} from "@mat3ra/code/dist/js/context";
 import { Made } from "@mat3ra/made";
 import lodash from "lodash";
 import { mix } from "mixwith";
