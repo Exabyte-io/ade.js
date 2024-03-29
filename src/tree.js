@@ -1,6 +1,6 @@
 /* eslint-disable new-cap */
 import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
-import { getOneMatchFromObject } from "@exabyte-io/code.js/dist/utils";
+import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils";
 
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
