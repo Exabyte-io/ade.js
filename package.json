@@ -45,7 +45,7 @@
     },
     "devDependencies": {
         "@exabyte-io/eslint-config": "^2022.11.17-0",
-        "@exabyte-io/application-flavors.js": "git+https://github.com/Exabyte-io/application-flavors.git#7f72e1edbde24b9f96d4d18a2a3532bbd37a4d5d",
+        "@exabyte-io/application-flavors.js": "2024.9.8-1",
         "@mat3ra/code": "2024.3.25-3",
         "@mat3ra/made": "2024.3.26-0",
         "@mat3ra/esse": "2024.4.19-1",
