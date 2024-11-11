@@ -60,6 +60,10 @@ export class Template extends NamedInMemoryEntity {
         if (!this.isManuallyChanged) {
             try {
                 template = nunjucks.compile(this.content);
+                console.log({
+                    content: this.content,
+                    _cleanRenderingContext: this._cleanRenderingContext(renderingContext),
+                });
                 // deepClone to pass JSON data without classes
                 rendered = template.render(this._cleanRenderingContext(renderingContext));
             } catch (e) {
