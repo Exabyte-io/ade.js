@@ -63,12 +63,6 @@ export class Template extends NamedInMemoryEntity {
 
                 // deepClone to pass JSON data without classes
                 rendered = template.render(this._cleanRenderingContext(renderingContext));
-
-                console.log({
-                    content: this.content,
-                    _cleanRenderingContext: this._cleanRenderingContext(renderingContext),
-                    rendered,
-                });
             } catch (e) {
                 console.log(`Template is not compiled: ${e}`);
                 console.log({
