@@ -1,7 +1,7 @@
 import { allTemplates } from "@exabyte-io/application-flavors.js";
 import { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import { deepClone } from "@mat3ra/code/dist/js/utils";
-import jinja from "swig";
+import nunjucks from "nunjucks";
 import _ from "underscore";
 
 import { ContextProviderRegistry } from "./context/registry";
@@ -59,11 +59,16 @@ export class Template extends NamedInMemoryEntity {
         let template, rendered;
         if (!this.isManuallyChanged) {
             try {
-                template = jinja.compile(this.content);
+                template = nunjucks.compile(this.content);
+
                 // deepClone to pass JSON data without classes
-                rendered = template && template(this._cleanRenderingContext(renderingContext));
+                rendered = template.render(this._cleanRenderingContext(renderingContext));
             } catch (e) {
                 console.log(`Template is not compiled: ${e}`);
+                console.log({
+                    content: this.content,
+                    _cleanRenderingContext: this._cleanRenderingContext(renderingContext),
+                });
             }
             this.setRendered(this.isManuallyChanged ? rendered : rendered || this.content);
         }
