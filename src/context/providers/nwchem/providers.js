@@ -30,7 +30,7 @@ export class NWChemTotalEnergyContextProvider extends mix(ExecutableContextProvi
     }
 
     get atomicPositions() {
-        return this.material.Basis.atomicPositionsWithConstraints;
+        return this.material.Basis.getAtomicPositionsWithConstraintsAsStrings();
     }
 
     get cartesianAtomicPositions() {
