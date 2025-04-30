@@ -37,7 +37,7 @@ export class QEPWXContextProvider extends mix(ExecutableContextProvider).with(
     /** Returns the input text block for atomic positions WITH constraints.
      */
     static atomicPositionsWithConstraints(material) {
-        return material.Basis.getAtomicPositionsWithConstraintsAsStrings();
+        return material.Basis.getAtomicPositionsWithConstraintsAsStrings().join("\n");
     }
 
     /** Returns the input text block for atomic positions
