@@ -46,9 +46,9 @@
     "devDependencies": {
         "@exabyte-io/eslint-config": "^2022.11.17-0",
         "@exabyte-io/application-flavors.js": "2024.9.8-1",
-        "@mat3ra/code": "2024.3.25-3",
-        "@mat3ra/made": "2024.3.26-0",
-        "@mat3ra/esse": "2024.4.19-1",
+        "@mat3ra/code": "2025.4.27-0",
+        "@mat3ra/made": "2025.4.30-0",
+        "@mat3ra/esse": "2025.4.22-0",
         "chai": "^4.3.4",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "19.0.2",
