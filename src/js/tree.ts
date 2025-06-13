@@ -1,5 +1,10 @@
 /* eslint-disable new-cap */
-import { allApplications, getAppData, getAppTree } from "@exabyte-io/application-flavors.js";
+import {
+    type ApplicationTreeItem,
+    allApplications,
+    getAppData,
+    getAppTree,
+} from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils";
 
 /**
@@ -38,7 +43,17 @@ export function getAllApplications(cls = null) {
  * @param build {String} the build to use (optional, defaults to Default)
  * @return {*} an application
  */
-export function getApplication({ applicationsTree, name, version = null, build = "Default" }) {
+export function getApplication({
+    applicationsTree,
+    name,
+    version = null,
+    build = "Default",
+}: {
+    applicationsTree: Record<string, any>;
+    name: string;
+    version?: string | null;
+    build?: string;
+}) {
     const app = applicationsTree[name];
     const version_ = version || app.defaultVersion;
     if (!app[version_]) console.log(`Version ${version_} not available for ${name} !`);
@@ -47,14 +62,20 @@ export function getApplication({ applicationsTree, name, version = null, build =
 
 const { applicationsTree } = getAllApplications(null);
 
+export type CreateApplicationConfig = {
+    name: string;
+    version?: string | null;
+    build?: string;
+};
+
 /**
  * @summary Get pre-defined application config from an already generated applicationsTree of configs
- * @param name
- * @param version {String|null}
- * @param build
- * @returns {*}
  */
-export function getApplicationConfig({ name, version = null, build = "Default" }) {
+export function getApplicationConfig({
+    name,
+    version = null,
+    build = "Default",
+}: CreateApplicationConfig) {
     return getApplication({
         applicationsTree,
         name,
@@ -65,16 +86,26 @@ export function getApplicationConfig({ name, version = null, build = "Default" }
 
 /**
  * @summary Get executable config
- * @param appName {String} name of application to get executable for
- * @param execName {String|null} if not provided, find the executable with isDefault === true
- * @returns {*}
+ * @param appName name of application to get executable for
+ * @param execName  if not provided, find the executable with isDefault === true
  */
-export function getExecutableConfig({ appName, execName }) {
+export function getExecutableConfig({
+    appName,
+    execName,
+}: {
+    appName: string;
+    execName?: string | null;
+}): ApplicationTreeItem {
     const appTree = getAppTree(appName);
+
     Object.entries(appTree).forEach(([name, exec]) => {
         exec.name = name;
     });
-    if (!execName) return getOneMatchFromObject(appTree, "isDefault", true);
+
+    if (!execName) {
+        return getOneMatchFromObject(appTree, "isDefault", true) as ApplicationTreeItem;
+    }
+
     return appTree[execName];
 }
 
@@ -85,6 +116,14 @@ export function getExecutableConfig({ appName, execName }) {
  * @param flavorName
  */
 // eslint-disable-next-line no-unused-vars
-export function getFlavorConfig({ appName, execName, flavorName }) {
+export function getFlavorConfig({
+    appName,
+    execName,
+    flavorName,
+}: {
+    appName: string;
+    execName: string;
+    flavorName: string;
+}) {
     // TODO : reduce redundancy of object construction in getting flavors from executable
 }
