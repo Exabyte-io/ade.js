@@ -1,10 +1,14 @@
+import { allTemplates } from "@exabyte-io/application-flavors.js";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import { deepClone } from "@mat3ra/code/dist/js/utils";
+import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import nunjucks from "nunjucks";
 import _ from "underscore";
 
-type Base = InMemoryEntity & NamedInMemoryEntity;
+import { ContextProviderRegistry } from "./context/registry";
+
+export type TemplateBase = InMemoryEntity & NamedInMemoryEntity;
 
 interface ContextProvider {
     name: string;
@@ -37,9 +41,9 @@ export type TemplateMixin = {
     getRenderingContext: (externalContext: Record<string, unknown>) => Record<string, unknown>;
 };
 
-export function templateMixin(item: Base) {
+export function templateMixin(item: TemplateBase) {
     // @ts-ignore
-    const properties: TemplateMixin & Base = {
+    const properties: TemplateMixin & TemplateBase = {
         get isManuallyChanged() {
             return this.prop("isManuallyChanged", false);
         },
@@ -178,6 +182,41 @@ export function templateMixin(item: Base) {
                 ...this.getDataFromProvidersForRenderingContext(externalContext),
             };
         },
+    };
+
+    Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
+
+    return properties;
+}
+
+export type TemplateStaticMixin = {
+    fromFlavor: (
+        appName: string,
+        execName: string,
+        inputName: string,
+    ) => TemplateMixin & TemplateBase;
+    providerRegistry: typeof ContextProviderRegistry;
+};
+
+export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>) {
+    // @ts-ignore
+    const properties: TemplateStaticMixin & Constructor<TemplateBase & TemplateMixin> = {
+        fromFlavor(appName: string, execName: string, inputName: string) {
+            const filtered = allTemplates.filter(
+                (temp) =>
+                    temp.applicationName === appName &&
+                    temp.executableName === execName &&
+                    temp.name === inputName,
+            );
+            if (filtered.length !== 1) {
+                console.log(
+                    `found ${filtered.length} templates for app=${appName} exec=${execName} name=${inputName} expected 1`,
+                );
+            }
+            return new this(filtered[0]);
+        },
+
+        providerRegistry: ContextProviderRegistry,
     };
 
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));

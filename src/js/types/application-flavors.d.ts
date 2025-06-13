@@ -1,3 +1,6 @@
+/**
+ * TODO: @exabyte-io/application-flavors.js package must be removed and the source code must be moved to the current repo later in the future
+ */
 declare module "@exabyte-io/application-flavors.js" {
     export const allApplications: string[];
 
@@ -36,4 +39,13 @@ declare module "@exabyte-io/application-flavors.js" {
         | "vasp";
 
     export function getAppData(appName: ApplicationName): ApplicationData;
+
+    export type Template = {
+        applicationName: string;
+        executableName: string;
+        name: string;
+        content: string;
+    };
+
+    export const allTemplates: Template[];
 }
