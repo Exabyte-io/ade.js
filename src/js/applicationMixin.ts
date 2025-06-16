@@ -172,6 +172,8 @@ export type ApplicationStaticProperties = {
     constructExecutable: (config: object) => Executable;
 };
 
+export type ApplicationConstructor = Constructor<ApplicationMixin> & ApplicationStaticProperties;
+
 export type ApplicationMixin = {
     defaultExecutable: Executable;
     summary: string | undefined;

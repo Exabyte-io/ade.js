@@ -10,7 +10,7 @@ import { type CreateApplicationConfig, getApplicationConfig } from "./tree";
 
 type Base = typeof NamedDefaultableInMemoryEntity & Constructor<ApplicationMixin>;
 
-class Application extends (NamedDefaultableInMemoryEntity as Base) {
+export default class Application extends (NamedDefaultableInMemoryEntity as Base) {
     constructor(config: CreateApplicationConfig) {
         const staticConfig = getApplicationConfig(config);
         super({ ...staticConfig, ...config });
