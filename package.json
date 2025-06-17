@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "description": "Application DEfinitions",
     "scripts": {
-        "test": "nyc --reporter=text mocha --recursive --bail --require @babel/register/lib --require tests/setup.js tests",
+        "test": "nyc --reporter=text mocha --recursive --bail tests/js/**/*.ts",
         "lint": "eslint src tests && prettier --write src tests",
         "lint:fix": "eslint --fix --cache src tests && prettier --write src tests",
         "transpile": "tsc -p tsconfig-transpile.json",
@@ -39,7 +39,7 @@
         "@babel/eslint-parser": "^7.16.3",
         "@exabyte-io/application-flavors.js": "2024.9.8-1",
         "@exabyte-io/eslint-config": "2025.5.13-0",
-        "@mat3ra/code": "git+https://github.com/Exabyte-io/code.git#3f12b20c2c6100c661631d448e63f6eb1a9ca55d",
+        "@mat3ra/code": "git+https://github.com/Exabyte-io/code.git#05924d1e00a9ea88e0bfd70703b4c22b8c8537a1",
         "@mat3ra/esse": "2025.4.22-0",
         "@mat3ra/made": "git+https://github.com/Exabyte-io/made.git#84807b83b15dfd632fae9495be301aa7df503b11",
         "@mat3ra/tsconfig": "2024.6.3-0",

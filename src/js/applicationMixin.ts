@@ -39,7 +39,7 @@ export function applicationMixin(item: Base) {
         },
 
         get executables() {
-            const tree = getAppTree(this.name);
+            const tree = getAppTree(this.name as ApplicationName);
             return Object.keys(tree)
                 .filter((key) => {
                     const { supportedApplicationVersions } = tree[key];
@@ -74,7 +74,7 @@ export function applicationMixin(item: Base) {
         getExecutableByName(name?: string) {
             return (this.constructor as unknown as ApplicationStaticProperties).constructExecutable(
                 getExecutableConfig({
-                    appName: this.name,
+                    appName: this.name as ApplicationName,
                     execName: name,
                 }),
             );

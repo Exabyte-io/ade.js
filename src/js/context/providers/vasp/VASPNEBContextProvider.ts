@@ -18,9 +18,10 @@ import {
 } from "../../mixins/MaterialsSetContextMixin";
 import type { WorkflowContextMixinType } from "../../mixins/WorkflowContextMixin";
 import { ExecutableContextProvider } from "../../providers";
+import type { Material } from "../espresso/QENEBContextProvider";
 import VASPContextProvider from "./VASPContextProvider";
 
-type Base = typeof VASPContextProvider &
+type Base = typeof ExecutableContextProvider &
     Constructor<MaterialContextMixinType> &
     Constructor<MaterialsContextMixinType> &
     Constructor<MaterialsSetContextMixinType> &
@@ -29,6 +30,8 @@ type Base = typeof VASPContextProvider &
     Constructor<JobContextMixinType>;
 
 export default class VASPNEBContextProvider extends (ExecutableContextProvider as Base) {
+    _materials: Material[] = [];
+
     constructor(config: ContextProviderConfig) {
         super(config);
         this.initMaterialContextMixin();

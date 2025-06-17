@@ -1,9 +1,10 @@
 import { expect } from "chai";
+import type { CreateApplicationConfig } from "src/js/tree";
 
-import { Application } from "../src/application";
+import Application from "../../src/js/application";
 
 describe("Application", () => {
-    const obj = { name: "espresso" };
+    const obj: CreateApplicationConfig = { name: "espresso" };
 
     it("can be created", () => {
         const app = new Application(obj);

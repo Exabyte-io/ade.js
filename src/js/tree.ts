@@ -1,47 +1,73 @@
 /* eslint-disable new-cap */
 import {
+    type ApplicationName,
     type ApplicationTreeItem,
     allApplications,
     getAppData,
     getAppTree,
 } from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils";
+import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
+import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
+
+import type { ApplicationMixin } from "./applicationMixin";
+
+type ApplicationVersion = {
+    [build: string]: ApplicationMixin | ApplicationSchemaBase;
+};
+
+type LocalApplicationTreeItem = {
+    defaultVersion: string;
+    [version: string]: ApplicationVersion | string;
+};
+
+type ApplicationTreeStructure = Partial<Record<ApplicationName, LocalApplicationTreeItem>>;
 
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
- * @param cls {*} optional class to use to create applications
- * @returns {Object} containing applications and applicationConfigs
+ * @param cls optional class to use to create applications
+ * @returns containing applications and applicationConfigs
  */
-export function getAllApplications(cls = null) {
-    const applicationsTree = {};
-    const applicationsArray = [];
+export function getAllApplications(cls: Constructor<ApplicationMixin> | null = null) {
+    const applicationsTree: ApplicationTreeStructure = {};
+    const applicationsArray: ApplicationMixin | ApplicationSchemaBase[] = [];
     allApplications.forEach((appName) => {
-        applicationsTree[appName] = {};
         const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
-        applicationsTree[appName].defaultVersion = defaultVersion;
+        const appTreeItem: LocalApplicationTreeItem = { defaultVersion };
+
         versions.forEach((options) => {
             const { version } = options;
-            if (!(version in applicationsTree[appName])) applicationsTree[appName][version] = {};
+
+            const appVersion =
+                version in appTreeItem && typeof appTreeItem[version] === "object"
+                    ? appTreeItem[version]
+                    : {};
+
+            appTreeItem[version] = appVersion;
+
             const config = { ...appData, build, ...options };
+
             if (cls) {
-                applicationsTree[appName][version][build] = new cls(config);
+                appVersion[build] = new cls(config);
                 applicationsArray.push(new cls(config));
             } else {
-                applicationsTree[appName][version][build] = config;
+                appVersion[build] = config;
                 applicationsArray.push(config);
             }
         });
+
+        applicationsTree[appName] = appTreeItem;
     });
     return { applicationsTree, applicationsArray };
 }
 
 /**
  * @summary Get an application from the constructed applications
- * @param applicationsTree {Object} See getAllApplications applicationsTree object structure
- * @param name {String} name of the application
- * @param version {String|null} version of the application (optional, defaults to defaultVersion)
- * @param build {String} the build to use (optional, defaults to Default)
- * @return {*} an application
+ * @param applicationsTree See getAllApplications applicationsTree object structure
+ * @param name name of the application
+ * @param version version of the application (optional, defaults to defaultVersion)
+ * @param build  the build to use (optional, defaults to Default)
+ * @return an application
  */
 export function getApplication({
     applicationsTree,
@@ -49,21 +75,30 @@ export function getApplication({
     version = null,
     build = "Default",
 }: {
-    applicationsTree: Record<string, any>;
-    name: string;
+    applicationsTree: ApplicationTreeStructure;
+    name: ApplicationName;
     version?: string | null;
     build?: string;
 }) {
     const app = applicationsTree[name];
+    if (!app) {
+        throw new Error(`Application ${name} not found`);
+    }
     const version_ = version || app.defaultVersion;
-    if (!app[version_]) console.log(`Version ${version_} not available for ${name} !`);
-    return app[version_]?.[build];
+    const appVersion = app[version_];
+    if (!appVersion || typeof appVersion === "string") {
+        console.log(`Version ${version_} not available for ${name} !`);
+    }
+    if (typeof appVersion === "string") {
+        return null;
+    }
+    return appVersion[build] ?? null;
 }
 
 const { applicationsTree } = getAllApplications(null);
 
 export type CreateApplicationConfig = {
-    name: string;
+    name: ApplicationName;
     version?: string | null;
     build?: string;
 };
@@ -93,7 +128,7 @@ export function getExecutableConfig({
     appName,
     execName,
 }: {
-    appName: string;
+    appName: ApplicationName;
     execName?: string | null;
 }): ApplicationTreeItem {
     const appTree = getAppTree(appName);
@@ -107,23 +142,4 @@ export function getExecutableConfig({
     }
 
     return appTree[execName];
-}
-
-/**
- * @summary Get flavor config
- * @param appName
- * @param execName
- * @param flavorName
- */
-// eslint-disable-next-line no-unused-vars
-export function getFlavorConfig({
-    appName,
-    execName,
-    flavorName,
-}: {
-    appName: string;
-    execName: string;
-    flavorName: string;
-}) {
-    // TODO : reduce redundancy of object construction in getting flavors from executable
 }
