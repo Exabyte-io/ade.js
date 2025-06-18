@@ -14,7 +14,7 @@
         "type": "git",
         "url": "https://github.com/Exabyte-io/ade.js.git"
     },
-    "main": "dist/index.js",
+    "main": "dist/js/index.js",
     "files": [
         "/dist",
         "/src/js",
