@@ -7,7 +7,6 @@ import {
 
 import Application from "./application";
 import * as context from "./context";
-import ExecutableContextProvider from "./context/ExecutableContextProvider";
 import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
@@ -24,6 +23,5 @@ export {
     allTemplates,
     allowedResults,
     allowedMonitors,
-    ExecutableContextProvider,
     context,
 };

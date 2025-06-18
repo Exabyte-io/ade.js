@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.context = exports.ExecutableContextProvider = exports.allowedMonitors = exports.allowedResults = exports.allTemplates = exports.allApplications = exports.getApplication = exports.getAllApplications = exports.Template = exports.Flavor = exports.Executable = exports.Application = void 0;
+exports.context = exports.allowedMonitors = exports.allowedResults = exports.allTemplates = exports.allApplications = exports.getApplication = exports.getAllApplications = exports.Template = exports.Flavor = exports.Executable = exports.Application = void 0;
 const application_flavors_js_1 = require("@exabyte-io/application-flavors.js");
 Object.defineProperty(exports, "allApplications", { enumerable: true, get: function () { return application_flavors_js_1.allApplications; } });
 Object.defineProperty(exports, "allowedMonitors", { enumerable: true, get: function () { return application_flavors_js_1.allowedMonitors; } });
@@ -46,8 +46,6 @@ const application_1 = __importDefault(require("./application"));
 exports.Application = application_1.default;
 const context = __importStar(require("./context"));
 exports.context = context;
-const ExecutableContextProvider_1 = __importDefault(require("./context/ExecutableContextProvider"));
-exports.ExecutableContextProvider = ExecutableContextProvider_1.default;
 const executable_1 = __importDefault(require("./executable"));
 exports.Executable = executable_1.default;
 const flavor_1 = __importDefault(require("./flavor"));
