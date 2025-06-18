@@ -5,13 +5,12 @@ import {
     allTemplates,
 } from "@exabyte-io/application-flavors.js";
 
-import { Application } from "./application";
+import Application from "./application";
 import * as context from "./context";
-import { ExecutableContextProvider } from "./context/providers";
-import { ContextProviderRegistry } from "./context/registry";
-import { Executable } from "./executable";
-import { Flavor } from "./flavor";
-import { Template } from "./template";
+import ExecutableContextProvider from "./context/ExecutableContextProvider";
+import Executable from "./executable";
+import Flavor from "./flavor";
+import Template from "./template";
 import { getAllApplications, getApplication } from "./tree";
 
 export {
@@ -26,6 +25,5 @@ export {
     allowedResults,
     allowedMonitors,
     ExecutableContextProvider,
-    ContextProviderRegistry,
     context,
 };

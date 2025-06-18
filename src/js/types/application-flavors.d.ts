@@ -49,4 +49,8 @@ declare module "@exabyte-io/application-flavors.js" {
     };
 
     export const allTemplates: Template[];
+
+    export const allowedResults: string[];
+
+    export const allowedMonitors: string[];
 }
