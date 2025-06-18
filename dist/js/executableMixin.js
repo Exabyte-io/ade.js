@@ -47,7 +47,10 @@ function executableMixin(item) {
             return filteredFlavors;
         },
         toJSON(exclude = []) {
-            return super.toJSON(["flavors"].concat(exclude));
+            const thisProto = Object.getPrototypeOf(this);
+            const superProto = Object.getPrototypeOf(thisProto);
+            const baseToJSON = superProto.toJSON;
+            return baseToJSON.call(this, ["flavors"].concat(exclude));
         },
     };
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
