@@ -10,7 +10,7 @@ import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/Nam
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import lodash from "lodash";
 
-import { Executable } from "./executable";
+import Executable from "./executable";
 import { CreateApplicationConfig, getExecutableConfig } from "./tree";
 
 type Base = InMemoryEntity & NamedInMemoryEntity & DefaultableInMemoryEntity;

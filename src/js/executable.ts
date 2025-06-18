@@ -6,7 +6,7 @@ import { type ExecutableMixin, executableMixin, executableStaticMixin } from "./
 
 type Base = typeof NamedDefaultableInMemoryEntity & Constructor<ExecutableMixin>;
 
-export class Executable extends (NamedDefaultableInMemoryEntity as Base) {}
+export default class Executable extends (NamedDefaultableInMemoryEntity as Base) {}
 
 // Apply mixins
 runtimeItemsMixin(Executable.prototype);

@@ -6,7 +6,7 @@ import { type FlavorMixin, flavorMixin } from "./flavorMixin";
 
 type Base = typeof NamedDefaultableInMemoryEntity & Constructor<FlavorMixin>;
 
-export class Flavor extends (NamedDefaultableInMemoryEntity as Base) {}
+export default class Flavor extends (NamedDefaultableInMemoryEntity as Base) {}
 
 // Apply mixins
 flavorMixin(Flavor.prototype);

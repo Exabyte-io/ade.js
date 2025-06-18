@@ -1,7 +1,7 @@
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 
-import { Template } from "./template";
+import Template from "./template";
 import type { TemplateBase, TemplateMixin } from "./templateMixin";
 
 type Base = InMemoryEntity & NamedInMemoryEntity;

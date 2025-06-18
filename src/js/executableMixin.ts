@@ -3,7 +3,7 @@ import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixi
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 
-import { Flavor } from "./flavor";
+import Flavor from "./flavor";
 import type { FlavorMixin } from "./flavorMixin";
 
 type BaseFlavor = FlavorMixin & NamedInMemoryEntity & InMemoryEntity;

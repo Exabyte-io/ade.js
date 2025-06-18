@@ -1,5 +1,8 @@
 import { allTemplates } from "@exabyte-io/application-flavors.js";
-import type { ContextProvider } from "@mat3ra/code/dist/js/context";
+import type {
+    ContextProvider,
+    ContextProviderRegistryContainer,
+} from "@mat3ra/code/dist/js/context";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import { deepClone } from "@mat3ra/code/dist/js/utils";
@@ -8,12 +11,7 @@ import type { AnyObject } from "@mat3ra/esse/dist/js/esse/types";
 import nunjucks from "nunjucks";
 import _ from "underscore";
 
-import { ContextProviderRegistry } from "./context/registry";
-
-export type TemplateBase = InMemoryEntity &
-    NamedInMemoryEntity & {
-        context: Record<string, unknown>;
-    };
+export type TemplateBase = InMemoryEntity & NamedInMemoryEntity;
 
 export type TemplateMixin = {
     isManuallyChanged: boolean;
@@ -25,7 +23,7 @@ export type TemplateMixin = {
     addContextProvider: (provider: ContextProvider) => void;
     removeContextProvider: (provider: ContextProvider) => void;
     render: (externalContext: Record<string, unknown>) => void;
-    getRenderedJSON: (context?: Record<string, unknown>) => AnyObject;
+    getRenderedJSON: (context: Record<string, unknown>) => AnyObject;
     _cleanRenderingContext: (object: Record<string, unknown>) => Record<string, unknown>;
     getDataFromProvidersForRenderingContext: (
         context: Record<string, unknown>,
@@ -111,8 +109,8 @@ export function templateMixin(item: TemplateBase) {
             }
         },
 
-        getRenderedJSON(context?: Record<string, unknown>) {
-            this.render(context || this.context);
+        getRenderedJSON(context: Record<string, unknown>) {
+            this.render(context);
             return this.toJSON();
         },
 
@@ -131,17 +129,20 @@ export function templateMixin(item: TemplateBase) {
          *          shall receive it on initialization through providerContext and prioritize this value over the default.
          */
         getContextProvidersAsClassInstances(providerContext: Record<string, unknown>) {
-            const { providerRegistry } = this.constructor as unknown as TemplateStaticMixin;
-
             return this.contextProviders.map((p) => {
-                const providerInstance = providerRegistry.findProviderInstanceByName(p.name);
+                const providerInstance = (
+                    this.constructor as unknown as TemplateStaticMixin
+                ).providerRegistry?.findProviderInstanceByName(p.name);
+
                 if (!providerInstance) {
                     throw new Error(`Provider ${p.name} not found`);
                 }
+
                 const clsInstance = new providerInstance.constructor({
                     ...providerInstance.config,
                     context: providerContext,
                 });
+
                 return clsInstance;
             });
         },
@@ -201,7 +202,8 @@ export type TemplateStaticMixin = {
         execName: string,
         inputName: string,
     ) => TemplateMixin & TemplateBase;
-    providerRegistry: typeof ContextProviderRegistry;
+    providerRegistry: ContextProviderRegistryContainer | null;
+    setProviderRegistry: (providerRegistry: ContextProviderRegistryContainer) => void;
 };
 
 export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>) {
@@ -222,7 +224,11 @@ export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMix
             return new this(filtered[0]);
         },
 
-        providerRegistry: ContextProviderRegistry,
+        providerRegistry: null,
+
+        setProviderRegistry(providerRegistry: ContextProviderRegistryContainer) {
+            this.providerRegistry = providerRegistry;
+        },
     };
 
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));

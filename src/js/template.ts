@@ -10,9 +10,7 @@ import {
 
 type Base = typeof NamedInMemoryEntity & Constructor<TemplateMixin> & TemplateStaticMixin;
 
-export class Template extends (NamedInMemoryEntity as Base) {
-    context: Record<string, unknown> = {}; // TODO: this is a Typescript fix, but it didn't exist in the original code
-}
+export default class Template extends (NamedInMemoryEntity as Base) {}
 
 // Apply mixins
 templateMixin(Template.prototype);
