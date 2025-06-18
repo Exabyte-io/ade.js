@@ -17,8 +17,9 @@
     "main": "dist/index.js",
     "files": [
         "/dist",
-        "/src",
-        ".babelrc"
+        "/src/js",
+        ".babelrc",
+        "tsconfig.json"
     ],
     "author": "Exabyte Inc.",
     "bugs": {
