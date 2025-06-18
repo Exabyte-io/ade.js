@@ -27,9 +27,7 @@
     "license": "Apache-2.0",
     "homepage": "https://github.com/Exabyte-io/ade.js",
     "dependencies": {
-        "@exabyte-io/periodic-table.js": "2022.6.8-0",
         "lodash": "^4.17.21",
-        "mixwith": "^0.1.1",
         "nunjucks": "^3.2.4",
         "underscore": "^1.13.3",
         "underscore.string": "^3.3.4"
