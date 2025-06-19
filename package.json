@@ -28,8 +28,10 @@
     "license": "Apache-2.0",
     "homepage": "https://github.com/Exabyte-io/ade.js",
     "dependencies": {
+        "@types/react-jsonschema-form": "^1.7.13",
         "lodash": "^4.17.21",
         "nunjucks": "^3.2.4",
+        "react-jsonschema-form": "^1.8.1",
         "underscore": "^1.13.3",
         "underscore.string": "^3.3.4"
     },
@@ -37,7 +39,7 @@
         "@babel/eslint-parser": "^7.16.3",
         "@exabyte-io/application-flavors.js": "2024.9.8-1",
         "@exabyte-io/eslint-config": "2025.5.13-0",
-        "@mat3ra/code": "git+https://github.com/Exabyte-io/code.git#18e25cec1cd51bc450505d329bca9c38ec694006",
+        "@mat3ra/code": "git+https://github.com/Exabyte-io/code.git#3fbf30e5318c9f1ab7a3a5b967fa57d2b70cad3e",
         "@mat3ra/esse": "2025.4.22-0",
         "@mat3ra/made": "git+https://github.com/Exabyte-io/made.git#84807b83b15dfd632fae9495be301aa7df503b11",
         "@mat3ra/tsconfig": "2024.6.3-0",

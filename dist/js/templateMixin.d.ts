@@ -1,8 +1,9 @@
-import type { ContextProvider, ContextProviderRegistryContainer } from "@mat3ra/code/dist/js/context";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { AnyObject } from "@mat3ra/esse/dist/js/esse/types";
+import type { ContextProvider, ContextProviderConfig, ContextProviderName } from "./context/ContextProvider";
+import ContextProviderRegistryContainer from "./context/ContextProviderRegistryContainer";
 export type TemplateBase = InMemoryEntity & NamedInMemoryEntity;
 export type TemplateMixin = {
     isManuallyChanged: boolean;
@@ -27,10 +28,15 @@ export declare function templateMixin(item: TemplateBase): TemplateMixin & InMem
     setName(name: string): void;
     name: string;
 };
+export type ContextProviderConfigMapEntry = {
+    providerCls: typeof ContextProvider;
+    config: ContextProviderConfig;
+};
+export type ContextProviderConfigMap = Record<ContextProviderName, ContextProviderConfigMapEntry>;
 export type TemplateStaticMixin = {
     fromFlavor: (appName: string, execName: string, inputName: string) => TemplateMixin & TemplateBase;
-    providerRegistry: ContextProviderRegistryContainer | null;
-    setProviderRegistry: (providerRegistry: ContextProviderRegistryContainer) => void;
+    contextProviderRegistry: ContextProviderRegistryContainer | null;
+    setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
 };
 export declare function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>): TemplateStaticMixin & Constructor<InMemoryEntity & {
     setName(name: string): void;

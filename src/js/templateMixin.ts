@@ -1,15 +1,17 @@
 import { allTemplates } from "@exabyte-io/application-flavors.js";
-import type {
-    ContextProvider,
-    ContextProviderRegistryContainer,
-} from "@mat3ra/code/dist/js/context";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import { deepClone } from "@mat3ra/code/dist/js/utils";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { AnyObject } from "@mat3ra/esse/dist/js/esse/types";
 import nunjucks from "nunjucks";
-import _ from "underscore";
+
+import type {
+    ContextProvider,
+    ContextProviderConfig,
+    ContextProviderName,
+} from "./context/ContextProvider";
+import ContextProviderRegistryContainer from "./context/ContextProviderRegistryContainer";
 
 export type TemplateBase = InMemoryEntity & NamedInMemoryEntity;
 
@@ -132,7 +134,7 @@ export function templateMixin(item: TemplateBase) {
             return this.contextProviders.map((p) => {
                 const providerInstance = (
                     this.constructor as unknown as TemplateStaticMixin
-                ).providerRegistry?.findProviderInstanceByName(p.name);
+                ).contextProviderRegistry?.findProviderInstanceByName(p.name);
 
                 if (!providerInstance) {
                     throw new Error(`Provider ${p.name} not found`);
@@ -156,10 +158,11 @@ export function templateMixin(item: TemplateBase) {
                 const context = contextProvider.yieldDataForRendering();
                 Object.keys(context).forEach((key) => {
                     // merge context keys if they are objects otherwise override them.
-                    result[key] = _.isObject(result[key])
-                        ? // @ts-ignore
-                          { ...result[key], ...context[key] }
-                        : context[key];
+                    result[key] =
+                        result[key] !== null && typeof result[key] === "object"
+                            ? // @ts-ignore
+                              { ...result[key], ...context[key] }
+                            : context[key];
                 });
             });
             return result;
@@ -196,14 +199,21 @@ export function templateMixin(item: TemplateBase) {
     return properties;
 }
 
+export type ContextProviderConfigMapEntry = {
+    providerCls: typeof ContextProvider;
+    config: ContextProviderConfig;
+};
+
+export type ContextProviderConfigMap = Record<ContextProviderName, ContextProviderConfigMapEntry>;
+
 export type TemplateStaticMixin = {
     fromFlavor: (
         appName: string,
         execName: string,
         inputName: string,
     ) => TemplateMixin & TemplateBase;
-    providerRegistry: ContextProviderRegistryContainer | null;
-    setProviderRegistry: (providerRegistry: ContextProviderRegistryContainer) => void;
+    contextProviderRegistry: ContextProviderRegistryContainer | null;
+    setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
 };
 
 export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>) {
@@ -224,10 +234,19 @@ export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMix
             return new this(filtered[0]);
         },
 
-        providerRegistry: null,
+        contextProviderRegistry: null,
 
-        setProviderRegistry(providerRegistry: ContextProviderRegistryContainer) {
-            this.providerRegistry = providerRegistry;
+        setContextProvidersConfig(classConfigMap: ContextProviderConfigMap) {
+            const contextProviderRegistry = new ContextProviderRegistryContainer();
+
+            Object.entries(classConfigMap).forEach(([name, { providerCls, config }]) => {
+                contextProviderRegistry.addProvider({
+                    instance: providerCls.getConstructorConfig(config),
+                    name,
+                });
+            });
+
+            this.contextProviderRegistry = contextProviderRegistry;
         },
     };
 

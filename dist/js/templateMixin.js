@@ -8,7 +8,7 @@ exports.templateStaticMixin = templateStaticMixin;
 const application_flavors_js_1 = require("@exabyte-io/application-flavors.js");
 const utils_1 = require("@mat3ra/code/dist/js/utils");
 const nunjucks_1 = __importDefault(require("nunjucks"));
-const underscore_1 = __importDefault(require("underscore"));
+const ContextProviderRegistryContainer_1 = __importDefault(require("./context/ContextProviderRegistryContainer"));
 function templateMixin(item) {
     // @ts-ignore
     const properties = {
@@ -80,7 +80,7 @@ function templateMixin(item) {
         getContextProvidersAsClassInstances(providerContext) {
             return this.contextProviders.map((p) => {
                 var _a;
-                const providerInstance = (_a = this.constructor.providerRegistry) === null || _a === void 0 ? void 0 : _a.findProviderInstanceByName(p.name);
+                const providerInstance = (_a = this.constructor.contextProviderRegistry) === null || _a === void 0 ? void 0 : _a.findProviderInstanceByName(p.name);
                 if (!providerInstance) {
                     throw new Error(`Provider ${p.name} not found`);
                 }
@@ -100,10 +100,11 @@ function templateMixin(item) {
                 const context = contextProvider.yieldDataForRendering();
                 Object.keys(context).forEach((key) => {
                     // merge context keys if they are objects otherwise override them.
-                    result[key] = underscore_1.default.isObject(result[key])
-                        ? // @ts-ignore
-                            { ...result[key], ...context[key] }
-                        : context[key];
+                    result[key] =
+                        result[key] !== null && typeof result[key] === "object"
+                            ? // @ts-ignore
+                                { ...result[key], ...context[key] }
+                            : context[key];
                 });
             });
             return result;
@@ -147,9 +148,16 @@ function templateStaticMixin(item) {
             }
             return new this(filtered[0]);
         },
-        providerRegistry: null,
-        setProviderRegistry(providerRegistry) {
-            this.providerRegistry = providerRegistry;
+        contextProviderRegistry: null,
+        setContextProvidersConfig(classConfigMap) {
+            const contextProviderRegistry = new ContextProviderRegistryContainer_1.default();
+            Object.entries(classConfigMap).forEach(([name, { providerCls, config }]) => {
+                contextProviderRegistry.addProvider({
+                    instance: providerCls.getConstructorConfig(config),
+                    name,
+                });
+            });
+            this.contextProviderRegistry = contextProviderRegistry;
         },
     };
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));

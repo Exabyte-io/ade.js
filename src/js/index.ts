@@ -6,7 +6,6 @@ import {
 } from "@exabyte-io/application-flavors.js";
 
 import Application from "./application";
-import * as context from "./context";
 import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
@@ -23,5 +22,4 @@ export {
     allTemplates,
     allowedResults,
     allowedMonitors,
-    context,
 };
