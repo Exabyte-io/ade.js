@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import type { UiSchema } from "react-jsonschema-form";
 
-import { ContextProvider, ContextProviderConfig } from "./ContextProvider";
+import ContextProvider, { type ContextProviderConfig } from "./ContextProvider";
 
 interface JSONSchemaFormDataProviderConfig extends ContextProviderConfig {
     isUsingJinjaVariables?: boolean;

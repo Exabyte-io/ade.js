@@ -1,4 +1,5 @@
-import type { ContextProvider, ContextProviderInstance } from "./ContextProvider";
+import type { ContextProviderInstance } from "./ContextProvider";
+import ContextProvider from "./ContextProvider";
 
 export default class ContextProviderRegistryContainer {
     _providers: {

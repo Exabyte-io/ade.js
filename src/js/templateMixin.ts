@@ -6,10 +6,9 @@ import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { AnyObject } from "@mat3ra/esse/dist/js/esse/types";
 import nunjucks from "nunjucks";
 
-import type {
-    ContextProvider,
-    ContextProviderConfig,
-    ContextProviderName,
+import ContextProvider, {
+    type ContextProviderConfig,
+    type ContextProviderName,
 } from "./context/ContextProvider";
 import ContextProviderRegistryContainer from "./context/ContextProviderRegistryContainer";
 

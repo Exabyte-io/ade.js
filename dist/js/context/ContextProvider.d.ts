@@ -44,7 +44,7 @@ export interface ContextProviderStatic {
     getExtraDataKeyByName: (name: string) => string;
     getIsEditedKeyByName: (name: string) => string;
 }
-export declare class ContextProvider {
+export default class ContextProvider {
     config: ContextProviderConfig;
     name: ContextProviderName;
     domain?: string;

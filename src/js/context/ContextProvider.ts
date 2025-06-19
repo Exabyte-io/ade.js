@@ -62,7 +62,7 @@ export interface ContextProviderStatic {
     getIsEditedKeyByName: (name: string) => string;
 }
 
-export class ContextProvider {
+export default class ContextProvider {
     config: ContextProviderConfig;
 
     name: ContextProviderName;

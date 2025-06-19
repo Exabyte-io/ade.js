@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContextProvider = exports.ContextProviderName = void 0;
+exports.ContextProviderName = void 0;
 /*
  * @summary This is a standalone class that contains "data" for a property with "name". Helps facilitate UI logic.
  *          Can be initialized from context when user edits are present:
@@ -135,4 +135,4 @@ class ContextProvider {
         return this.entityName === "subworkflow";
     }
 }
-exports.ContextProvider = ContextProvider;
+exports.default = ContextProvider;

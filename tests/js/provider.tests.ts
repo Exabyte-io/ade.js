@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { ContextProvider, ContextProviderName } from "../../src/js/context/ContextProvider";
+import ContextProvider, { ContextProviderName } from "../../src/js/context/ContextProvider";
 
 describe("ContextProvider", () => {
     const minimal = { name: ContextProviderName.KGridFormDataManager };
