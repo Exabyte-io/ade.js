@@ -1,8 +1,4 @@
-import type {
-    ContextProvider,
-    ContextProviderConfig,
-    ContextProviderInstance,
-} from "./ContextProvider";
+import type { ContextProvider, ContextProviderInstance } from "./ContextProvider";
 
 export default class ContextProviderRegistryContainer {
     _providers: {
@@ -42,43 +38,3 @@ export default class ContextProviderRegistryContainer {
         this.providers = this.providers.filter((p) => p.name === name);
     }
 }
-
-const registryContainer = new ContextProviderRegistryContainer();
-
-/** Extends an existing context provider registry container and patches static class variables if applicable.
- * @example
- * const classConfigMap = {
- *     PlanewaveCutoffDataManager: {
- *         providerCls: PlanewaveCutoffsContextProvider,
- *         config: _makeImportant({ name: "cutoffs", entityName: "subworkflow" })
- *     },
- * };
- */
-export const extendAndPatchRegistry = (
-    classConfigMap: Record<
-        string,
-        { providerCls: typeof ContextProvider; config: ContextProviderConfig }
-    >,
-) => {
-    Object.entries(classConfigMap).forEach(([name, { providerCls, config }]) => {
-        registryContainer.addProvider({
-            instance: providerCls.getConstructorConfig(config),
-            name,
-        });
-    });
-    return registryContainer;
-};
-
-/** Creates a new context provider registry container and patches static class variables if applicable.
- *
- * @param {Object} classConfigMap
- * @param {{Material: SpecificMockMaterial}} classesToPatch
- */
-export const createAndPatchRegistry = (
-    classConfigMap: Record<
-        string,
-        { providerCls: typeof ContextProvider; config: ContextProviderConfig }
-    >,
-) => {
-    return extendAndPatchRegistry(classConfigMap);
-};
