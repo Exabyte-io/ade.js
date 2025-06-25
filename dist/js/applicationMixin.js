@@ -28,39 +28,6 @@ function applicationMixin(item) {
             const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
             return materialUsingApplications.includes(this.name);
         },
-        // get executables() {
-        //     const tree = getAppTree(this.name as ApplicationName);
-        //     return Object.keys(tree)
-        //         .filter((key) => {
-        //             const { supportedApplicationVersions } = tree[key];
-        //             return (
-        //                 !supportedApplicationVersions ||
-        //                 supportedApplicationVersions.includes(this.version)
-        //             );
-        //         })
-        //         .map((key) => {
-        //             return (
-        //                 this.constructor as unknown as ApplicationStaticMixin
-        //             ).constructExecutable({
-        //                 ...tree[key],
-        //                 name: key,
-        //             });
-        //         });
-        // },
-        // get defaultExecutable() {
-        //     return this.getExecutableByName();
-        // },
-        // getExecutableByName(name?: string) {
-        //     return (this.constructor as unknown as ApplicationStaticMixin).constructExecutable(
-        //         getExecutableConfig({
-        //             appName: this.name as ApplicationName,
-        //             execName: name,
-        //         }),
-        //     );
-        // },
-        // getExecutableByConfig(config?: { name: string }) {
-        //     return config ? this.getExecutableByName(config.name) : this.defaultExecutable;
-        // },
     };
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
     return item;

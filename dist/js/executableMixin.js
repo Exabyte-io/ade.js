@@ -4,43 +4,6 @@ exports.executableMixin = executableMixin;
 function executableMixin(item) {
     // @ts-ignore
     const properties = {
-        // get defaultFlavor() {
-        //     return this.getFlavorByName();
-        // },
-        // get flavorsTree() {
-        //     return this.prop("flavors", {}) as Record<string, any>;
-        // },
-        //  get flavors() {
-        //     return Object.keys(this.flavorsTree).map((key) => {
-        //         return this.constructor.Flavor.create({
-        //             ...this.flavorsTree[key],
-        //             name: key,
-        //             executable: this,
-        //         });
-        //     });
-        // },
-        // get flavorsFromTree() {
-        //     return Object.keys(this.flavorsTree).map((key) => {
-        //         return new this.constructor.Flavor({ ...this.flavorsTree[key], name: key });
-        //     });
-        // },
-        // getFlavorByName(name?: string) {
-        //     return this.getEntityByName(this.flavors, "flavor", name || "") as BaseFlavor;
-        // },
-        // getFlavorByConfig(config?: { name: string }) {
-        //     return config ? this.getFlavorByName(config.name) : this.defaultFlavor;
-        // },
-        // getFlavorsByApplicationVersion(version: string) {
-        //     const filteredFlavors = this.flavors.filter((flavor) => {
-        //         const supportedApplicationVersions = flavor.prop<string[]>(
-        //             "supportedApplicationVersions",
-        //         );
-        //         return (
-        //             !supportedApplicationVersions || supportedApplicationVersions.includes(version)
-        //         );
-        //     });
-        //     return filteredFlavors;
-        // },
         toJSON(exclude = []) {
             const thisProto = Object.getPrototypeOf(this);
             const superProto = Object.getPrototypeOf(thisProto);

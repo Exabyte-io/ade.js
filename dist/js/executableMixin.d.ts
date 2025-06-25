@@ -6,10 +6,6 @@ import type { FlavorMixin } from "./flavorMixin";
 type BaseFlavor = FlavorMixin & NamedInMemoryEntity & InMemoryEntity;
 type Base = InMemoryEntity & NamedInMemoryEntity & DefaultableInMemoryEntity;
 export declare function executableMixin(item: Base): Base;
-export type CreateExecutableConfig = {
-    name: string;
-    flavors?: Record<string, any>;
-};
 export type BaseConstructor = Constructor<Base> & {
     constructCustomFlavor?: (config: object) => BaseFlavor;
 };
