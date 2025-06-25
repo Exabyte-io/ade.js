@@ -3,10 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllApplications = getAllApplications;
 exports.getApplication = getApplication;
 exports.getApplicationConfig = getApplicationConfig;
-exports.getExecutableConfig = getExecutableConfig;
 /* eslint-disable new-cap */
 const application_flavors_js_1 = require("@exabyte-io/application-flavors.js");
-const utils_1 = require("@mat3ra/code/dist/js/utils");
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
  * @param cls optional class to use to create applications
@@ -73,19 +71,4 @@ function getApplicationConfig({ name, version = null, build = "Default", }) {
         version,
         build,
     });
-}
-/**
- * @summary Get executable config
- * @param appName name of application to get executable for
- * @param execName  if not provided, find the executable with isDefault === true
- */
-function getExecutableConfig({ appName, execName, }) {
-    const appTree = (0, application_flavors_js_1.getAppTree)(appName);
-    Object.entries(appTree).forEach(([name, exec]) => {
-        exec.name = name;
-    });
-    if (!execName) {
-        return (0, utils_1.getOneMatchFromObject)(appTree, "isDefault", true);
-    }
-    return appTree[execName];
 }

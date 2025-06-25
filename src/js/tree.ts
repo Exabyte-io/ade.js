@@ -1,12 +1,9 @@
 /* eslint-disable new-cap */
 import {
     type ApplicationName,
-    type ApplicationTreeItem,
     allApplications,
     getAppData,
-    getAppTree,
 } from "@exabyte-io/application-flavors.js";
-import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
 
@@ -117,29 +114,4 @@ export function getApplicationConfig({
         version,
         build,
     });
-}
-
-/**
- * @summary Get executable config
- * @param appName name of application to get executable for
- * @param execName  if not provided, find the executable with isDefault === true
- */
-export function getExecutableConfig({
-    appName,
-    execName,
-}: {
-    appName: ApplicationName;
-    execName?: string | null;
-}): ApplicationTreeItem {
-    const appTree = getAppTree(appName);
-
-    Object.entries(appTree).forEach(([name, exec]) => {
-        exec.name = name;
-    });
-
-    if (!execName) {
-        return getOneMatchFromObject(appTree, "isDefault", true) as ApplicationTreeItem;
-    }
-
-    return appTree[execName];
 }

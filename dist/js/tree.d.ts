@@ -1,4 +1,4 @@
-import { type ApplicationName, type ApplicationTreeItem } from "@exabyte-io/application-flavors.js";
+import { type ApplicationName } from "@exabyte-io/application-flavors.js";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
 import type { ApplicationMixin } from "./applicationMixin";
@@ -42,13 +42,4 @@ export type CreateApplicationConfig = {
  * @summary Get pre-defined application config from an already generated applicationsTree of configs
  */
 export declare function getApplicationConfig({ name, version, build, }: CreateApplicationConfig): ApplicationMixin | ApplicationSchemaBase | null;
-/**
- * @summary Get executable config
- * @param appName name of application to get executable for
- * @param execName  if not provided, find the executable with isDefault === true
- */
-export declare function getExecutableConfig({ appName, execName, }: {
-    appName: ApplicationName;
-    execName?: string | null;
-}): ApplicationTreeItem;
 export {};
