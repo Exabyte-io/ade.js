@@ -1,3 +1,4 @@
+import { type ApplicationName } from "@exabyte-io/application-flavors.js";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/DefaultableMixin";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
@@ -14,6 +15,7 @@ export type ApplicationMixin = {
     version: string;
     build: string | undefined;
     shortName: string;
+    name: ApplicationName;
     hasAdvancedComputeOptions: boolean;
     isLicensed: boolean;
     isUsingMaterial: boolean;

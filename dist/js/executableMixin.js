@@ -10,12 +10,18 @@ function executableMixin(item) {
         // get flavorsTree() {
         //     return this.prop("flavors", {}) as Record<string, any>;
         // },
-        // get flavorsFromTree() {
+        //  get flavors() {
         //     return Object.keys(this.flavorsTree).map((key) => {
-        //         return (this.constructor as unknown as ExecutableStaticProperties).constructFlavor({
+        //         return this.constructor.Flavor.create({
         //             ...this.flavorsTree[key],
         //             name: key,
+        //             executable: this,
         //         });
+        //     });
+        // },
+        // get flavorsFromTree() {
+        //     return Object.keys(this.flavorsTree).map((key) => {
+        //         return new this.constructor.Flavor({ ...this.flavorsTree[key], name: key });
         //     });
         // },
         // getFlavorByName(name?: string) {

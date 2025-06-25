@@ -76,21 +76,12 @@ function applicationStaticMixin(Application) {
                 build: "Default",
             };
         },
-        // create(config: CreateApplicationConfig) {
-        //     return this.createFromNameVersionBuild(config);
-        // },
         create({ name, version = null, build = "Default" }) {
             return new Application({ name, version, build });
         },
         getUniqueAvailableNames() {
             return application_flavors_js_1.allApplications;
         },
-        // constructExecutable(this: BaseConstructor & typeof properties, config: object) {
-        //     if (this.constructCustomExecutable) {
-        //         return this.constructCustomExecutable(config);
-        //     }
-        //     return new Executable(config);
-        // },
     };
     Object.defineProperties(Application, Object.getOwnPropertyDescriptors(properties));
     return properties;

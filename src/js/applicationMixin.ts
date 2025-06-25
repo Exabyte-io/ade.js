@@ -1,4 +1,4 @@
-import { allApplications } from "@exabyte-io/application-flavors.js";
+import { type ApplicationName, allApplications } from "@exabyte-io/application-flavors.js";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/DefaultableMixin";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
@@ -21,6 +21,7 @@ export type ApplicationMixin = {
     version: string;
     build: string | undefined;
     shortName: string;
+    name: ApplicationName;
     // executables: Executable[];
     hasAdvancedComputeOptions: boolean;
     isLicensed: boolean;
@@ -130,10 +131,6 @@ export function applicationStaticMixin<T extends BaseConstructor>(Application: T
             };
         },
 
-        // create(config: CreateApplicationConfig) {
-        //     return this.createFromNameVersionBuild(config);
-        // },
-
         create({ name, version = null, build = "Default" }: CreateApplicationConfig) {
             return new Application({ name, version, build });
         },
@@ -141,13 +138,6 @@ export function applicationStaticMixin<T extends BaseConstructor>(Application: T
         getUniqueAvailableNames() {
             return allApplications as string[];
         },
-
-        // constructExecutable(this: BaseConstructor & typeof properties, config: object) {
-        //     if (this.constructCustomExecutable) {
-        //         return this.constructCustomExecutable(config);
-        //     }
-        //     return new Executable(config);
-        // },
     };
 
     Object.defineProperties(Application, Object.getOwnPropertyDescriptors(properties));
