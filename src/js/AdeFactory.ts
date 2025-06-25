@@ -7,7 +7,7 @@ import Executable from "./executable";
 import Flavor from "./flavor";
 import { type CreateApplicationConfig } from "./tree";
 
-export class AdeFactory {
+export default class AdeFactory {
     // applications
     static createApplication({ name, version = null, build = "Default" }: CreateApplicationConfig) {
         return new Application({ name, version, build });
