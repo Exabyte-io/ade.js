@@ -13,7 +13,7 @@ export default class AdeFactory {
         return new Application({ name, version, build });
     }
 
-    static getApplicationExecutables(application: Application) {
+    static getExecutables(application: Application) {
         const tree = getAppTree(application.name);
 
         return Object.keys(tree)
@@ -27,7 +27,7 @@ export default class AdeFactory {
             .map((key) => new Executable({ ...tree[key], name: key }));
     }
 
-    static getApplicationExecutableByName(application: Application, name?: string) {
+    static getExecutableByName(application: Application, name?: string) {
         const appTree = getAppTree(application.name);
 
         Object.entries(appTree).forEach(([name, exec]) => {
@@ -42,8 +42,8 @@ export default class AdeFactory {
     }
 
     // TODO: remove this method and use getApplicationExecutableByName directly
-    static getApplicationExecutableByConfig(application: Application, config?: { name: string }) {
-        return this.getApplicationExecutableByName(application, config?.name);
+    static getExecutableByConfig(application: Application, config?: { name: string }) {
+        return this.getExecutableByName(application, config?.name);
     }
 
     // executables

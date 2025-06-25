@@ -4,9 +4,9 @@ import Flavor from "./flavor";
 import { type CreateApplicationConfig } from "./tree";
 export default class AdeFactory {
     static createApplication({ name, version, build }: CreateApplicationConfig): Application;
-    static getApplicationExecutables(application: Application): Executable[];
-    static getApplicationExecutableByName(application: Application, name?: string): Executable;
-    static getApplicationExecutableByConfig(application: Application, config?: {
+    static getExecutables(application: Application): Executable[];
+    static getExecutableByName(application: Application, name?: string): Executable;
+    static getExecutableByConfig(application: Application, config?: {
         name: string;
     }): Executable;
     static getFlavorsByApplicationVersion(executable: Executable, version: string): Flavor[];

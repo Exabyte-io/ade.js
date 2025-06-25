@@ -13,7 +13,7 @@ class AdeFactory {
     static createApplication({ name, version = null, build = "Default" }) {
         return new application_1.default({ name, version, build });
     }
-    static getApplicationExecutables(application) {
+    static getExecutables(application) {
         const tree = (0, application_flavors_js_1.getAppTree)(application.name);
         return Object.keys(tree)
             .filter((key) => {
@@ -23,7 +23,7 @@ class AdeFactory {
         })
             .map((key) => new executable_1.default({ ...tree[key], name: key }));
     }
-    static getApplicationExecutableByName(application, name) {
+    static getExecutableByName(application, name) {
         const appTree = (0, application_flavors_js_1.getAppTree)(application.name);
         Object.entries(appTree).forEach(([name, exec]) => {
             exec.name = name;
@@ -34,8 +34,8 @@ class AdeFactory {
         return new executable_1.default(config);
     }
     // TODO: remove this method and use getApplicationExecutableByName directly
-    static getApplicationExecutableByConfig(application, config) {
-        return this.getApplicationExecutableByName(application, config === null || config === void 0 ? void 0 : config.name);
+    static getExecutableByConfig(application, config) {
+        return this.getExecutableByName(application, config === null || config === void 0 ? void 0 : config.name);
     }
     // executables
     static getFlavorsByApplicationVersion(executable, version) {
