@@ -1,4 +1,3 @@
-import { allTemplates } from "@exabyte-io/application-flavors.js";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import { deepClone } from "@mat3ra/code/dist/js/utils";
@@ -206,11 +205,6 @@ export type ContextProviderConfigMapEntry = {
 export type ContextProviderConfigMap = Record<ContextProviderName, ContextProviderConfigMapEntry>;
 
 export type TemplateStaticMixin = {
-    fromFlavor: (
-        appName: string,
-        execName: string,
-        inputName: string,
-    ) => TemplateMixin & TemplateBase;
     contextProviderRegistry: ContextProviderRegistryContainer | null;
     setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
 };
@@ -218,21 +212,6 @@ export type TemplateStaticMixin = {
 export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>) {
     // @ts-ignore
     const properties: TemplateStaticMixin & Constructor<TemplateBase & TemplateMixin> = {
-        fromFlavor(appName: string, execName: string, inputName: string) {
-            const filtered = allTemplates.filter(
-                (temp) =>
-                    temp.applicationName === appName &&
-                    temp.executableName === execName &&
-                    temp.name === inputName,
-            );
-            if (filtered.length !== 1) {
-                console.log(
-                    `found ${filtered.length} templates for app=${appName} exec=${execName} name=${inputName} expected 1`,
-                );
-            }
-            return new this(filtered[0]);
-        },
-
         contextProviderRegistry: null,
 
         setContextProvidersConfig(classConfigMap: ContextProviderConfigMap) {

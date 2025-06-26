@@ -4,7 +4,6 @@ import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixi
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import Executable from "./executable";
-import { CreateApplicationConfig } from "./tree";
 type Base = InMemoryEntity & NamedInMemoryEntity & DefaultableInMemoryEntity;
 export type BaseConstructor = Constructor<Base> & {
     constructCustomExecutable?: (config: object) => Executable;
@@ -28,8 +27,6 @@ export type ApplicationStaticMixin = {
         summary: string;
         build: string;
     };
-    create: (config: CreateApplicationConfig) => Base;
-    getUniqueAvailableNames: () => string[];
 };
 export declare function applicationMixin(item: Base): Base;
 export declare function applicationStaticMixin<T extends BaseConstructor>(Application: T): ApplicationStaticMixin;

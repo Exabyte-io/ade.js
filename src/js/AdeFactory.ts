@@ -1,16 +1,133 @@
-import { getAppTree } from "@exabyte-io/application-flavors.js";
+import {
+    type ApplicationName,
+    allApplications,
+    allTemplates,
+    getAppData,
+    getAppTree,
+} from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils/object";
-import type { ExecutableSchema } from "@mat3ra/esse/dist/js/types";
+import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
+import type { ApplicationSchemaBase, ExecutableSchema } from "@mat3ra/esse/dist/js/types";
 
 import Application from "./application";
+import type { ApplicationMixin } from "./applicationMixin";
 import Executable from "./executable";
 import Flavor from "./flavor";
-import { type CreateApplicationConfig } from "./tree";
+import Template from "./template";
+
+type ApplicationVersion = {
+    [build: string]: ApplicationMixin | ApplicationSchemaBase;
+};
+
+type LocalApplicationTreeItem = {
+    defaultVersion: string;
+    [version: string]: ApplicationVersion | string;
+};
+
+export type CreateApplicationConfig = {
+    name: ApplicationName;
+    version?: string | null;
+    build?: string;
+};
+
+type ApplicationTreeStructure = Partial<Record<ApplicationName, LocalApplicationTreeItem>>;
 
 export default class AdeFactory {
     // applications
+    static applicationsTree: ApplicationTreeStructure;
+
+    static applicationsArray: (ApplicationMixin | ApplicationSchemaBase)[];
+
     static createApplication({ name, version = null, build = "Default" }: CreateApplicationConfig) {
-        return new Application({ name, version, build });
+        const staticConfig = AdeFactory.getApplicationConfig({ name, version, build });
+        return new Application({ ...staticConfig, name, version, build });
+    }
+
+    static getUniqueAvailableApplicationNames() {
+        return allApplications;
+    }
+
+    /**
+     * @summary Return all applications as both a nested object of Applications and an array of config objects
+     * @param Cls optional class to use to create applications
+     * @returns containing applications and applicationConfigs
+     */
+    static getAllApplications(Cls: Constructor<ApplicationMixin> | null = null) {
+        if (this.applicationsTree && this.applicationsArray) {
+            return {
+                applicationsTree: this.applicationsTree,
+                applicationsArray: this.applicationsArray,
+            };
+        }
+
+        const applicationsTree: ApplicationTreeStructure = {};
+        const applicationsArray: ApplicationMixin | ApplicationSchemaBase[] = [];
+
+        allApplications.forEach((appName) => {
+            const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
+            const appTreeItem: LocalApplicationTreeItem = { defaultVersion };
+
+            versions.forEach((options) => {
+                const { version } = options;
+
+                const appVersion =
+                    version in appTreeItem && typeof appTreeItem[version] === "object"
+                        ? appTreeItem[version]
+                        : {};
+
+                appTreeItem[version] = appVersion;
+
+                const config = { ...appData, build, ...options };
+
+                if (Cls) {
+                    appVersion[build] = new Cls(config);
+                    applicationsArray.push(new Cls(config));
+                } else {
+                    appVersion[build] = config;
+                    applicationsArray.push(config);
+                }
+            });
+
+            applicationsTree[appName] = appTreeItem;
+        });
+
+        this.applicationsTree = applicationsTree;
+        this.applicationsArray = applicationsArray;
+
+        return { applicationsTree, applicationsArray };
+    }
+
+    /**
+     * @summary Get an application from the constructed applications
+     * @param name name of the application
+     * @param version version of the application (optional, defaults to defaultVersion)
+     * @param build  the build to use (optional, defaults to Default)
+     * @return an application
+     */
+    static getApplicationConfig({
+        name,
+        version = null,
+        build = "Default",
+    }: CreateApplicationConfig) {
+        const { applicationsTree } = this.getAllApplications();
+        const app = applicationsTree[name];
+
+        if (!app) {
+            throw new Error(`Application ${name} not found`);
+        }
+
+        const version_ = version || app.defaultVersion;
+        const appVersion = app[version_];
+
+        if (!appVersion || typeof appVersion === "string") {
+            console.log(`Version ${version_} not available for ${name} !`);
+        }
+
+        if (typeof appVersion === "string") {
+            return null;
+        }
+
+        return appVersion[build] ?? null;
     }
 
     static getExecutables(application: Application) {
@@ -78,5 +195,36 @@ export default class AdeFactory {
 
     static getFlavorByConfig(executable: Executable, config?: { name: string }) {
         return this.getFlavorByName(executable, config?.name);
+    }
+
+    // flavors
+    static getInputAsTemplates(flavor: Flavor) {
+        const appName = flavor.prop("applicationName", "");
+        const execName = flavor.prop("executableName", "");
+
+        return flavor.input.map((input) => {
+            const inputName = input.templateName || input.name;
+
+            const filtered = allTemplates.filter(
+                (temp) =>
+                    temp.applicationName === appName &&
+                    temp.executableName === execName &&
+                    temp.name === inputName,
+            );
+
+            if (filtered.length !== 1) {
+                console.log(
+                    `found ${filtered.length} templates for app=${appName} exec=${execName} name=${inputName} expected 1`,
+                );
+            }
+
+            return new Template({ ...filtered[0], name: input.name });
+        });
+    }
+
+    static getInputAsRenderedTemplates(flavor: Flavor, context: Record<string, unknown>) {
+        return this.getInputAsTemplates(flavor).map((template) =>
+            template.getRenderedJSON(context),
+        );
     }
 }

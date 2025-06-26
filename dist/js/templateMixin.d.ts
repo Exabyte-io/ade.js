@@ -34,7 +34,6 @@ export type ContextProviderConfigMapEntry = {
 };
 export type ContextProviderConfigMap = Record<ContextProviderName, ContextProviderConfigMapEntry>;
 export type TemplateStaticMixin = {
-    fromFlavor: (appName: string, execName: string, inputName: string) => TemplateMixin & TemplateBase;
     contextProviderRegistry: ContextProviderRegistryContainer | null;
     setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
 };

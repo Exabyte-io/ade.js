@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllApplications = getAllApplications;
-exports.getApplication = getApplication;
 exports.getApplicationConfig = getApplicationConfig;
 /* eslint-disable new-cap */
 const application_flavors_js_1 = require("@exabyte-io/application-flavors.js");
@@ -14,20 +13,25 @@ function getAllApplications(cls = null) {
     const applicationsTree = {};
     const applicationsArray = [];
     application_flavors_js_1.allApplications.forEach((appName) => {
-        const { versions, defaultVersion, build = "Default", ...appData } = (0, application_flavors_js_1.getAppData)(appName);
+        const {
+            versions,
+            defaultVersion,
+            build = "Default",
+            ...appData
+        } = (0, application_flavors_js_1.getAppData)(appName);
         const appTreeItem = { defaultVersion };
         versions.forEach((options) => {
             const { version } = options;
-            const appVersion = version in appTreeItem && typeof appTreeItem[version] === "object"
-                ? appTreeItem[version]
-                : {};
+            const appVersion =
+                version in appTreeItem && typeof appTreeItem[version] === "object"
+                    ? appTreeItem[version]
+                    : {};
             appTreeItem[version] = appVersion;
             const config = { ...appData, build, ...options };
             if (cls) {
                 appVersion[build] = new cls(config);
                 applicationsArray.push(new cls(config));
-            }
-            else {
+            } else {
                 appVersion[build] = config;
                 applicationsArray.push(config);
             }
@@ -44,7 +48,7 @@ function getAllApplications(cls = null) {
  * @param build  the build to use (optional, defaults to Default)
  * @return an application
  */
-function getApplication({ applicationsTree, name, version = null, build = "Default", }) {
+function getApplication({ applicationsTree, name, version = null, build = "Default" }) {
     var _a;
     const app = applicationsTree[name];
     if (!app) {
@@ -64,7 +68,7 @@ const { applicationsTree } = getAllApplications(null);
 /**
  * @summary Get pre-defined application config from an already generated applicationsTree of configs
  */
-function getApplicationConfig({ name, version = null, build = "Default", }) {
+function getApplicationConfig({ name, version = null, build = "Default" }) {
     return getApplication({
         applicationsTree,
         name,

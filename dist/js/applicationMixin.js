@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.applicationMixin = applicationMixin;
 exports.applicationStaticMixin = applicationStaticMixin;
-const application_flavors_js_1 = require("@exabyte-io/application-flavors.js");
 function applicationMixin(item) {
     // @ts-expect-error
     const properties = {
@@ -42,12 +41,6 @@ function applicationStaticMixin(Application) {
                 summary: "Quantum Espresso",
                 build: "Default",
             };
-        },
-        create({ name, version = null, build = "Default" }) {
-            return new Application({ name, version, build });
-        },
-        getUniqueAvailableNames() {
-            return application_flavors_js_1.allApplications;
         },
     };
     Object.defineProperties(Application, Object.getOwnPropertyDescriptors(properties));

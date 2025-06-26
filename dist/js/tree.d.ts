@@ -9,7 +9,6 @@ type LocalApplicationTreeItem = {
     defaultVersion: string;
     [version: string]: ApplicationVersion | string;
 };
-type ApplicationTreeStructure = Partial<Record<ApplicationName, LocalApplicationTreeItem>>;
 /**
  * @summary Return all applications as both a nested object of Applications and an array of config objects
  * @param cls optional class to use to create applications
@@ -19,20 +18,6 @@ export declare function getAllApplications(cls?: Constructor<ApplicationMixin> |
     applicationsTree: Partial<Record<ApplicationName, LocalApplicationTreeItem>>;
     applicationsArray: ApplicationSchemaBase[];
 };
-/**
- * @summary Get an application from the constructed applications
- * @param applicationsTree See getAllApplications applicationsTree object structure
- * @param name name of the application
- * @param version version of the application (optional, defaults to defaultVersion)
- * @param build  the build to use (optional, defaults to Default)
- * @return an application
- */
-export declare function getApplication({ applicationsTree, name, version, build, }: {
-    applicationsTree: ApplicationTreeStructure;
-    name: ApplicationName;
-    version?: string | null;
-    build?: string;
-}): ApplicationMixin | ApplicationSchemaBase | null;
 export type CreateApplicationConfig = {
     name: ApplicationName;
     version?: string | null;

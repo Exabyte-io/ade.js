@@ -1,11 +1,10 @@
-import { type ApplicationName, allApplications } from "@exabyte-io/application-flavors.js";
+import { type ApplicationName } from "@exabyte-io/application-flavors.js";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/DefaultableMixin";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 
 import Executable from "./executable";
-import { CreateApplicationConfig } from "./tree";
 
 type Base = InMemoryEntity & NamedInMemoryEntity & DefaultableInMemoryEntity;
 
@@ -34,10 +33,6 @@ export type ApplicationStaticMixin = {
         summary: string;
         build: string;
     };
-
-    create: (config: CreateApplicationConfig) => Base;
-
-    getUniqueAvailableNames: () => string[];
 };
 
 export function applicationMixin(item: Base) {
@@ -88,14 +83,6 @@ export function applicationStaticMixin<T extends BaseConstructor>(Application: T
                 summary: "Quantum Espresso",
                 build: "Default",
             };
-        },
-
-        create({ name, version = null, build = "Default" }: CreateApplicationConfig) {
-            return new Application({ name, version, build });
-        },
-
-        getUniqueAvailableNames() {
-            return allApplications as string[];
         },
     };
 
