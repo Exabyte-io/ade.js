@@ -9,7 +9,6 @@ import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils/object";
 import type { ApplicationSchemaBase, ExecutableSchema } from "@mat3ra/esse/dist/js/types";
 
 import Application from "./application";
-import type { ApplicationMixin } from "./applicationMixin";
 import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
@@ -35,7 +34,7 @@ export default class AdeFactory {
     // applications
     static applicationsTree: ApplicationTree = {};
 
-    static applicationsArray: (ApplicationMixin | ApplicationSchemaBase)[] = [];
+    static applicationsArray: ApplicationSchemaBase[] = [];
 
     static createApplication({ name, version = null, build = "Default" }: CreateApplicationConfig) {
         const staticConfig = AdeFactory.getApplicationConfig({ name, version, build });

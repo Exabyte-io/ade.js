@@ -1,7 +1,6 @@
 import { type ApplicationName } from "@exabyte-io/application-flavors.js";
 import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
 import Application from "./application";
-import type { ApplicationMixin } from "./applicationMixin";
 import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
@@ -20,7 +19,7 @@ export type CreateApplicationConfig = {
 type ApplicationTree = Partial<Record<ApplicationName, ApplicationTreeItem>>;
 export default class AdeFactory {
     static applicationsTree: ApplicationTree;
-    static applicationsArray: (ApplicationMixin | ApplicationSchemaBase)[];
+    static applicationsArray: ApplicationSchemaBase[];
     static createApplication({ name, version, build }: CreateApplicationConfig): Application;
     static getUniqueAvailableApplicationNames(): ApplicationName[];
     /**
@@ -29,7 +28,7 @@ export default class AdeFactory {
      */
     static getAllApplications(): {
         applicationsTree: Partial<Record<ApplicationName, ApplicationTreeItem>>;
-        applicationsArray: (ApplicationMixin | ApplicationSchemaBase)[];
+        applicationsArray: ApplicationSchemaBase[];
     };
     /**
      * @summary Get an application from the constructed applications
