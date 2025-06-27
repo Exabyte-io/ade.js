@@ -9,8 +9,14 @@ type BaseFlavor = FlavorMixin & NamedInMemoryEntity & InMemoryEntity;
 type Base = InMemoryEntity & NamedInMemoryEntity & DefaultableInMemoryEntity;
 
 export function executableMixin(item: Base) {
-    // @ts-ignore
+    // @ts-expect-error
     const properties: ExecutableMixin & Base = {
+        get applicationId() {
+            return this.prop("applicationId", "");
+        },
+        set applicationId(value: string) {
+            this.setProp("applicationId", value);
+        },
         toJSON(exclude: string[] = []) {
             const thisProto = Object.getPrototypeOf(this);
             const superProto = Object.getPrototypeOf(thisProto);
@@ -30,4 +36,5 @@ export type BaseConstructor = Constructor<Base> & {
 
 export type ExecutableMixin = {
     toJSON: (exclude?: string[]) => object;
+    applicationId: string;
 };
