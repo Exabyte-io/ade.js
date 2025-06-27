@@ -99,14 +99,6 @@ class AdeFactory {
     static getExecutableByConfig(appName, config) {
         return this.getExecutableByName(appName, config === null || config === void 0 ? void 0 : config.name);
     }
-    // executables
-    static getFlavorsByApplicationVersion(executable, version) {
-        const filteredFlavors = this.getExecutableFlavors(executable).filter((flavor) => {
-            const supportedApplicationVersions = flavor.prop("supportedApplicationVersions");
-            return !supportedApplicationVersions || supportedApplicationVersions.includes(version);
-        });
-        return filteredFlavors;
-    }
     static getExecutableFlavors(executable) {
         const flavorsTree = executable.prop("flavors", {});
         return Object.keys(flavorsTree).map((key) => {

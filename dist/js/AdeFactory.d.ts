@@ -46,7 +46,6 @@ export default class AdeFactory {
     static getExecutableByConfig(appName: ApplicationName, config?: {
         name: string;
     }): Executable;
-    static getFlavorsByApplicationVersion(executable: Executable, version: string): Flavor[];
     static getExecutableFlavors(executable: Executable): Flavor[];
     static getFlavorByName(executable: Executable, name?: string): Flavor | undefined;
     static getFlavorByConfig(executable: Executable, config?: {

@@ -157,18 +157,6 @@ export default class AdeFactory {
         return this.getExecutableByName(appName, config?.name);
     }
 
-    // executables
-    static getFlavorsByApplicationVersion(executable: Executable, version: string) {
-        const filteredFlavors = this.getExecutableFlavors(executable).filter((flavor) => {
-            const supportedApplicationVersions = flavor.prop<string[]>(
-                "supportedApplicationVersions",
-            );
-            return !supportedApplicationVersions || supportedApplicationVersions.includes(version);
-        });
-
-        return filteredFlavors;
-    }
-
     static getExecutableFlavors(executable: Executable) {
         const flavorsTree = executable.prop("flavors", {}) as Record<string, any>;
 
