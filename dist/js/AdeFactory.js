@@ -139,4 +139,7 @@ class AdeFactory {
         return this.getInputAsTemplates(flavor).map((template) => template.getRenderedJSON(context));
     }
 }
+// applications
+AdeFactory.applicationsTree = {};
+AdeFactory.applicationsArray = [];
 exports.default = AdeFactory;
