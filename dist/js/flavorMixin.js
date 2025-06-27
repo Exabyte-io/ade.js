@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.flavorMixin = flavorMixin;
+// TODO: should we add fields from esse schema (executableId, executableName, applicationName)?
 function flavorMixin(item) {
-    // @ts-ignore
+    // @ts-expect-error
     const properties = {
         get input() {
             return this.prop("input", []);
