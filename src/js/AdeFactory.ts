@@ -9,6 +9,7 @@ import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils/object";
 import type { ApplicationSchemaBase, ExecutableSchema } from "@mat3ra/esse/dist/js/types";
 
 import Application from "./application";
+import type { ApplicationMixin } from "./applicationMixin";
 import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
@@ -119,7 +120,7 @@ export default class AdeFactory {
         return appVersion[build] ?? null;
     }
 
-    static getExecutables(application: Application) {
+    static getExecutables(application: ApplicationMixin) {
         const tree = getAppTree(application.name);
 
         return Object.keys(tree)
@@ -133,7 +134,7 @@ export default class AdeFactory {
             .map((key) => new Executable({ ...tree[key], name: key }));
     }
 
-    static getExecutableByName(application: Application, name?: string) {
+    static getExecutableByName(application: ApplicationMixin, name?: string) {
         const appTree = getAppTree(application.name);
 
         Object.entries(appTree).forEach(([name, exec]) => {
@@ -148,7 +149,7 @@ export default class AdeFactory {
     }
 
     // TODO: remove this method and use getApplicationExecutableByName directly
-    static getExecutableByConfig(application: Application, config?: { name: string }) {
+    static getExecutableByConfig(application: ApplicationMixin, config?: { name: string }) {
         return this.getExecutableByName(application, config?.name);
     }
 

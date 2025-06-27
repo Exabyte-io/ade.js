@@ -1,6 +1,7 @@
 import { type ApplicationName } from "@exabyte-io/application-flavors.js";
 import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
 import Application from "./application";
+import type { ApplicationMixin } from "./applicationMixin";
 import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
@@ -38,9 +39,9 @@ export default class AdeFactory {
      * @return an application
      */
     static getApplicationConfig({ name, version, build, }: CreateApplicationConfig): ApplicationSchemaBase | null;
-    static getExecutables(application: Application): Executable[];
-    static getExecutableByName(application: Application, name?: string): Executable;
-    static getExecutableByConfig(application: Application, config?: {
+    static getExecutables(application: ApplicationMixin): Executable[];
+    static getExecutableByName(application: ApplicationMixin, name?: string): Executable;
+    static getExecutableByConfig(application: ApplicationMixin, config?: {
         name: string;
     }): Executable;
     static getFlavorsByApplicationVersion(executable: Executable, version: string): Flavor[];
