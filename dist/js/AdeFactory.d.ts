@@ -18,8 +18,8 @@ export type CreateApplicationConfig = {
 };
 type ApplicationTree = Partial<Record<ApplicationName, ApplicationTreeItem>>;
 export default class AdeFactory {
-    static applicationsTree: ApplicationTree;
-    static applicationsArray: ApplicationSchemaBase[];
+    static applicationsTree?: ApplicationTree;
+    static applicationsArray?: ApplicationSchemaBase[];
     static createApplication({ name, version, build }: CreateApplicationConfig): Application;
     static getUniqueAvailableApplicationNames(): ApplicationName[];
     /**

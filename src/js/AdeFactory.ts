@@ -32,9 +32,9 @@ type ApplicationTree = Partial<Record<ApplicationName, ApplicationTreeItem>>;
 
 export default class AdeFactory {
     // applications
-    static applicationsTree: ApplicationTree = {};
+    static applicationsTree?: ApplicationTree;
 
-    static applicationsArray: ApplicationSchemaBase[] = [];
+    static applicationsArray?: ApplicationSchemaBase[];
 
     static createApplication({ name, version = null, build = "Default" }: CreateApplicationConfig) {
         const staticConfig = AdeFactory.getApplicationConfig({ name, version, build });
@@ -57,6 +57,9 @@ export default class AdeFactory {
             };
         }
 
+        const applicationsTree: ApplicationTree = {};
+        const applicationsArray: ApplicationSchemaBase[] = [];
+
         allApplications.forEach((appName) => {
             const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
             const appTreeItem: ApplicationTreeItem = { defaultVersion };
@@ -74,14 +77,17 @@ export default class AdeFactory {
                 const applicationConfig: ApplicationSchemaBase = { ...appData, build, ...options };
 
                 appVersion[build] = applicationConfig;
-                this.applicationsArray.push(applicationConfig);
+                applicationsArray.push(applicationConfig);
             });
 
-            this.applicationsTree[appName] = appTreeItem;
+            applicationsTree[appName] = appTreeItem;
         });
 
+        this.applicationsTree = applicationsTree;
+        this.applicationsArray = applicationsArray;
+
         return {
-            applicationsTree: this.applicationsTree,
+            applicationsTree,
             applicationsArray: this.applicationsArray,
         };
     }

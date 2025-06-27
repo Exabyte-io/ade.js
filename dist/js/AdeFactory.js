@@ -28,6 +28,8 @@ class AdeFactory {
                 applicationsArray: this.applicationsArray,
             };
         }
+        const applicationsTree = {};
+        const applicationsArray = [];
         application_flavors_js_1.allApplications.forEach((appName) => {
             const { versions, defaultVersion, build = "Default", ...appData } = (0, application_flavors_js_1.getAppData)(appName);
             const appTreeItem = { defaultVersion };
@@ -39,12 +41,14 @@ class AdeFactory {
                 appTreeItem[version] = appVersion;
                 const applicationConfig = { ...appData, build, ...options };
                 appVersion[build] = applicationConfig;
-                this.applicationsArray.push(applicationConfig);
+                applicationsArray.push(applicationConfig);
             });
-            this.applicationsTree[appName] = appTreeItem;
+            applicationsTree[appName] = appTreeItem;
         });
+        this.applicationsTree = applicationsTree;
+        this.applicationsArray = applicationsArray;
         return {
-            applicationsTree: this.applicationsTree,
+            applicationsTree,
             applicationsArray: this.applicationsArray,
         };
     }
@@ -138,7 +142,4 @@ class AdeFactory {
         return this.getInputAsTemplates(flavor).map((template) => template.getRenderedJSON(context));
     }
 }
-// applications
-AdeFactory.applicationsTree = {};
-AdeFactory.applicationsArray = [];
 exports.default = AdeFactory;
