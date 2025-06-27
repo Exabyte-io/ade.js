@@ -1,13 +1,10 @@
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
-import type { TemplateBase, TemplateMixin } from "./templateMixin";
+import type { FlavorSchema } from "@mat3ra/esse/dist/js/types";
 type Base = InMemoryEntity & NamedInMemoryEntity;
+type Input = Required<FlavorSchema>["input"];
 export type FlavorMixin = {
-    input: {
-        name: string;
-        templateName?: string;
-    }[];
-    inputAsTemplates: (TemplateMixin & TemplateBase)[];
+    input: Input;
     disableRenderMaterials: boolean;
     getInputAsRenderedTemplates: (context: Record<string, unknown>) => Record<string, unknown>[];
 };

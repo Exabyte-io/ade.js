@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import type { CreateApplicationConfig } from "src/js/tree";
 
+import type { CreateApplicationConfig } from "../../src/js/AdeFactory";
 import Application from "../../src/js/application";
 
 describe("Application", () => {

@@ -1,40 +1,23 @@
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
-
-import Template from "./template";
-import type { TemplateBase, TemplateMixin } from "./templateMixin";
+import type { FlavorSchema } from "@mat3ra/esse/dist/js/types";
 
 type Base = InMemoryEntity & NamedInMemoryEntity;
 
+type Input = Required<FlavorSchema>["input"];
+
 export type FlavorMixin = {
-    input: { name: string; templateName?: string }[];
-    inputAsTemplates: (TemplateMixin & TemplateBase)[];
+    input: Input;
     disableRenderMaterials: boolean;
     getInputAsRenderedTemplates: (context: Record<string, unknown>) => Record<string, unknown>[];
 };
 
+// TODO: should we add fields from esse schema (executableId, executableName, applicationName)?
 export function flavorMixin(item: Base) {
-    // @ts-ignore
+    // @ts-expect-error
     const properties: FlavorMixin & Base = {
         get input() {
-            return this.prop<{ name: string; templateName?: string }[]>("input", []);
-        },
-
-        // TODO : prevent this from running in client
-        get inputAsTemplates() {
-            return this.input.map((input) => {
-                const template = Template.fromFlavor(
-                    this.prop("applicationName", ""),
-                    this.prop("executableName", ""),
-                    input.templateName || input.name,
-                );
-                template.name = input.name;
-                return template;
-            });
-        },
-
-        getInputAsRenderedTemplates(context: Record<string, unknown>) {
-            return this.inputAsTemplates.map((t) => t.getRenderedJSON(context));
+            return this.prop<Input>("input", []);
         },
 
         get disableRenderMaterials() {
