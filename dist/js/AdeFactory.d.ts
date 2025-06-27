@@ -1,5 +1,4 @@
 import { type ApplicationName } from "@exabyte-io/application-flavors.js";
-import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
 import Application from "./application";
 import type { ApplicationMixin } from "./applicationMixin";
@@ -7,9 +6,9 @@ import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
 type ApplicationVersion = {
-    [build: string]: ApplicationMixin | ApplicationSchemaBase;
+    [build: string]: ApplicationSchemaBase;
 };
-type LocalApplicationTreeItem = {
+type ApplicationTreeItem = {
     defaultVersion: string;
     [version: string]: ApplicationVersion | string;
 };
@@ -18,19 +17,18 @@ export type CreateApplicationConfig = {
     version?: string | null;
     build?: string;
 };
-type ApplicationTreeStructure = Partial<Record<ApplicationName, LocalApplicationTreeItem>>;
+type ApplicationTree = Partial<Record<ApplicationName, ApplicationTreeItem>>;
 export default class AdeFactory {
-    static applicationsTree: ApplicationTreeStructure;
+    static applicationsTree: ApplicationTree;
     static applicationsArray: (ApplicationMixin | ApplicationSchemaBase)[];
     static createApplication({ name, version, build }: CreateApplicationConfig): Application;
     static getUniqueAvailableApplicationNames(): ApplicationName[];
     /**
      * @summary Return all applications as both a nested object of Applications and an array of config objects
-     * @param Cls optional class to use to create applications
      * @returns containing applications and applicationConfigs
      */
-    static getAllApplications(Cls?: Constructor<ApplicationMixin> | null): {
-        applicationsTree: Partial<Record<ApplicationName, LocalApplicationTreeItem>>;
+    static getAllApplications(): {
+        applicationsTree: Partial<Record<ApplicationName, ApplicationTreeItem>>;
         applicationsArray: (ApplicationMixin | ApplicationSchemaBase)[];
     };
     /**
@@ -40,7 +38,7 @@ export default class AdeFactory {
      * @param build  the build to use (optional, defaults to Default)
      * @return an application
      */
-    static getApplicationConfig({ name, version, build, }: CreateApplicationConfig): ApplicationMixin | ApplicationSchemaBase | null;
+    static getApplicationConfig({ name, version, build, }: CreateApplicationConfig): ApplicationSchemaBase | null;
     static getExecutables(application: Application): Executable[];
     static getExecutableByName(application: Application, name?: string): Executable;
     static getExecutableByConfig(application: Application, config?: {

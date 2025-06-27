@@ -6,7 +6,6 @@ import {
     getAppTree,
 } from "@exabyte-io/application-flavors.js";
 import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils/object";
-import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { ApplicationSchemaBase, ExecutableSchema } from "@mat3ra/esse/dist/js/types";
 
 import Application from "./application";
@@ -16,10 +15,10 @@ import Flavor from "./flavor";
 import Template from "./template";
 
 type ApplicationVersion = {
-    [build: string]: ApplicationMixin | ApplicationSchemaBase;
+    [build: string]: ApplicationSchemaBase;
 };
 
-type LocalApplicationTreeItem = {
+type ApplicationTreeItem = {
     defaultVersion: string;
     [version: string]: ApplicationVersion | string;
 };
@@ -30,11 +29,11 @@ export type CreateApplicationConfig = {
     build?: string;
 };
 
-type ApplicationTreeStructure = Partial<Record<ApplicationName, LocalApplicationTreeItem>>;
+type ApplicationTree = Partial<Record<ApplicationName, ApplicationTreeItem>>;
 
 export default class AdeFactory {
     // applications
-    static applicationsTree: ApplicationTreeStructure;
+    static applicationsTree: ApplicationTree;
 
     static applicationsArray: (ApplicationMixin | ApplicationSchemaBase)[];
 
@@ -49,10 +48,9 @@ export default class AdeFactory {
 
     /**
      * @summary Return all applications as both a nested object of Applications and an array of config objects
-     * @param Cls optional class to use to create applications
      * @returns containing applications and applicationConfigs
      */
-    static getAllApplications(Cls: Constructor<ApplicationMixin> | null = null) {
+    static getAllApplications() {
         if (this.applicationsTree && this.applicationsArray) {
             return {
                 applicationsTree: this.applicationsTree,
@@ -60,12 +58,9 @@ export default class AdeFactory {
             };
         }
 
-        const applicationsTree: ApplicationTreeStructure = {};
-        const applicationsArray: ApplicationMixin | ApplicationSchemaBase[] = [];
-
         allApplications.forEach((appName) => {
             const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
-            const appTreeItem: LocalApplicationTreeItem = { defaultVersion };
+            const appTreeItem: ApplicationTreeItem = { defaultVersion };
 
             versions.forEach((options) => {
                 const { version } = options;
@@ -77,24 +72,19 @@ export default class AdeFactory {
 
                 appTreeItem[version] = appVersion;
 
-                const config = { ...appData, build, ...options };
+                const applicationConfig: ApplicationSchemaBase = { ...appData, build, ...options };
 
-                if (Cls) {
-                    appVersion[build] = new Cls(config);
-                    applicationsArray.push(new Cls(config));
-                } else {
-                    appVersion[build] = config;
-                    applicationsArray.push(config);
-                }
+                appVersion[build] = applicationConfig;
+                this.applicationsArray.push(applicationConfig);
             });
 
-            applicationsTree[appName] = appTreeItem;
+            this.applicationsTree[appName] = appTreeItem;
         });
 
-        this.applicationsTree = applicationsTree;
-        this.applicationsArray = applicationsArray;
-
-        return { applicationsTree, applicationsArray };
+        return {
+            applicationsTree: this.applicationsTree,
+            applicationsArray: this.applicationsArray,
+        };
     }
 
     /**

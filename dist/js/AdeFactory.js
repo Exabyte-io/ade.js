@@ -19,18 +19,15 @@ class AdeFactory {
     }
     /**
      * @summary Return all applications as both a nested object of Applications and an array of config objects
-     * @param Cls optional class to use to create applications
      * @returns containing applications and applicationConfigs
      */
-    static getAllApplications(Cls = null) {
+    static getAllApplications() {
         if (this.applicationsTree && this.applicationsArray) {
             return {
                 applicationsTree: this.applicationsTree,
                 applicationsArray: this.applicationsArray,
             };
         }
-        const applicationsTree = {};
-        const applicationsArray = [];
         application_flavors_js_1.allApplications.forEach((appName) => {
             const { versions, defaultVersion, build = "Default", ...appData } = (0, application_flavors_js_1.getAppData)(appName);
             const appTreeItem = { defaultVersion };
@@ -40,21 +37,16 @@ class AdeFactory {
                     ? appTreeItem[version]
                     : {};
                 appTreeItem[version] = appVersion;
-                const config = { ...appData, build, ...options };
-                if (Cls) {
-                    appVersion[build] = new Cls(config);
-                    applicationsArray.push(new Cls(config));
-                }
-                else {
-                    appVersion[build] = config;
-                    applicationsArray.push(config);
-                }
+                const applicationConfig = { ...appData, build, ...options };
+                appVersion[build] = applicationConfig;
+                this.applicationsArray.push(applicationConfig);
             });
-            applicationsTree[appName] = appTreeItem;
+            this.applicationsTree[appName] = appTreeItem;
         });
-        this.applicationsTree = applicationsTree;
-        this.applicationsArray = applicationsArray;
-        return { applicationsTree, applicationsArray };
+        return {
+            applicationsTree: this.applicationsTree,
+            applicationsArray: this.applicationsArray,
+        };
     }
     /**
      * @summary Get an application from the constructed applications
