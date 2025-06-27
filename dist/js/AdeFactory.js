@@ -72,29 +72,28 @@ class AdeFactory {
         }
         return (_a = appVersion[build]) !== null && _a !== void 0 ? _a : null;
     }
-    static getExecutables(application) {
-        const tree = (0, application_flavors_js_1.getAppTree)(application.name);
+    static getExecutables({ name, version }) {
+        const tree = (0, application_flavors_js_1.getAppTree)(name);
         return Object.keys(tree)
             .filter((key) => {
             const { supportedApplicationVersions } = tree[key];
-            return (!supportedApplicationVersions ||
-                supportedApplicationVersions.includes(application.version));
+            return (!supportedApplicationVersions || supportedApplicationVersions.includes(version));
         })
             .map((key) => new executable_1.default({ ...tree[key], name: key }));
     }
-    static getExecutableByName(application, name) {
-        const appTree = (0, application_flavors_js_1.getAppTree)(application.name);
+    static getExecutableByName(appName, execName) {
+        const appTree = (0, application_flavors_js_1.getAppTree)(appName);
         Object.entries(appTree).forEach(([name, exec]) => {
             exec.name = name;
         });
-        const config = name
-            ? appTree[name]
+        const config = execName
+            ? appTree[execName]
             : (0, object_1.getOneMatchFromObject)(appTree, "isDefault", true);
         return new executable_1.default(config);
     }
     // TODO: remove this method and use getApplicationExecutableByName directly
-    static getExecutableByConfig(application, config) {
-        return this.getExecutableByName(application, config === null || config === void 0 ? void 0 : config.name);
+    static getExecutableByConfig(appName, config) {
+        return this.getExecutableByName(appName, config === null || config === void 0 ? void 0 : config.name);
     }
     // executables
     static getFlavorsByApplicationVersion(executable, version) {

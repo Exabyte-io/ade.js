@@ -9,7 +9,6 @@ import { getOneMatchFromObject } from "@mat3ra/code/dist/js/utils/object";
 import type { ApplicationSchemaBase, ExecutableSchema } from "@mat3ra/esse/dist/js/types";
 
 import Application from "./application";
-import type { ApplicationMixin } from "./applicationMixin";
 import Executable from "./executable";
 import Flavor from "./flavor";
 import Template from "./template";
@@ -120,37 +119,36 @@ export default class AdeFactory {
         return appVersion[build] ?? null;
     }
 
-    static getExecutables(application: ApplicationMixin) {
-        const tree = getAppTree(application.name);
+    static getExecutables({ name, version }: { name: ApplicationName; version: string }) {
+        const tree = getAppTree(name);
 
         return Object.keys(tree)
             .filter((key) => {
                 const { supportedApplicationVersions } = tree[key];
                 return (
-                    !supportedApplicationVersions ||
-                    supportedApplicationVersions.includes(application.version)
+                    !supportedApplicationVersions || supportedApplicationVersions.includes(version)
                 );
             })
             .map((key) => new Executable({ ...tree[key], name: key }));
     }
 
-    static getExecutableByName(application: ApplicationMixin, name?: string) {
-        const appTree = getAppTree(application.name);
+    static getExecutableByName(appName: ApplicationName, execName?: string) {
+        const appTree = getAppTree(appName);
 
         Object.entries(appTree).forEach(([name, exec]) => {
             exec.name = name;
         });
 
-        const config = name
-            ? appTree[name]
+        const config = execName
+            ? appTree[execName]
             : (getOneMatchFromObject(appTree, "isDefault", true) as ExecutableSchema);
 
         return new Executable(config);
     }
 
     // TODO: remove this method and use getApplicationExecutableByName directly
-    static getExecutableByConfig(application: ApplicationMixin, config?: { name: string }) {
-        return this.getExecutableByName(application, config?.name);
+    static getExecutableByConfig(appName: ApplicationName, config?: { name: string }) {
+        return this.getExecutableByName(appName, config?.name);
     }
 
     // executables
