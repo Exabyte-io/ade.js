@@ -14,15 +14,15 @@ export type TemplateMixin = {
     contextProviders: ContextProvider[];
     addContextProvider: (provider: ContextProvider) => void;
     removeContextProvider: (provider: ContextProvider) => void;
-    render: (externalContext: Record<string, unknown>) => void;
-    getRenderedJSON: (context: Record<string, unknown>) => AnyObject;
+    render: (externalContext?: Record<string, unknown>) => void;
+    getRenderedJSON: (context?: Record<string, unknown>) => AnyObject;
     _cleanRenderingContext: (object: Record<string, unknown>) => Record<string, unknown>;
-    getDataFromProvidersForRenderingContext: (context: Record<string, unknown>) => Record<string, unknown>;
+    getDataFromProvidersForRenderingContext: (context?: Record<string, unknown>) => Record<string, unknown>;
     setContent: (text: string) => void;
     setRendered: (text: string) => void;
-    getContextProvidersAsClassInstances: (providerContext: Record<string, unknown>) => ContextProvider[];
-    getDataFromProvidersForPersistentContext: (providerContext: Record<string, unknown>) => Record<string, unknown>;
-    getRenderingContext: (externalContext: Record<string, unknown>) => Record<string, unknown>;
+    getContextProvidersAsClassInstances: (providerContext?: Record<string, unknown>) => ContextProvider[];
+    getDataFromProvidersForPersistentContext: (providerContext?: Record<string, unknown>) => Record<string, unknown>;
+    getRenderingContext: (externalContext?: Record<string, unknown>) => Record<string, unknown>;
 };
 export declare function templateMixin(item: TemplateBase): TemplateMixin & InMemoryEntity & {
     setName(name: string): void;

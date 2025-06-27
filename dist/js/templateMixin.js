@@ -121,10 +121,10 @@ function templateMixin(item) {
             return result;
         },
         /*
-     @summary Combines rendering context (in order of preference):
-     *        - context from templates initialized with external context
-     *        - "external" context and
-     */
+         * @summary Combines rendering context (in order of preference):
+         *        - context from templates initialized with external context
+         *        - "external" context and
+         */
         getRenderingContext(externalContext) {
             return {
                 ...externalContext,

@@ -22,21 +22,21 @@ export type TemplateMixin = {
     contextProviders: ContextProvider[];
     addContextProvider: (provider: ContextProvider) => void;
     removeContextProvider: (provider: ContextProvider) => void;
-    render: (externalContext: Record<string, unknown>) => void;
-    getRenderedJSON: (context: Record<string, unknown>) => AnyObject;
+    render: (externalContext?: Record<string, unknown>) => void;
+    getRenderedJSON: (context?: Record<string, unknown>) => AnyObject;
     _cleanRenderingContext: (object: Record<string, unknown>) => Record<string, unknown>;
     getDataFromProvidersForRenderingContext: (
-        context: Record<string, unknown>,
+        context?: Record<string, unknown>,
     ) => Record<string, unknown>;
     setContent: (text: string) => void;
     setRendered: (text: string) => void;
     getContextProvidersAsClassInstances: (
-        providerContext: Record<string, unknown>,
+        providerContext?: Record<string, unknown>,
     ) => ContextProvider[];
     getDataFromProvidersForPersistentContext: (
-        providerContext: Record<string, unknown>,
+        providerContext?: Record<string, unknown>,
     ) => Record<string, unknown>;
-    getRenderingContext: (externalContext: Record<string, unknown>) => Record<string, unknown>;
+    getRenderingContext: (externalContext?: Record<string, unknown>) => Record<string, unknown>;
 };
 
 export function templateMixin(item: TemplateBase) {
@@ -87,7 +87,7 @@ export function templateMixin(item: TemplateBase) {
             );
         },
 
-        render(externalContext: Record<string, unknown>) {
+        render(externalContext?: Record<string, unknown>) {
             const renderingContext = this.getRenderingContext(externalContext);
             if (!this.isManuallyChanged) {
                 try {
@@ -109,7 +109,7 @@ export function templateMixin(item: TemplateBase) {
             }
         },
 
-        getRenderedJSON(context: Record<string, unknown>) {
+        getRenderedJSON(context?: Record<string, unknown>) {
             this.render(context);
             return this.toJSON();
         },
@@ -128,7 +128,7 @@ export function templateMixin(item: TemplateBase) {
          *          previously stored values. That is if data was previously saved in database, the context provider
          *          shall receive it on initialization through providerContext and prioritize this value over the default.
          */
-        getContextProvidersAsClassInstances(providerContext: Record<string, unknown>) {
+        getContextProvidersAsClassInstances(providerContext?: Record<string, unknown>) {
             return this.contextProviders.map((p) => {
                 const providerInstance = (
                     this.constructor as unknown as TemplateStaticMixin
@@ -150,7 +150,7 @@ export function templateMixin(item: TemplateBase) {
         /*
          * @summary Extracts the the data from all context providers for further use during render.
          */
-        getDataFromProvidersForRenderingContext(providerContext: Record<string, unknown>) {
+        getDataFromProvidersForRenderingContext(providerContext?: Record<string, unknown>) {
             const result: AnyObject = {};
             this.getContextProvidersAsClassInstances(providerContext).forEach((contextProvider) => {
                 const context = contextProvider.yieldDataForRendering();
@@ -170,7 +170,7 @@ export function templateMixin(item: TemplateBase) {
          * @summary Extracts the the data from all context providers for further save in persistent context.
          */
         // TODO: optimize logic to prevent re-initializing the context provider classes again below, reuse above function
-        getDataFromProvidersForPersistentContext(providerContext: Record<string, unknown>) {
+        getDataFromProvidersForPersistentContext(providerContext?: Record<string, unknown>) {
             const result = {};
             this.getContextProvidersAsClassInstances(providerContext).forEach((contextProvider) => {
                 // only save in the persistent context the data from providers that were edited (or able to be edited)
@@ -180,11 +180,11 @@ export function templateMixin(item: TemplateBase) {
         },
 
         /*
-     @summary Combines rendering context (in order of preference):
-     *        - context from templates initialized with external context
-     *        - "external" context and
-     */
-        getRenderingContext(externalContext: Record<string, unknown>) {
+         * @summary Combines rendering context (in order of preference):
+         *        - context from templates initialized with external context
+         *        - "external" context and
+         */
+        getRenderingContext(externalContext?: Record<string, unknown>) {
             return {
                 ...externalContext,
                 ...this.getDataFromProvidersForRenderingContext(externalContext),
