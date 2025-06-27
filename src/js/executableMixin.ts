@@ -12,9 +12,9 @@ export function executableMixin(item: Base) {
     // @ts-expect-error
     const properties: ExecutableMixin & Base = {
         get applicationId() {
-            return this.prop("applicationId", "");
+            return this.prop("applicationId", []);
         },
-        set applicationId(value: string) {
+        set applicationId(value: string[]) {
             this.setProp("applicationId", value);
         },
         toJSON(exclude: string[] = []) {
@@ -36,5 +36,5 @@ export type BaseConstructor = Constructor<Base> & {
 
 export type ExecutableMixin = {
     toJSON: (exclude?: string[]) => object;
-    applicationId: string;
+    applicationId: string[];
 };

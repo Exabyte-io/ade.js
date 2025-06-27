@@ -11,6 +11,6 @@ export type BaseConstructor = Constructor<Base> & {
 };
 export type ExecutableMixin = {
     toJSON: (exclude?: string[]) => object;
-    applicationId: string;
+    applicationId: string[];
 };
 export {};

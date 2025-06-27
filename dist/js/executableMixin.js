@@ -5,7 +5,7 @@ function executableMixin(item) {
     // @ts-expect-error
     const properties = {
         get applicationId() {
-            return this.prop("applicationId", "");
+            return this.prop("applicationId", []);
         },
         set applicationId(value) {
             this.setProp("applicationId", value);
