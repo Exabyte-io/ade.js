@@ -21,7 +21,7 @@ function flavorMixin(item) {
             return this.prop("applicationName", "");
         },
         get supportedApplicationVersions() {
-            return this.prop("supportedApplicationVersions", []);
+            return this.prop("supportedApplicationVersions");
         },
     };
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));

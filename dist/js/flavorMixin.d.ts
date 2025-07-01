@@ -9,7 +9,7 @@ export type FlavorMixin = {
     executableId: string;
     executableName: string;
     applicationName: string;
-    supportedApplicationVersions: string[];
+    supportedApplicationVersions?: string[];
     getInputAsRenderedTemplates: (context: Record<string, unknown>) => Record<string, unknown>[];
 };
 export declare function flavorMixin(item: Base): FlavorMixin & InMemoryEntity & {

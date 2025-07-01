@@ -12,7 +12,7 @@ export type FlavorMixin = {
     executableId: string;
     executableName: string;
     applicationName: string;
-    supportedApplicationVersions: string[];
+    supportedApplicationVersions?: string[];
     getInputAsRenderedTemplates: (context: Record<string, unknown>) => Record<string, unknown>[];
 };
 
@@ -41,7 +41,7 @@ export function flavorMixin(item: Base) {
         },
 
         get supportedApplicationVersions() {
-            return this.prop("supportedApplicationVersions", []);
+            return this.prop("supportedApplicationVersions");
         },
     };
 
