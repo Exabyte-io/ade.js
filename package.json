@@ -38,7 +38,7 @@
         "@exabyte-io/application-flavors.js": "2024.9.8-1",
         "@exabyte-io/eslint-config": "2025.5.13-0",
         "@mat3ra/code": "git+https://github.com/Exabyte-io/code.git#3fbf30e5318c9f1ab7a3a5b967fa57d2b70cad3e",
-        "@mat3ra/esse": "2025.4.22-0",
+        "@mat3ra/esse": "git+https://github.com/Exabyte-io/esse.git#51ebdff7682a9767016cd9af8bc13086386737ec",
         "@mat3ra/made": "git+https://github.com/Exabyte-io/made.git#84807b83b15dfd632fae9495be301aa7df503b11",
         "@mat3ra/tsconfig": "2024.6.3-0",
         "@types/nunjucks": "^3.2.6",

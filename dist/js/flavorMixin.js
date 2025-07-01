@@ -11,6 +11,18 @@ function flavorMixin(item) {
         get disableRenderMaterials() {
             return this.prop("isMultiMaterial", false);
         },
+        get executableId() {
+            return this.prop("executableId", "");
+        },
+        get executableName() {
+            return this.prop("executableName", "");
+        },
+        get applicationName() {
+            return this.prop("applicationName", "");
+        },
+        get supportedApplicationVersions() {
+            return this.prop("supportedApplicationVersions", []);
+        },
     };
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
     return properties;

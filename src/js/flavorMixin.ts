@@ -9,6 +9,10 @@ type Input = Required<FlavorSchema>["input"];
 export type FlavorMixin = {
     input: Input;
     disableRenderMaterials: boolean;
+    executableId: string;
+    executableName: string;
+    applicationName: string;
+    supportedApplicationVersions: string[];
     getInputAsRenderedTemplates: (context: Record<string, unknown>) => Record<string, unknown>[];
 };
 
@@ -22,6 +26,22 @@ export function flavorMixin(item: Base) {
 
         get disableRenderMaterials() {
             return this.prop("isMultiMaterial", false);
+        },
+
+        get executableId() {
+            return this.prop("executableId", "");
+        },
+
+        get executableName() {
+            return this.prop("executableName", "");
+        },
+
+        get applicationName() {
+            return this.prop("applicationName", "");
+        },
+
+        get supportedApplicationVersions() {
+            return this.prop("supportedApplicationVersions", []);
         },
     };
 
