@@ -80,8 +80,10 @@ class AdeFactory {
         const tree = (0, application_flavors_js_1.getAppTree)(name);
         return Object.keys(tree)
             .filter((key) => {
-            const { supportedApplicationVersions } = tree[key];
-            return (!supportedApplicationVersions || supportedApplicationVersions.includes(version));
+            const executable = tree[key];
+            const { supportedApplicationVersions } = executable;
+            return (!supportedApplicationVersions ||
+                (version && supportedApplicationVersions.includes(version)));
         })
             .map((key) => new executable_1.default({ ...tree[key], name: key }));
     }
@@ -132,6 +134,10 @@ class AdeFactory {
     }
     static getInputAsRenderedTemplates(flavor, context) {
         return this.getInputAsTemplates(flavor).map((template) => template.getRenderedJSON(context));
+    }
+    static getAllFlavorsForApplication(appName, version) {
+        const allExecutables = this.getExecutables({ name: appName, version });
+        return allExecutables.flatMap((executable) => this.getExecutableFlavors(executable));
     }
 }
 exports.default = AdeFactory;

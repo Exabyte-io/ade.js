@@ -40,7 +40,7 @@ export default class AdeFactory {
     static getApplicationConfig({ name, version, build, }: CreateApplicationConfig): ApplicationSchemaBase | null;
     static getExecutables({ name, version }: {
         name: ApplicationName;
-        version: string;
+        version?: string;
     }): Executable[];
     static getExecutableByName(appName: ApplicationName, execName?: string): Executable;
     static getExecutableByConfig(appName: ApplicationName, config?: {
@@ -53,5 +53,6 @@ export default class AdeFactory {
     }): Flavor | undefined;
     static getInputAsTemplates(flavor: Flavor): Template[];
     static getInputAsRenderedTemplates(flavor: Flavor, context: Record<string, unknown>): import("@mat3ra/esse/dist/js/esse/types").AnyObject[];
+    static getAllFlavorsForApplication(appName: ApplicationName, version?: string): Flavor[];
 }
 export {};

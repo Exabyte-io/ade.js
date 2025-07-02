@@ -125,14 +125,16 @@ export default class AdeFactory {
         return appVersion[build] ?? null;
     }
 
-    static getExecutables({ name, version }: { name: ApplicationName; version: string }) {
+    static getExecutables({ name, version }: { name: ApplicationName; version?: string }) {
         const tree = getAppTree(name);
 
         return Object.keys(tree)
             .filter((key) => {
-                const { supportedApplicationVersions } = tree[key];
+                const executable = tree[key];
+                const { supportedApplicationVersions } = executable;
                 return (
-                    !supportedApplicationVersions || supportedApplicationVersions.includes(version)
+                    !supportedApplicationVersions ||
+                    (version && supportedApplicationVersions.includes(version))
                 );
             })
             .map((key) => new Executable({ ...tree[key], name: key }));
@@ -208,5 +210,11 @@ export default class AdeFactory {
         return this.getInputAsTemplates(flavor).map((template) =>
             template.getRenderedJSON(context),
         );
+    }
+
+    static getAllFlavorsForApplication(appName: ApplicationName, version?: string) {
+        const allExecutables = this.getExecutables({ name: appName, version });
+
+        return allExecutables.flatMap((executable) => this.getExecutableFlavors(executable));
     }
 }
