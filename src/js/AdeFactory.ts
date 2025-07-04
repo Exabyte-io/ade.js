@@ -166,7 +166,6 @@ export default class AdeFactory {
             return new Flavor({
                 ...flavorsTree[key],
                 name: key,
-                executable,
             });
         });
     }

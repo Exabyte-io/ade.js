@@ -107,7 +107,6 @@ class AdeFactory {
             return new flavor_1.default({
                 ...flavorsTree[key],
                 name: key,
-                executable,
             });
         });
     }
