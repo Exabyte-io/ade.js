@@ -1,10 +1,15 @@
 import { NamedDefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity";
-import { runtimeItemsMixin } from "@mat3ra/code/dist/js/entity/mixins/RuntimeItemsMixin";
+import {
+    type RuntimeItemsInMemoryEntity,
+    runtimeItemsMixin,
+} from "@mat3ra/code/dist/js/entity/mixins/RuntimeItemsMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 
 import { type FlavorMixin, flavorMixin } from "./flavorMixin";
 
-type Base = typeof NamedDefaultableInMemoryEntity & Constructor<FlavorMixin>;
+type Base = typeof NamedDefaultableInMemoryEntity &
+    Constructor<FlavorMixin> &
+    Constructor<RuntimeItemsInMemoryEntity>;
 
 export default class Flavor extends (NamedDefaultableInMemoryEntity as Base) {}
 
