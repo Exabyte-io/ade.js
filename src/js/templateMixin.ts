@@ -201,7 +201,9 @@ export type ContextProviderConfigMapEntry = {
     config: ContextProviderConfig;
 };
 
-export type ContextProviderConfigMap = Record<ContextProviderName, ContextProviderConfigMapEntry>;
+export type ContextProviderConfigMap = Partial<
+    Record<ContextProviderName, ContextProviderConfigMapEntry>
+>;
 
 export type TemplateStaticMixin = {
     contextProviderRegistry: ContextProviderRegistryContainer | null;

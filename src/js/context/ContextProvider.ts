@@ -27,6 +27,7 @@ export interface ContextProviderConfig {
     context?: object;
 }
 
+// TODO: separate application-specific CPs
 export enum ContextProviderName {
     PlanewaveCutoffDataManager = "PlanewaveCutoffDataManager",
     KGridFormDataManager = "KGridFormDataManager",
