@@ -10,7 +10,6 @@ export type BaseConstructor = Constructor<Base> & {
     constructCustomFlavor?: (config: object) => BaseFlavor;
 };
 export type ExecutableMixin = {
-    toJSON: (exclude?: string[]) => object;
     applicationId: string[];
 };
 export {};

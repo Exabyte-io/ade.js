@@ -33,13 +33,16 @@ function templateMixin(item) {
             return this.prop("executableName");
         },
         get contextProviders() {
-            return this.prop("contextProviders") || [];
+            return this.prop("contextProviders", []);
         },
         addContextProvider(provider) {
-            this.setProp("contextProviders", this.contextProviders.push(provider));
+            this.setProp("contextProviders", [...this.contextProviders, provider]);
         },
         removeContextProvider(provider) {
-            this.setProp("contextProviders", this.contextProviders.filter((p) => p.name !== provider.name && p.domain !== provider.domain));
+            const contextProviders = this.contextProviders.filter((p) => {
+                return p.name !== provider.name && p.domain !== provider.domain;
+            });
+            this.setProp("contextProviders", contextProviders);
         },
         render(externalContext) {
             const renderingContext = this.getRenderingContext(externalContext);

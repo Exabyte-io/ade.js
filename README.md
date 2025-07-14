@@ -44,6 +44,15 @@ npm run transpile
 
 # run tests
 npm run test
+
+# run tests with coverage
+npm run test:coverage
+
+# run tests with coverage and check thresholds
+npm run test:coverage:check
+
+# generate HTML coverage report
+npm run test:coverage:html
 ```
 
 ADe

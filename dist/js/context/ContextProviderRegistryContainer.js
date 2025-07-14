@@ -21,10 +21,10 @@ class ContextProviderRegistryContainer {
         return provider && provider.instance;
     }
     removeProvider(providerCls) {
-        this.providers = this.providers.filter((p) => p.name === providerCls.name);
+        this.providers = this.providers.filter((p) => p.name !== providerCls.name);
     }
     removeProviderByName(name) {
-        this.providers = this.providers.filter((p) => p.name === name);
+        this.providers = this.providers.filter((p) => p.name !== name);
     }
 }
 exports.default = ContextProviderRegistryContainer;

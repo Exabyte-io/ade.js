@@ -16,7 +16,7 @@ declare module "@exabyte-io/application-flavors.js" {
         name: ApplicationName,
     ): Record<string, ExecutableSchema & ApplicationTreeItem & { flavors: FlavorSchema[] }>;
 
-    export interface ApplicationVersion {
+    export interface ApplicationVersionInfo {
         version: string;
         isDefault?: boolean;
         build?: string;
@@ -29,8 +29,7 @@ declare module "@exabyte-io/application-flavors.js" {
         summary: string;
         defaultVersion: string;
         isLicensed?: boolean;
-        build?: string;
-        versions: ApplicationVersion[];
+        versions: ApplicationVersionInfo[];
     }
 
     export type ApplicationName =

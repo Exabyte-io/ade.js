@@ -30,14 +30,14 @@ export type CreateApplicationConfig = {
 
 type ApplicationTree = Partial<Record<ApplicationName, ApplicationTreeItem>>;
 
-export default class AdeFactory {
+export default class ApplicationRegistry {
     // applications
     static applicationsTree?: ApplicationTree;
 
     static applicationsArray?: ApplicationSchemaBase[];
 
     static createApplication({ name, version = null, build = "Default" }: CreateApplicationConfig) {
-        const staticConfig = AdeFactory.getApplicationConfig({ name, version, build });
+        const staticConfig = ApplicationRegistry.getApplicationConfig({ name, version, build });
         return new Application({ ...staticConfig, name, version, build });
     }
 
@@ -61,11 +61,11 @@ export default class AdeFactory {
         const applicationsArray: ApplicationSchemaBase[] = [];
 
         allApplications.forEach((appName) => {
-            const { versions, defaultVersion, build = "Default", ...appData } = getAppData(appName);
+            const { versions, defaultVersion, ...appData } = getAppData(appName);
             const appTreeItem: ApplicationTreeItem = { defaultVersion };
 
-            versions.forEach((options) => {
-                const { version } = options;
+            versions.forEach((versionInfo) => {
+                const { version, build = "Default" } = versionInfo;
 
                 const appVersion =
                     version in appTreeItem && typeof appTreeItem[version] === "object"
@@ -74,7 +74,11 @@ export default class AdeFactory {
 
                 appTreeItem[version] = appVersion;
 
-                const applicationConfig: ApplicationSchemaBase = { ...appData, build, ...options };
+                const applicationConfig: ApplicationSchemaBase = {
+                    ...appData,
+                    build,
+                    ...versionInfo,
+                };
 
                 appVersion[build] = applicationConfig;
                 applicationsArray.push(applicationConfig);
@@ -115,10 +119,7 @@ export default class AdeFactory {
         const appVersion = app[version_];
 
         if (!appVersion || typeof appVersion === "string") {
-            console.log(`Version ${version_} not available for ${name} !`);
-        }
-
-        if (typeof appVersion === "string") {
+            console.warn(`Version ${version_} not available for ${name} !`);
             return null;
         }
 
@@ -206,9 +207,9 @@ export default class AdeFactory {
     }
 
     static getInputAsRenderedTemplates(flavor: Flavor, context: Record<string, unknown>) {
-        return this.getInputAsTemplates(flavor).map((template) =>
-            template.getRenderedJSON(context),
-        );
+        return this.getInputAsTemplates(flavor).map((template) => {
+            return template.getRenderedJSON(context);
+        });
     }
 
     static getAllFlavorsForApplication(appName: ApplicationName, version?: string) {

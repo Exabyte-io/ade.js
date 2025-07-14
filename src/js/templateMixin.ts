@@ -71,20 +71,19 @@ export function templateMixin(item: TemplateBase) {
         },
 
         get contextProviders() {
-            return this.prop("contextProviders") || [];
+            return this.prop("contextProviders", []);
         },
 
         addContextProvider(provider: ContextProvider) {
-            this.setProp("contextProviders", this.contextProviders.push(provider));
+            this.setProp("contextProviders", [...this.contextProviders, provider]);
         },
 
         removeContextProvider(provider: ContextProvider) {
-            this.setProp(
-                "contextProviders",
-                this.contextProviders.filter(
-                    (p) => p.name !== provider.name && p.domain !== provider.domain,
-                ),
-            );
+            const contextProviders = this.contextProviders.filter((p) => {
+                return p.name !== provider.name && p.domain !== provider.domain;
+            });
+
+            this.setProp("contextProviders", contextProviders);
         },
 
         render(externalContext?: Record<string, unknown>) {

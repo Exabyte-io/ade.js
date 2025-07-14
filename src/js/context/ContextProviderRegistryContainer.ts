@@ -32,10 +32,10 @@ export default class ContextProviderRegistryContainer {
     }
 
     removeProvider(providerCls: ContextProvider) {
-        this.providers = this.providers.filter((p) => p.name === providerCls.name);
+        this.providers = this.providers.filter((p) => p.name !== providerCls.name);
     }
 
     removeProviderByName(name: string) {
-        this.providers = this.providers.filter((p) => p.name === name);
+        this.providers = this.providers.filter((p) => p.name !== name);
     }
 }

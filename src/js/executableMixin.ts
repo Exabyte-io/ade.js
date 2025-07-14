@@ -17,12 +17,6 @@ export function executableMixin(item: Base) {
         set applicationId(value: string[]) {
             this.setProp("applicationId", value);
         },
-        toJSON(exclude: string[] = []) {
-            const thisProto = Object.getPrototypeOf(this);
-            const superProto = Object.getPrototypeOf(thisProto);
-            const baseToJSON = superProto.toJSON;
-            return baseToJSON.call(this, ["flavors"].concat(exclude));
-        },
     };
 
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
@@ -35,6 +29,5 @@ export type BaseConstructor = Constructor<Base> & {
 };
 
 export type ExecutableMixin = {
-    toJSON: (exclude?: string[]) => object;
     applicationId: string[];
 };

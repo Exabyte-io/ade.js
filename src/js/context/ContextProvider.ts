@@ -18,7 +18,7 @@ export interface ContextProviderInstance {
 }
 
 export interface ContextProviderConfig {
-    name: ContextProviderName;
+    name: ContextProviderName | `${ContextProviderName}`;
     domain?: string;
     entityName?: string;
     data?: object;
@@ -65,7 +65,7 @@ export interface ContextProviderStatic {
 export default class ContextProvider {
     config: ContextProviderConfig;
 
-    name: ContextProviderName;
+    name: `${ContextProviderName}`;
 
     domain?: string;
 
@@ -135,7 +135,7 @@ export default class ContextProvider {
 
     // override in children
     // eslint-disable-next-line class-methods-use-this
-    get defaultData() {
+    get defaultData(): object {
         throw new Error("Not implemented.");
     }
 

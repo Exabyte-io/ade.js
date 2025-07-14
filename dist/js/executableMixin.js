@@ -10,12 +10,6 @@ function executableMixin(item) {
         set applicationId(value) {
             this.setProp("applicationId", value);
         },
-        toJSON(exclude = []) {
-            const thisProto = Object.getPrototypeOf(this);
-            const superProto = Object.getPrototypeOf(thisProto);
-            const baseToJSON = superProto.toJSON;
-            return baseToJSON.call(this, ["flavors"].concat(exclude));
-        },
     };
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
     return item;
