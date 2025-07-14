@@ -7,6 +7,7 @@
         "test:coverage": "nyc --reporter=text --reporter=html --reporter=lcov mocha --recursive --bail tests/js/**/*.ts",
         "test:coverage:html": "nyc --reporter=html mocha --recursive --bail tests/js/**/*.ts",
         "test:coverage:check": "nyc --reporter=text --check-coverage mocha --recursive --bail tests/js/**/*.ts",
+        "test:coverage:view": "node scripts/view-coverage.js",
         "lint": "eslint src tests && prettier --write src tests",
         "lint:fix": "eslint --fix --cache src tests && prettier --write src tests",
         "transpile": "tsc -p tsconfig-transpile.json",
