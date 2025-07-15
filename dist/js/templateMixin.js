@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.templateMixin = templateMixin;
 exports.templateStaticMixin = templateStaticMixin;
-const application_flavors_js_1 = require("@exabyte-io/application-flavors.js");
 const utils_1 = require("@mat3ra/code/dist/js/utils");
 const nunjucks_1 = __importDefault(require("nunjucks"));
 const ContextProviderRegistryContainer_1 = __importDefault(require("./context/ContextProviderRegistryContainer"));
@@ -34,13 +33,16 @@ function templateMixin(item) {
             return this.prop("executableName");
         },
         get contextProviders() {
-            return this.prop("contextProviders") || [];
+            return this.prop("contextProviders", []);
         },
         addContextProvider(provider) {
-            this.setProp("contextProviders", this.contextProviders.push(provider));
+            this.setProp("contextProviders", [...this.contextProviders, provider]);
         },
         removeContextProvider(provider) {
-            this.setProp("contextProviders", this.contextProviders.filter((p) => p.name !== provider.name && p.domain !== provider.domain));
+            const contextProviders = this.contextProviders.filter((p) => {
+                return p.name !== provider.name && p.domain !== provider.domain;
+            });
+            this.setProp("contextProviders", contextProviders);
         },
         render(externalContext) {
             const renderingContext = this.getRenderingContext(externalContext);
@@ -122,10 +124,10 @@ function templateMixin(item) {
             return result;
         },
         /*
-     @summary Combines rendering context (in order of preference):
-     *        - context from templates initialized with external context
-     *        - "external" context and
-     */
+         * @summary Combines rendering context (in order of preference):
+         *        - context from templates initialized with external context
+         *        - "external" context and
+         */
         getRenderingContext(externalContext) {
             return {
                 ...externalContext,
@@ -139,15 +141,6 @@ function templateMixin(item) {
 function templateStaticMixin(item) {
     // @ts-ignore
     const properties = {
-        fromFlavor(appName, execName, inputName) {
-            const filtered = application_flavors_js_1.allTemplates.filter((temp) => temp.applicationName === appName &&
-                temp.executableName === execName &&
-                temp.name === inputName);
-            if (filtered.length !== 1) {
-                console.log(`found ${filtered.length} templates for app=${appName} exec=${execName} name=${inputName} expected 1`);
-            }
-            return new this(filtered[0]);
-        },
         contextProviderRegistry: null,
         setContextProvidersConfig(classConfigMap) {
             const contextProviderRegistry = new ContextProviderRegistryContainer_1.default();

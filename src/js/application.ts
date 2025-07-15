@@ -3,19 +3,16 @@ import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 
 import {
     type ApplicationMixin,
+    type ApplicationStaticMixin,
     applicationMixin,
     applicationStaticMixin,
 } from "./applicationMixin";
-import { type CreateApplicationConfig, getApplicationConfig } from "./tree";
 
-type Base = typeof NamedDefaultableInMemoryEntity & Constructor<ApplicationMixin>;
+type Base = typeof NamedDefaultableInMemoryEntity &
+    Constructor<ApplicationMixin> &
+    ApplicationStaticMixin;
 
-export default class Application extends (NamedDefaultableInMemoryEntity as Base) {
-    constructor(config: CreateApplicationConfig) {
-        const staticConfig = getApplicationConfig(config);
-        super({ ...staticConfig, ...config });
-    }
-}
+export default class Application extends (NamedDefaultableInMemoryEntity as Base) {}
 
 applicationMixin(Application.prototype);
 applicationStaticMixin(Application);

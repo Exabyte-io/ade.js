@@ -44,7 +44,50 @@ npm run transpile
 
 # run tests
 npm run test
+
+# run tests with coverage
+npm run test:coverage
+
+# run tests with coverage and check thresholds
+npm run test:coverage:check
+
+# generate HTML coverage report
+npm run test:coverage:html
 ```
+
+## Code Coverage
+
+This project includes comprehensive code coverage reporting with multiple viewing options:
+
+### Local Coverage
+- Run `npm run test:coverage:html` to generate an HTML coverage report locally
+- Open `coverage/index.html` in your browser to view the report
+
+### GitHub Integration
+The project uses GitHub Actions to automatically generate and display coverage reports:
+
+1. **PR Coverage Comments**: Every pull request automatically gets a coverage report comment showing:
+   - Overall coverage percentages
+   - Coverage changes compared to the base branch
+   - Detailed file-by-file coverage breakdown
+
+2. **Coverage Artifacts**: Coverage reports are uploaded as GitHub artifacts for each PR and commit
+   - Download from the Actions tab in GitHub
+   - Available for 30 days for main branch, 7 days for PRs
+
+3. **GitHub Pages** (Optional): Coverage reports are published to GitHub Pages for easy browser viewing
+   - Available at: `https://exabyte-io.github.io/ade.js/`
+   - Updated on every push to main branch
+
+### Coverage Thresholds
+The project enforces minimum coverage thresholds:
+- **Statements**: 85%
+- **Branches**: 80%
+- **Functions**: 80%
+- **Lines**: 85%
+
+### External Coverage Services
+- **Codecov**: Coverage data is automatically uploaded to Codecov for historical tracking and trend analysis
 
 ADe
 ===

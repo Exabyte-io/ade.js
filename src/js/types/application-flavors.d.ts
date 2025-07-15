@@ -2,6 +2,8 @@
  * TODO: @exabyte-io/application-flavors.js package must be removed and the source code must be moved to the current repo later in the future
  */
 declare module "@exabyte-io/application-flavors.js" {
+    import type { ExecutableSchema, FlavorSchema } from "@mat3ra/esse/dist/js/types";
+
     export const allApplications: ApplicationName[];
 
     export interface ApplicationTreeItem {
@@ -10,9 +12,11 @@ declare module "@exabyte-io/application-flavors.js" {
         isDefault?: boolean;
     }
 
-    export function getAppTree(name: ApplicationName): Record<string, ApplicationTreeItem>;
+    export function getAppTree(
+        name: ApplicationName,
+    ): Record<string, ExecutableSchema & ApplicationTreeItem & { flavors: FlavorSchema[] }>;
 
-    export interface ApplicationVersion {
+    export interface ApplicationVersionInfo {
         version: string;
         isDefault?: boolean;
         build?: string;
@@ -25,8 +29,7 @@ declare module "@exabyte-io/application-flavors.js" {
         summary: string;
         defaultVersion: string;
         isLicensed?: boolean;
-        build?: string;
-        versions: ApplicationVersion[];
+        versions: ApplicationVersionInfo[];
     }
 
     export type ApplicationName =

@@ -3,7 +3,7 @@ export interface ContextProviderInstance {
     config: ContextProviderConfig;
 }
 export interface ContextProviderConfig {
-    name: ContextProviderName;
+    name: ContextProviderName | `${ContextProviderName}`;
     domain?: string;
     entityName?: string;
     data?: object;
@@ -46,7 +46,7 @@ export interface ContextProviderStatic {
 }
 export default class ContextProvider {
     config: ContextProviderConfig;
-    name: ContextProviderName;
+    name: `${ContextProviderName}`;
     domain?: string;
     entityName?: string;
     data?: object;
@@ -64,9 +64,9 @@ export default class ContextProvider {
         isEdited?: undefined;
     });
     setIsEdited(isEdited: boolean): void;
-    getData(): void | object;
+    getData(): object | undefined;
     setData(data: object): void;
-    get defaultData(): void;
+    get defaultData(): object;
     transformData(data: object): object;
     yieldData(...transformDataArgs: any): {
         [x: string]: boolean | object | undefined;

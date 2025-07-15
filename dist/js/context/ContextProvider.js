@@ -17,6 +17,7 @@ exports.ContextProviderName = void 0;
  */
 const utils_1 = require("@mat3ra/code/dist/js/utils");
 const lodash_1 = __importDefault(require("lodash"));
+// TODO: separate application-specific CPs
 var ContextProviderName;
 (function (ContextProviderName) {
     ContextProviderName["PlanewaveCutoffDataManager"] = "PlanewaveCutoffDataManager";

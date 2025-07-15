@@ -1,4 +1,3 @@
-import { allTemplates } from "@exabyte-io/application-flavors.js";
 import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import { deepClone } from "@mat3ra/code/dist/js/utils";
@@ -23,21 +22,21 @@ export type TemplateMixin = {
     contextProviders: ContextProvider[];
     addContextProvider: (provider: ContextProvider) => void;
     removeContextProvider: (provider: ContextProvider) => void;
-    render: (externalContext: Record<string, unknown>) => void;
-    getRenderedJSON: (context: Record<string, unknown>) => AnyObject;
+    render: (externalContext?: Record<string, unknown>) => void;
+    getRenderedJSON: (context?: Record<string, unknown>) => AnyObject;
     _cleanRenderingContext: (object: Record<string, unknown>) => Record<string, unknown>;
     getDataFromProvidersForRenderingContext: (
-        context: Record<string, unknown>,
+        context?: Record<string, unknown>,
     ) => Record<string, unknown>;
     setContent: (text: string) => void;
     setRendered: (text: string) => void;
     getContextProvidersAsClassInstances: (
-        providerContext: Record<string, unknown>,
+        providerContext?: Record<string, unknown>,
     ) => ContextProvider[];
     getDataFromProvidersForPersistentContext: (
-        providerContext: Record<string, unknown>,
+        providerContext?: Record<string, unknown>,
     ) => Record<string, unknown>;
-    getRenderingContext: (externalContext: Record<string, unknown>) => Record<string, unknown>;
+    getRenderingContext: (externalContext?: Record<string, unknown>) => Record<string, unknown>;
 };
 
 export function templateMixin(item: TemplateBase) {
@@ -72,23 +71,22 @@ export function templateMixin(item: TemplateBase) {
         },
 
         get contextProviders() {
-            return this.prop("contextProviders") || [];
+            return this.prop("contextProviders", []);
         },
 
         addContextProvider(provider: ContextProvider) {
-            this.setProp("contextProviders", this.contextProviders.push(provider));
+            this.setProp("contextProviders", [...this.contextProviders, provider]);
         },
 
         removeContextProvider(provider: ContextProvider) {
-            this.setProp(
-                "contextProviders",
-                this.contextProviders.filter(
-                    (p) => p.name !== provider.name && p.domain !== provider.domain,
-                ),
-            );
+            const contextProviders = this.contextProviders.filter((p) => {
+                return p.name !== provider.name && p.domain !== provider.domain;
+            });
+
+            this.setProp("contextProviders", contextProviders);
         },
 
-        render(externalContext: Record<string, unknown>) {
+        render(externalContext?: Record<string, unknown>) {
             const renderingContext = this.getRenderingContext(externalContext);
             if (!this.isManuallyChanged) {
                 try {
@@ -110,7 +108,7 @@ export function templateMixin(item: TemplateBase) {
             }
         },
 
-        getRenderedJSON(context: Record<string, unknown>) {
+        getRenderedJSON(context?: Record<string, unknown>) {
             this.render(context);
             return this.toJSON();
         },
@@ -129,7 +127,7 @@ export function templateMixin(item: TemplateBase) {
          *          previously stored values. That is if data was previously saved in database, the context provider
          *          shall receive it on initialization through providerContext and prioritize this value over the default.
          */
-        getContextProvidersAsClassInstances(providerContext: Record<string, unknown>) {
+        getContextProvidersAsClassInstances(providerContext?: Record<string, unknown>) {
             return this.contextProviders.map((p) => {
                 const providerInstance = (
                     this.constructor as unknown as TemplateStaticMixin
@@ -151,7 +149,7 @@ export function templateMixin(item: TemplateBase) {
         /*
          * @summary Extracts the the data from all context providers for further use during render.
          */
-        getDataFromProvidersForRenderingContext(providerContext: Record<string, unknown>) {
+        getDataFromProvidersForRenderingContext(providerContext?: Record<string, unknown>) {
             const result: AnyObject = {};
             this.getContextProvidersAsClassInstances(providerContext).forEach((contextProvider) => {
                 const context = contextProvider.yieldDataForRendering();
@@ -171,7 +169,7 @@ export function templateMixin(item: TemplateBase) {
          * @summary Extracts the the data from all context providers for further save in persistent context.
          */
         // TODO: optimize logic to prevent re-initializing the context provider classes again below, reuse above function
-        getDataFromProvidersForPersistentContext(providerContext: Record<string, unknown>) {
+        getDataFromProvidersForPersistentContext(providerContext?: Record<string, unknown>) {
             const result = {};
             this.getContextProvidersAsClassInstances(providerContext).forEach((contextProvider) => {
                 // only save in the persistent context the data from providers that were edited (or able to be edited)
@@ -181,11 +179,11 @@ export function templateMixin(item: TemplateBase) {
         },
 
         /*
-     @summary Combines rendering context (in order of preference):
-     *        - context from templates initialized with external context
-     *        - "external" context and
-     */
-        getRenderingContext(externalContext: Record<string, unknown>) {
+         * @summary Combines rendering context (in order of preference):
+         *        - context from templates initialized with external context
+         *        - "external" context and
+         */
+        getRenderingContext(externalContext?: Record<string, unknown>) {
             return {
                 ...externalContext,
                 ...this.getDataFromProvidersForRenderingContext(externalContext),
@@ -203,14 +201,11 @@ export type ContextProviderConfigMapEntry = {
     config: ContextProviderConfig;
 };
 
-export type ContextProviderConfigMap = Record<ContextProviderName, ContextProviderConfigMapEntry>;
+export type ContextProviderConfigMap = Partial<
+    Record<ContextProviderName, ContextProviderConfigMapEntry>
+>;
 
 export type TemplateStaticMixin = {
-    fromFlavor: (
-        appName: string,
-        execName: string,
-        inputName: string,
-    ) => TemplateMixin & TemplateBase;
     contextProviderRegistry: ContextProviderRegistryContainer | null;
     setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
 };
@@ -218,21 +213,6 @@ export type TemplateStaticMixin = {
 export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>) {
     // @ts-ignore
     const properties: TemplateStaticMixin & Constructor<TemplateBase & TemplateMixin> = {
-        fromFlavor(appName: string, execName: string, inputName: string) {
-            const filtered = allTemplates.filter(
-                (temp) =>
-                    temp.applicationName === appName &&
-                    temp.executableName === execName &&
-                    temp.name === inputName,
-            );
-            if (filtered.length !== 1) {
-                console.log(
-                    `found ${filtered.length} templates for app=${appName} exec=${execName} name=${inputName} expected 1`,
-                );
-            }
-            return new this(filtered[0]);
-        },
-
         contextProviderRegistry: null,
 
         setContextProvidersConfig(classConfigMap: ContextProviderConfigMap) {
