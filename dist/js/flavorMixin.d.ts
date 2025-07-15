@@ -11,8 +11,5 @@ export type FlavorMixin = {
     disableRenderMaterials: boolean;
     getInputAsRenderedTemplates: (context: Record<string, unknown>) => Record<string, unknown>[];
 };
-export declare function flavorMixin(item: Base): FlavorMixin & InMemoryEntity & {
-    setName(name: string): void;
-    name: string;
-};
+export declare function flavorMixin(item: Base): FlavorMixin & InMemoryEntity & NamedInMemoryEntity;
 export {};

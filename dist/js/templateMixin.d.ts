@@ -24,10 +24,7 @@ export type TemplateMixin = {
     getDataFromProvidersForPersistentContext: (providerContext: Record<string, unknown>) => Record<string, unknown>;
     getRenderingContext: (externalContext: Record<string, unknown>) => Record<string, unknown>;
 };
-export declare function templateMixin(item: TemplateBase): TemplateMixin & InMemoryEntity & {
-    setName(name: string): void;
-    name: string;
-};
+export declare function templateMixin(item: TemplateBase): TemplateMixin & InMemoryEntity & NamedInMemoryEntity;
 export type ContextProviderConfigMapEntry = {
     providerCls: typeof ContextProvider;
     config: ContextProviderConfig;
@@ -38,7 +35,4 @@ export type TemplateStaticMixin = {
     contextProviderRegistry: ContextProviderRegistryContainer | null;
     setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
 };
-export declare function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>): TemplateStaticMixin & Constructor<InMemoryEntity & {
-    setName(name: string): void;
-    name: string;
-} & TemplateMixin>;
+export declare function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>): TemplateStaticMixin & Constructor<InMemoryEntity & NamedInMemoryEntity & TemplateMixin>;
