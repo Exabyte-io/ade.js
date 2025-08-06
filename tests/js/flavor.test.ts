@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-expressions */
+import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import type { JSONSchema } from "@mat3ra/esse/dist/js/esse/utils";
+import schemas from "@mat3ra/esse/dist/js/schemas.json";
 import { expect } from "chai";
 
 import ApplicationRegistry from "../../src/js/ApplicationRegistry";
@@ -81,6 +84,23 @@ describe("Flavor", () => {
         it("should return supportedApplicationVersions when set", () => {
             flavor.setProp("supportedApplicationVersions", ["6.3", "7.0"]);
             expect(flavor.supportedApplicationVersions).to.deep.equal(["6.3", "7.0"]);
+        });
+    });
+
+    describe("flavorStaticMixin", () => {
+        before(() => {
+            JSONSchemasInterface.setSchemas(schemas as JSONSchema[]);
+        });
+
+        it("should have jsonSchema property", () => {
+            expect(Flavor.jsonSchema).to.exist;
+        });
+
+        it("should return correct schema structure", () => {
+            const schema = Flavor.jsonSchema;
+            expect(schema).to.have.property("$schema");
+            expect(schema).to.have.property("$id");
+            expect(schema?.$id).to.include("software/flavor");
         });
     });
 });

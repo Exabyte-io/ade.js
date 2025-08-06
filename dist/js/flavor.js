@@ -9,3 +9,4 @@ exports.default = Flavor;
 // Apply mixins
 (0, flavorMixin_1.flavorMixin)(Flavor.prototype);
 (0, RuntimeItemsMixin_1.runtimeItemsMixin)(Flavor.prototype);
+(0, flavorMixin_1.flavorStaticMixin)(Flavor);
