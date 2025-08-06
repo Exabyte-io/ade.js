@@ -3,6 +3,8 @@ import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/DefaultableMixin";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
+import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
 
 import Executable from "./executable";
 
@@ -33,6 +35,7 @@ export type ApplicationStaticMixin = {
         summary: string;
         build: string;
     };
+    jsonSchema: ApplicationSchemaBase;
 };
 
 export function applicationMixin(item: Base) {
@@ -69,8 +72,6 @@ export function applicationMixin(item: Base) {
     };
 
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
-
-    return item;
 }
 
 export function applicationStaticMixin<T extends BaseConstructor>(Application: T) {
@@ -84,9 +85,12 @@ export function applicationStaticMixin<T extends BaseConstructor>(Application: T
                 build: "Default",
             };
         },
+        get jsonSchema() {
+            return JSONSchemasInterface.getSchemaById(
+                "software/application",
+            ) as ApplicationSchemaBase;
+        },
     };
 
     Object.defineProperties(Application, Object.getOwnPropertyDescriptors(properties));
-
-    return properties;
 }

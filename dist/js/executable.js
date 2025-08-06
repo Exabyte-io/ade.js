@@ -9,3 +9,4 @@ exports.default = Executable;
 // Apply mixins
 (0, RuntimeItemsMixin_1.runtimeItemsMixin)(Executable.prototype);
 (0, executableMixin_1.executableMixin)(Executable.prototype);
+(0, executableMixin_1.executableStaticMixin)(Executable);

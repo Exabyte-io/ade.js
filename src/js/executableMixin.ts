@@ -2,6 +2,9 @@ import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/DefaultableMixin";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
+import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import type { AnyObject } from "@mat3ra/esse/dist/js/esse/types";
+import type { ExecutableSchema } from "@mat3ra/esse/dist/js/types";
 
 import type { FlavorMixin } from "./flavorMixin";
 
@@ -20,8 +23,16 @@ export function executableMixin(item: Base) {
     };
 
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
+}
 
-    return item;
+export function executableStaticMixin(Executable: Constructor<Base>) {
+    const properties: ExecutableStaticMixin = {
+        get jsonSchema() {
+            return JSONSchemasInterface.getSchemaById("software/executable") as ExecutableSchema;
+        },
+    };
+
+    Object.defineProperties(Executable, Object.getOwnPropertyDescriptors(properties));
 }
 
 export type BaseConstructor = Constructor<Base> & {
@@ -30,4 +41,9 @@ export type BaseConstructor = Constructor<Base> & {
 
 export type ExecutableMixin = {
     applicationId: string[];
+    toJSON: () => ExecutableSchema & AnyObject;
+};
+
+export type ExecutableStaticMixin = {
+    jsonSchema: ExecutableSchema;
 };

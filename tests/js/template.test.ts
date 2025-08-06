@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-expressions */
+import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
+import type { JSONSchema } from "@mat3ra/esse/dist/js/esse/utils";
+import schemas from "@mat3ra/esse/dist/js/schemas.json";
 import { expect } from "chai";
 
 import ContextProvider from "../../src/js/context/ContextProvider";
@@ -258,9 +261,24 @@ describe("Template", () => {
     });
 
     describe("templateStaticMixin properties", () => {
+        before(() => {
+            JSONSchemasInterface.setSchemas(schemas as JSONSchema[]);
+        });
+
         it("should set context providers config", () => {
             Template.setContextProvidersConfig(providersConfig);
             expect(Template.contextProviderRegistry).to.not.be.null;
+        });
+
+        it("should have jsonSchema property", () => {
+            expect(Template.jsonSchema).to.exist;
+        });
+
+        it("should return correct schema structure", () => {
+            const schema = Template.jsonSchema;
+            expect(schema).to.have.property("$schema");
+            expect(schema).to.have.property("$id");
+            expect(schema?.$id).to.include("software/template");
         });
     });
 });

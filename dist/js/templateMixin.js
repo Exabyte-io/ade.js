@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.templateMixin = templateMixin;
 exports.templateStaticMixin = templateStaticMixin;
 const utils_1 = require("@mat3ra/code/dist/js/utils");
+const JSONSchemasInterface_1 = __importDefault(require("@mat3ra/esse/dist/js/esse/JSONSchemasInterface"));
 const nunjucks_1 = __importDefault(require("nunjucks"));
 const ContextProviderRegistryContainer_1 = __importDefault(require("./context/ContextProviderRegistryContainer"));
 function templateMixin(item) {
@@ -142,6 +143,9 @@ function templateStaticMixin(item) {
     // @ts-ignore
     const properties = {
         contextProviderRegistry: null,
+        get jsonSchema() {
+            return JSONSchemasInterface_1.default.getSchemaById("software/template");
+        },
         setContextProvidersConfig(classConfigMap) {
             const contextProviderRegistry = new ContextProviderRegistryContainer_1.default();
             Object.entries(classConfigMap).forEach(([name, { providerCls, config }]) => {

@@ -3,6 +3,7 @@ import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { DefaultableInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/DefaultableMixin";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
+import type { ApplicationSchemaBase } from "@mat3ra/esse/dist/js/types";
 import Executable from "./executable";
 type Base = InMemoryEntity & NamedInMemoryEntity & DefaultableInMemoryEntity;
 export type BaseConstructor = Constructor<Base> & {
@@ -27,7 +28,8 @@ export type ApplicationStaticMixin = {
         summary: string;
         build: string;
     };
+    jsonSchema: ApplicationSchemaBase;
 };
-export declare function applicationMixin(item: Base): Base;
-export declare function applicationStaticMixin<T extends BaseConstructor>(Application: T): ApplicationStaticMixin;
+export declare function applicationMixin(item: Base): void;
+export declare function applicationStaticMixin<T extends BaseConstructor>(Application: T): void;
 export {};

@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.applicationMixin = applicationMixin;
 exports.applicationStaticMixin = applicationStaticMixin;
+const JSONSchemasInterface_1 = __importDefault(require("@mat3ra/esse/dist/js/esse/JSONSchemasInterface"));
 function applicationMixin(item) {
     // @ts-expect-error
     const properties = {
@@ -29,7 +33,6 @@ function applicationMixin(item) {
         },
     };
     Object.defineProperties(item, Object.getOwnPropertyDescriptors(properties));
-    return item;
 }
 function applicationStaticMixin(Application) {
     const properties = {
@@ -42,7 +45,9 @@ function applicationStaticMixin(Application) {
                 build: "Default",
             };
         },
+        get jsonSchema() {
+            return JSONSchemasInterface_1.default.getSchemaById("software/application");
+        },
     };
     Object.defineProperties(Application, Object.getOwnPropertyDescriptors(properties));
-    return properties;
 }

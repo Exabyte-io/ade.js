@@ -2,7 +2,9 @@ import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import { deepClone } from "@mat3ra/code/dist/js/utils";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
+import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
 import type { AnyObject } from "@mat3ra/esse/dist/js/esse/types";
+import type { TemplateSchema } from "@mat3ra/esse/dist/js/types";
 import nunjucks from "nunjucks";
 
 import ContextProvider, {
@@ -208,12 +210,17 @@ export type ContextProviderConfigMap = Partial<
 export type TemplateStaticMixin = {
     contextProviderRegistry: ContextProviderRegistryContainer | null;
     setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
+    jsonSchema: TemplateSchema;
 };
 
 export function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>) {
     // @ts-ignore
     const properties: TemplateStaticMixin & Constructor<TemplateBase & TemplateMixin> = {
         contextProviderRegistry: null,
+
+        get jsonSchema() {
+            return JSONSchemasInterface.getSchemaById("software/template") as TemplateSchema;
+        },
 
         setContextProvidersConfig(classConfigMap: ContextProviderConfigMap) {
             const contextProviderRegistry = new ContextProviderRegistryContainer();
