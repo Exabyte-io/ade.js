@@ -35,7 +35,6 @@ declare module "@exabyte-io/application-flavors.js" {
     export type ApplicationName =
         | "deepmd"
         | "espresso"
-        | "exabyteml"
         | "jupyterLab"
         | "nwchem"
         | "python"
