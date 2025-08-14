@@ -83,4 +83,17 @@ describe("Flavor", () => {
             expect(flavor.supportedApplicationVersions).to.deep.equal(["6.3", "7.0"]);
         });
     });
+
+    describe("flavorStaticMixin", () => {
+        it("should have jsonSchema property", () => {
+            expect(Flavor.jsonSchema).to.exist;
+        });
+
+        it("should return correct schema structure", () => {
+            const schema = Flavor.jsonSchema;
+            expect(schema).to.have.property("$schema");
+            expect(schema).to.have.property("$id");
+            expect(schema?.$id).to.include("software/flavor");
+        });
+    });
 });

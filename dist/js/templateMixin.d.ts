@@ -2,6 +2,7 @@ import type { InMemoryEntity } from "@mat3ra/code/dist/js/entity";
 import type { NamedInMemoryEntity } from "@mat3ra/code/dist/js/entity/mixins/NamedEntityMixin";
 import type { Constructor } from "@mat3ra/code/dist/js/utils/types";
 import type { AnyObject } from "@mat3ra/esse/dist/js/esse/types";
+import type { TemplateSchema } from "@mat3ra/esse/dist/js/types";
 import ContextProvider, { type ContextProviderConfig, type ContextProviderName } from "./context/ContextProvider";
 import ContextProviderRegistryContainer from "./context/ContextProviderRegistryContainer";
 export type TemplateBase = InMemoryEntity & NamedInMemoryEntity;
@@ -33,5 +34,6 @@ export type ContextProviderConfigMap = Partial<Record<ContextProviderName, Conte
 export type TemplateStaticMixin = {
     contextProviderRegistry: ContextProviderRegistryContainer | null;
     setContextProvidersConfig: (classConfigMap: ContextProviderConfigMap) => void;
+    jsonSchema: TemplateSchema;
 };
 export declare function templateStaticMixin(item: Constructor<TemplateBase & TemplateMixin>): TemplateStaticMixin & Constructor<InMemoryEntity & NamedInMemoryEntity & TemplateMixin>;
