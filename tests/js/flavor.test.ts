@@ -1,7 +1,4 @@
 /* eslint-disable no-unused-expressions */
-import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
-import type { JSONSchema } from "@mat3ra/esse/dist/js/esse/utils";
-import schemas from "@mat3ra/esse/dist/js/schemas.json";
 import { expect } from "chai";
 
 import ApplicationRegistry from "../../src/js/ApplicationRegistry";
@@ -88,10 +85,6 @@ describe("Flavor", () => {
     });
 
     describe("flavorStaticMixin", () => {
-        before(() => {
-            JSONSchemasInterface.setSchemas(schemas as JSONSchema[]);
-        });
-
         it("should have jsonSchema property", () => {
             expect(Flavor.jsonSchema).to.exist;
         });

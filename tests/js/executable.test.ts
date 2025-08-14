@@ -1,7 +1,4 @@
 /* eslint-disable no-unused-expressions */
-import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
-import type { JSONSchema } from "@mat3ra/esse/dist/js/esse/utils";
-import schemas from "@mat3ra/esse/dist/js/schemas.json";
 import { expect } from "chai";
 
 import ApplicationRegistry from "../../src/js/ApplicationRegistry";
@@ -10,11 +7,13 @@ import Executable from "../../src/js/executable";
 describe("Executable", () => {
     it("toJSON works as expected", () => {
         const executable = new Executable({ name: "espresso" });
-        expect(executable.toJSON()).to.deep.equal({ name: "espresso" });
+        const json = executable.toJSON();
+        expect(json).to.have.property("name", "espresso");
+        expect(json).to.have.property("isDefault");
+        expect(json).to.have.property("schemaVersion");
     });
 
     it("should find executable via ApplicationRegistry and validate JSON structure", () => {
-        JSONSchemasInterface.setSchemas(schemas as JSONSchema[]);
         // Find an executable using ApplicationRegistry
         const executable = ApplicationRegistry.getExecutableByName("espresso", "pw.x");
 
@@ -64,10 +63,6 @@ describe("Executable", () => {
     });
 
     describe("executableStaticMixin", () => {
-        before(() => {
-            JSONSchemasInterface.setSchemas(schemas as JSONSchema[]);
-        });
-
         it("should have jsonSchema property", () => {
             expect(Executable.jsonSchema).to.exist;
         });

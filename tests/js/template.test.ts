@@ -1,7 +1,4 @@
 /* eslint-disable no-unused-expressions */
-import JSONSchemasInterface from "@mat3ra/esse/dist/js/esse/JSONSchemasInterface";
-import type { JSONSchema } from "@mat3ra/esse/dist/js/esse/utils";
-import schemas from "@mat3ra/esse/dist/js/schemas.json";
 import { expect } from "chai";
 
 import ContextProvider from "../../src/js/context/ContextProvider";
@@ -63,6 +60,64 @@ describe("Template", () => {
 
     beforeEach(() => {
         template = new Template({ name: "test_template" });
+    });
+
+    it("toJSON works as expected", () => {
+        const template = new Template({ name: "test_template" });
+        template.setContent("test content");
+        template.setRendered("test content");
+        const json = template.toJSON();
+
+        // Check basic properties from NamedInMemoryEntity
+        expect(json).to.have.property("name", "test_template");
+        expect(json).to.have.property("schemaVersion");
+
+        // Check required template properties
+        expect(json).to.have.property("content", "test content");
+        expect(json).to.have.property("rendered", "test content");
+
+        // Verify data types
+        expect(json.content).to.be.a("string");
+        expect(json.rendered).to.be.a("string");
+        expect(json.schemaVersion).to.be.a("string");
+    });
+
+    it("toJSON includes all template properties when set", () => {
+        const template = new Template({ name: "test_template" });
+
+        // Set various properties
+        template.setContent("test content");
+        template.setProp("isManuallyChanged", true);
+        template.setProp("applicationName", "espresso");
+        template.setProp("executableName", "pw");
+        template.setRendered("rendered content");
+
+        const json = template.toJSON();
+
+        // Check required properties
+        expect(json.name).to.equal("test_template");
+        expect(json.content).to.equal("test content");
+        expect(json.rendered).to.equal("rendered content");
+        expect(json.schemaVersion).to.be.a("string");
+
+        // Check that the JSON contains the expected structure
+        expect(json).to.be.an("object");
+        expect(Object.keys(json).length).to.be.greaterThan(3);
+    });
+
+    it("getRenderedJSON returns valid JSON after rendering", () => {
+        const template = new Template({ name: "test_template" });
+        template.setContent("Hello {{ name }}!");
+        template.setProp("isManuallyChanged", false);
+
+        const json = template.getRenderedJSON({ name: "World" });
+
+        // Check that it returns a valid JSON object
+        expect(json).to.be.an("object");
+        expect(json).to.have.property("name", "test_template");
+        expect(json).to.have.property("content", "Hello {{ name }}!");
+        expect(json).to.have.property("rendered", "Hello World!");
+        expect(json).to.have.property("schemaVersion");
     });
 
     describe("templateMixin properties", () => {
@@ -261,10 +316,6 @@ describe("Template", () => {
     });
 
     describe("templateStaticMixin properties", () => {
-        before(() => {
-            JSONSchemasInterface.setSchemas(schemas as JSONSchema[]);
-        });
-
         it("should set context providers config", () => {
             Template.setContextProvidersConfig(providersConfig);
             expect(Template.contextProviderRegistry).to.not.be.null;
