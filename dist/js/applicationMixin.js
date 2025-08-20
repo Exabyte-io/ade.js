@@ -28,7 +28,7 @@ function applicationMixin(item) {
             return this.prop("isLicensed", false);
         },
         get isUsingMaterial() {
-            const materialUsingApplications = ["vasp", "nwchem", "espresso", "exabyteml"];
+            const materialUsingApplications = ["vasp", "nwchem", "espresso"];
             return materialUsingApplications.includes(this.name);
         },
     };

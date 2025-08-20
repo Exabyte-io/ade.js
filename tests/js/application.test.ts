@@ -101,11 +101,6 @@ describe("Application", () => {
                 expect(espressoApp.isUsingMaterial).to.be.true;
             });
 
-            it("should return true for exabyteml application", () => {
-                const exabytemlApp = new Application({ name: "exabyteml" });
-                expect(exabytemlApp.isUsingMaterial).to.be.true;
-            });
-
             it("should return false for other applications", () => {
                 const otherApp = new Application({ name: "other_app" });
                 expect(otherApp.isUsingMaterial).to.be.false;
